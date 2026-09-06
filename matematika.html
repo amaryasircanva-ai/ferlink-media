@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FERLINK - Matematika</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:"Trebuchet MS",Arial,sans-serif;
+    background:#f5fbff;color:#24324a;min-height:100vh;
+}
+.topbar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.95);
+    border-bottom:2px solid #dceefa;
+    padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:15px;
+    box-shadow:0 3px 12px rgba(40,90,130,.08);
+}
+.brand{
+    display:flex;align-items:center;gap:10px;
+    text-decoration:none;color:#243b68;font-weight:900;font-size:20px;
+}
+.brand-icon{font-size:30px}
+.nav-actions{display:flex;gap:8px}
+.nav-btn{
+    text-decoration:none;border:none;cursor:pointer;
+    padding:10px 15px;border-radius:14px;font-weight:bold;font-size:13px;
+    background:#eef6ff;color:#2460a9;
+}
+.nav-btn:hover{background:#dceeff}
+.nav-btn.home{background:#1877f2;color:#fff}
+.container{max-width:1180px;margin:auto;padding:28px 24px 50px}
+.hero{
+    position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#2467e8,#7046df);
+    color:white;border-radius:28px;padding:34px 38px;
+    box-shadow:0 12px 28px rgba(55,82,210,.20);
+    margin-bottom:30px;
+}
+.hero:after{
+    content:"🔢  ➕  📐  ✏️  ⭐";
+    position:absolute;right:25px;bottom:15px;
+    font-size:42px;opacity:.75;
+}
+.hero h1{font-size:32px;margin-bottom:9px}
+.hero h1 span{color:#ffe34d}
+.hero p{font-size:15px;line-height:1.6;max-width:720px}
+.breadcrumb{
+    margin:5px 0 18px;color:#64758a;font-size:13px;font-weight:bold;
+}
+.section-title{
+    color:#4930a8;font-size:25px;margin-bottom:15px;
+}
+.grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+}
+.card{
+    position:relative;background:white;border-radius:24px;
+    border:2px solid #e0ebf5;padding:22px;
+    min-height:250px;display:flex;flex-direction:column;
+    transition:.22s;box-shadow:0 5px 14px rgba(40,90,130,.06);
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 12px 25px rgba(40,90,130,.14)}
+.card.busur{border-color:#b8ddff;background:linear-gradient(180deg,#fff,#eef8ff)}
+.card.nilai{border-color:#d7c5ff;background:linear-gradient(180deg,#fff,#f7f1ff)}
+.card.komdekom{border-color:#ffd1e6;background:linear-gradient(180deg,#fff,#fff1f7)}
+.card.garis{border-color:#bde8c1;background:linear-gradient(180deg,#fff,#f2fff3)}
+.card.operasi{border-color:#ffd1a5;background:linear-gradient(180deg,#fff,#fff8ef)}
+.icon{
+    width:78px;height:78px;border-radius:22px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:44px;background:#eef6ff;margin-bottom:14px;
+}
+.card h2{font-size:20px;color:#263d68;margin-bottom:7px}
+.card p{font-size:13px;line-height:1.55;color:#68788b;flex:1}
+.badge{
+    position:absolute;right:14px;top:14px;
+    background:#36a935;color:white;font-size:10px;
+    padding:6px 9px;border-radius:10px;font-weight:bold;
+}
+.open{
+    display:block;text-align:center;text-decoration:none;
+    color:white;background:#1877f2;
+    padding:11px;border-radius:14px;font-size:13px;font-weight:bold;
+    margin-top:15px;
+}
+.open:hover{filter:brightness(1.08);transform:scale(1.02)}
+.busur .open{background:#1877f2}
+.nilai .open{background:#7040d8}
+.komdekom .open{background:#ec3971}
+.garis .open{background:#35a83d}
+.operasi .open{background:#ef7d17}
+.coming{
+    opacity:.92;
+}
+.coming .open{
+    background:#aab6c4;cursor:default;
+}
+.info{
+    margin-top:28px;
+    background:#fff5ca;border:2px solid #ffdf64;
+    border-radius:20px;padding:17px;text-align:center;
+    color:#795600;font-weight:bold;font-size:14px;
+}
+.footer{text-align:center;margin-top:28px;color:#718096;font-size:12px}
+@media(max-width:850px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .hero h1{font-size:27px}
+}
+@media(max-width:600px){
+    .topbar{padding:10px 14px}
+    .brand{font-size:16px}
+    .brand-icon{font-size:24px}
+    .nav-btn{padding:9px 10px;font-size:11px}
+    .container{padding:18px 14px 40px}
+    .hero{padding:25px 22px}
+    .hero h1{font-size:24px}
+    .hero:after{font-size:25px}
+    .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <a class="brand" href="index.html">
+        <span class="brand-icon">🎓</span>
+        <span>FERLINK</span>
+    </a>
+
+    <div class="nav-actions">
+        <a class="nav-btn" href="index.html">🏠 Dashboard</a>
+        <a class="nav-btn" href="index.html#pembelajaran">← Kembali</a>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="breadcrumb">
+        🏠 FERLINK &nbsp;›&nbsp; 📚 Pembelajaran &nbsp;›&nbsp; 🔢 Matematika
+    </div>
+
+    <section class="hero">
+        <h1>🔢 Belajar <span>Matematika!</span></h1>
+        <p>
+            Selamat datang di ruang Matematika FERLINK.
+            Pilih media pembelajaran yang ingin kamu gunakan.
+            Yuk belajar sambil bermain dan mencoba! 🚀
+        </p>
+    </section>
+
+    <h2 class="section-title">⭐ Pilih Media Pembelajaran</h2>
+
+    <section class="grid">
+
+        <!-- BUSUR DERAJAT - SUDAH AKTIF -->
+        <article class="card busur">
+            <span class="badge">SIAP DIGUNAKAN</span>
+            <div class="icon">📐</div>
+            <h2>Busur Derajat Interaktif</h2>
+            <p>
+                Belajar mengenal, mengukur, dan memahami besar sudut
+                menggunakan busur derajat secara interaktif.
+            </p>
+            <a class="open"
+               href="aplikasi/busur_derajat_interaktif_Laptop_Android_IFP.html">
+                📐 Buka Busur Derajat →
+            </a>
+        </article>
+
+        <!-- NILAI TEMPAT - DISIAPKAN -->
+        <article class="card nilai">
+            <span class="badge">SIAP DIGUNAKAN</span>
+            <div class="icon">🔢</div>
+            <h2>Belajar Nilai Tempat</h2>
+            <p>
+                Media interaktif untuk mengenal satuan, puluhan,
+                ratusan, ribuan, hingga bilangan yang lebih besar.
+            </p>
+            <a class="open" href="aplikasi/lab-bilangan/index3.html">
+                🚀 Mulai Belajar
+            </a>
+        </article>
+
+<!-- KOMPOSISI & DEKOMPOSISI BILANGAN -->
+<article class="card komdekom">
+    <span class="badge">BARU!</span>
+    <div class="icon">🔢</div>
+    <h2>Komposisi & Dekomposisi</h2>
+    <p>
+        Belajar menyusun dan menguraikan bilangan
+        berdasarkan nilai tempat secara interaktif.
+    </p>
+    <a class="open" href="aplikasi/komdekom.html">
+        🔢 Mulai Belajar
+    </a>
+</article>
+
+<!-- PENGURANGAN BERSUSUN - BARU -->
+        <article class="card operasi">
+            <span class="badge">BARU!</span>
+            <div class="icon">➖</div>
+            <h2>Pengurangan Bersusun</h2>
+            <p>
+                Belajar pengurangan bersusun dengan teknik meminjam 
+                untuk jangkauan ribuan hingga ratus ribuan.
+            </p>
+            <a class="open" href="aplikasi/pengurangan.html">
+                ➖ Mulai Belajar
+            </a>
+        </article>
+
+        <!-- GARIS BILANGAN - DISIAPKAN -->
+        <article class="card garis coming">
+            <div class="icon">📏</div>
+            <h2>Garis Bilangan</h2>
+            <p>
+                Belajar memahami posisi dan urutan bilangan
+                melalui garis bilangan yang menarik.
+            </p>
+            <a class="open" href="#">
+                🚀 Segera Hadir
+            </a>
+        </article>
+
+        <!-- OPERASI HITUNG - DISIAPKAN -->
+        <article class="card operasi coming">
+            <div class="icon">➕</div>
+            <h2>Operasi Hitung</h2>
+            <p>
+                Latihan penjumlahan, pengurangan, perkalian,
+                dan pembagian dengan cara yang menyenangkan.
+            </p>
+            <a class="open" href="#">
+                🚀 Segera Hadir
+            </a>
+        </article>
+
+    </section>
+
+    <div class="info">
+        💡 Pilih salah satu media di atas untuk mulai belajar.
+        Media baru akan ditambahkan ke ruang Matematika FERLINK secara bertahap. 🌟
+    </div>
+
+    <div class="footer">
+        🎓 FERLINK — Media Pembelajaran Interaktif
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Komposisi &amp; Dekomposisi Bilangan — Kelas 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F6F0;
+    --paper-line:#E4E6DC;
+    --card:#FFFFFF;
+    --ink:#23262B;
+    --muted:#6B7280;
+
+    --ratusan-ribu:#2E3A73;
+    --puluhan-ribu:#3E63A8;
+    --ribuan:#2F9E6E;
+    --ratusan:#E8A33D;
+    --puluhan:#C9506B;
+    --satuan:#E8574A;
+
+    --good:#2F9E6E;
+    --bad:#D64545;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0/100% 42px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'Nunito', sans-serif;
+    font-size:17px;
+    line-height:1.55;
+    padding-bottom:40px;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    margin:0;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit;}
+
+  /* ---------- layout shells ---------- */
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px;}
+  section{padding:70px 0;}
+  .card{
+    background:var(--card);
+    border:1.5px solid var(--paper-line);
+    border-radius:18px;
+    box-shadow:0 1px 0 rgba(35,38,43,0.03);
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,246,240,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1.5px solid var(--paper-line);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px;}
+  .nav-brand{font-family:'Fredoka';font-weight:600;font-size:1.05rem;display:flex;align-items:center;gap:8px;}
+  .nav-brand .dot{width:10px;height:10px;border-radius:3px;background:var(--ribuan);display:inline-block;transform:rotate(6deg);}
+  .nav-links{display:flex;gap:4px;}
+  .nav-links button{
+    font-family:'Nunito';font-weight:700;font-size:0.88rem;color:var(--muted);
+    background:none;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;
+  }
+  .nav-links button:hover{background:var(--paper-line);color:var(--ink);}
+  .nav-links button.active{background:var(--ink);color:#fff;}
+
+  /* ---------- page switching ---------- */
+  .page{display:none;}
+  .page.active{display:block;}
+
+  /* ---------- hero ---------- */
+  .hero{padding-top:56px;padding-bottom:30px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Nunito';font-weight:800;font-size:0.78rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--ribuan);
+    background:#EAF6EF;border:1px solid #CBE8D6;padding:6px 12px;border-radius:100px;
+  }
+  .hero h1{font-size:2.6rem;line-height:1.12;margin-top:18px;max-width:680px;}
+  .hero p.lead{color:var(--muted);font-size:1.08rem;max-width:560px;margin-top:14px;}
+
+  /* signature machine visual */
+  .machine{margin-top:36px;display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap;}
+  .machine .blockstack{display:flex;flex-direction:column-reverse;gap:4px;height:130px;justify-content:flex-start;width:46px;}
+  .machine .blockstack .b{height:14px;border-radius:4px;opacity:0;animation:pop .5s ease forwards;}
+  @keyframes pop{from{opacity:0;transform:scaleY(0);}to{opacity:1;transform:scaleY(1);}}
+  .machine .label{font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;font-weight:700;}
+  .machine .col{display:flex;flex-direction:column;align-items:center;}
+  .screen-wrap{display:flex;align-items:center;gap:16px;}
+  .screen{
+    background:var(--ink);color:#DFF5E7;
+    font-family:'JetBrains Mono';font-weight:700;font-size:1.9rem;
+    padding:16px 26px;border-radius:12px;letter-spacing:.04em;
+    box-shadow:inset 0 0 0 3px #40454d;
+  }
+  .arrow{font-size:1.6rem;color:var(--muted);}
+
+  /* ---------- section headers ---------- */
+  .section-head{margin-bottom:30px;}
+  .section-head .kicker{font-weight:800;font-size:0.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--puluhan);}
+  .section-head h2{font-size:1.9rem;margin-top:6px;}
+  .section-head p{color:var(--muted);margin-top:8px;max-width:600px;}
+
+  /* ---------- concept examples ---------- */
+  .concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:760px){.concept-grid{grid-template-columns:1fr;}}
+  .concept-card{padding:24px;}
+  .concept-card h3{font-size:1.15rem;margin-bottom:6px;}
+  .concept-card .tag{display:inline-block;font-size:0.72rem;font-weight:800;padding:3px 9px;border-radius:100px;margin-bottom:12px;}
+  .tag.compose{background:#EAF6EF;color:var(--ribuan);}
+  .tag.decompose{background:#FBEDEC;color:var(--puluhan);}
+  .eq-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-family:'JetBrains Mono';font-weight:700;font-size:1.05rem;margin-top:14px;}
+  .chip{padding:5px 10px;border-radius:8px;color:#fff;font-size:0.95rem;}
+  .plus{color:var(--muted);font-weight:400;}
+
+  /* ---------- builder ---------- */
+  .level-toggle{display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap;}
+  .level-toggle button{
+    font-family:'Nunito';font-weight:700;font-size:0.85rem;
+    padding:9px 16px;border-radius:100px;border:1.5px solid var(--paper-line);
+    background:var(--card);cursor:pointer;color:var(--muted);
+  }
+  .level-toggle button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .builder{padding:28px;}
+  .builder-cols{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+  .pv-col{display:flex;flex-direction:column;align-items:center;gap:12px;width:118px;}
+  .pv-col .name{font-size:0.72rem;font-weight:800;color:var(--muted);text-align:center;height:28px;}
+  .stepper-row{display:flex;align-items:center;gap:8px;}
+  .stepper-row button{
+    width:32px;height:32px;flex:none;border-radius:9px;border:1.5px solid var(--paper-line);
+    background:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;color:var(--ink);
+  }
+  .stepper-row button:hover{background:var(--paper-line);}
+  .value-chip{
+    font-family:'JetBrains Mono';font-weight:700;font-size:1.15rem;
+    min-width:82px;padding:13px 8px;border-radius:11px;text-align:center;
+    color:#fff;transition:background .15s ease,color .15s ease,box-shadow .15s ease;
+    cursor:pointer;box-shadow:0 0 0 3px transparent;
+  }
+  .value-chip.zero{background:var(--paper-line)!important;color:var(--muted);}
+  .value-chip.selected{box-shadow:0 0 0 3px var(--ink);}
+  .col-plus{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .col-plus .spacer{height:28px;}
+  .col-plus .plus-mark{
+    font-family:'JetBrains Mono';font-weight:700;font-size:1.3rem;color:var(--muted);
+    padding:13px 0;
+  }
+  .builder-hint{color:var(--muted);font-size:0.82rem;text-align:center;margin-top:12px;font-weight:700;}
+
+  .builder-readout{margin-top:34px;text-align:center;}
+  .builder-question{color:var(--muted);font-size:0.9rem;font-weight:700;margin-bottom:14px;}
+  .builder-readout .screen{display:inline-block;font-size:2.1rem;}
+  .builder-input{
+    border:none;outline:none;text-align:center;width:220px;max-width:80vw;
+    cursor:pointer;caret-color:transparent;border-radius:12px;
+    box-shadow:inset 0 0 0 3px #40454d;
+  }
+  .builder-input.selected{box-shadow:inset 0 0 0 3px #40454d,0 0 0 3px var(--ink);}
+  .builder-input::placeholder{color:#8a9099;opacity:.6;}
+  .keypad{
+    display:grid;grid-template-columns:repeat(3,64px);gap:10px;
+    justify-content:center;margin:22px auto 4px;
+  }
+  .keypad button{
+    font-family:'JetBrains Mono';font-weight:700;font-size:1.3rem;
+    height:56px;border-radius:12px;border:1.5px solid var(--paper-line);
+    background:#fff;cursor:pointer;color:var(--ink);
+  }
+  .keypad button:hover{background:var(--paper-line);}
+  .keypad button.key-clear{color:var(--bad);}
+  .keypad button.key-back{color:var(--muted);font-size:1.15rem;}
+
+  /* ---------- decompose ---------- */
+  .decompose-card{padding:28px;}
+  .target-number{text-align:center;margin-bottom:26px;}
+  .target-number .screen{font-size:2.3rem;}
+  .target-number .sub{color:var(--muted);font-size:0.85rem;margin-top:10px;font-weight:700;}
+  .decompose-inputs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .di-field{display:flex;flex-direction:column;align-items:center;gap:8px;width:112px;}
+  .di-field label{font-size:0.72rem;font-weight:800;color:var(--muted);text-align:center;height:26px;}
+  .di-input-row{display:flex;align-items:center;gap:5px;width:100%;}
+  .di-input-row .plus-sign{font-family:'JetBrains Mono';font-weight:700;font-size:1rem;color:var(--muted);}
+  .di-field input{
+    width:100%;text-align:center;font-family:'JetBrains Mono';font-weight:700;font-size:1rem;
+    padding:9px 4px;border-radius:9px;border:1.5px solid var(--paper-line);
+  }
+  .di-field input:focus{outline:2px solid var(--ribuan);outline-offset:1px;}
+  .decompose-actions{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Nunito';font-weight:800;font-size:0.9rem;padding:11px 20px;border-radius:11px;
+    border:none;cursor:pointer;
+  }
+  .btn-primary{background:var(--ribuan);color:#fff;}
+  .btn-primary:hover{background:#268a5f;}
+  .btn-ghost{background:var(--paper);border:1.5px solid var(--paper-line);color:var(--ink);}
+  .btn-ghost:hover{background:var(--paper-line);}
+  .feedback{text-align:center;margin-top:18px;font-weight:800;min-height:26px;}
+  .feedback.good{color:var(--good);}
+  .feedback.bad{color:var(--bad);}
+
+  /* ---------- quiz ---------- */
+  .quiz-card{padding:28px;}
+  .quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+  .quiz-progress{font-weight:800;font-size:0.85rem;color:var(--muted);}
+  .quiz-score{font-weight:800;font-size:0.85rem;background:#EAF6EF;color:var(--ribuan);padding:6px 12px;border-radius:100px;}
+  .progress-bar{height:6px;background:var(--paper-line);border-radius:100px;overflow:hidden;margin-bottom:26px;}
+  .progress-bar .fill{height:100%;background:var(--ribuan);width:0%;transition:width .3s ease;}
+  .quiz-question{font-family:'Fredoka';font-weight:600;font-size:1.25rem;text-align:center;margin-bottom:24px;line-height:1.4;}
+  .quiz-question .qnum{font-family:'Nunito';font-weight:800;font-size:0.78rem;color:var(--puluhan);display:block;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+  .quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.quiz-options{grid-template-columns:1fr;}}
+  .qopt{
+    font-family:'JetBrains Mono';font-weight:700;font-size:1.05rem;
+    padding:16px;border-radius:12px;border:1.5px solid var(--paper-line);background:#fff;
+    cursor:pointer;text-align:center;
+  }
+  .qopt:hover{border-color:var(--ribuan);}
+  .qopt.correct{background:#EAF6EF;border-color:var(--good);color:var(--good);}
+  .qopt.wrong{background:#FBEDEC;border-color:var(--bad);color:var(--bad);}
+  .qopt[disabled]{cursor:default;}
+  .quiz-footer{display:flex;justify-content:center;margin-top:24px;}
+  .quiz-done{text-align:center;}
+  .quiz-done .big-score{font-family:'Fredoka';font-size:2.6rem;margin:10px 0;}
+  .quiz-done p{color:var(--muted);}
+
+  footer{margin-top:20px;}
+  footer .wrap{color:var(--muted);font-size:0.85rem;text-align:center;padding-top:20px;border-top:1px solid var(--paper-line);}
+
+/* ---------- floating navigation FERLINK ---------- */
+.floating-nav{
+  position:fixed;
+  top:14px;
+  left:14px;
+  z-index:9999;
+  display:flex;
+  gap:8px;
+}
+
+.floating-nav a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  font-family:'Nunito',sans-serif;
+  font-weight:800;
+  font-size:0.82rem;
+  padding:9px 13px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.94);
+  color:var(--ink);
+  border:1.5px solid var(--paper-line);
+  box-shadow:0 3px 12px rgba(35,38,43,0.12);
+  backdrop-filter:blur(6px);
+  transition:.2s ease;
+}
+
+.floating-nav a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(35,38,43,0.16);
+}
+
+.floating-nav .ferlink-btn{
+  background:#1877f2;
+  color:#fff;
+  border-color:#1877f2;
+}
+
+.floating-nav .math-btn{
+  background:#7040d8;
+  color:#fff;
+  border-color:#7040d8;
+}
+
+@media(max-width:600px){
+  .floating-nav{
+    top:10px;
+    left:10px;
+    gap:5px;
+  }
+
+  .floating-nav a{
+    font-size:0.72rem;
+    padding:8px 10px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- FLOATING NAVIGATION -->
+<div class="floating-nav">
+  <a href="../index.html" class="ferlink-btn">
+    🏠 Ferlink
+  </a>
+
+  <a href="../matematika.html" class="math-btn">
+    ➗ Matematika
+  </a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-brand"><span class="dot"></span>Bilangan Kelas 5</div>
+    <div class="nav-links" id="navLinks">
+      <button data-page="konsep" class="active" onclick="showPage('konsep')">Konsep</button>
+      <button data-page="bangun" onclick="showPage('bangun')">Bangun</button>
+      <button data-page="urai" onclick="showPage('urai')">Urai</button>
+      <button data-page="kuis" onclick="showPage('kuis')">Kuis</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="heroBanner">
+  <div class="wrap">
+    <span class="eyebrow">Matematika · Kelas 5 SD</span>
+    <h1>Komposisi &amp; Dekomposisi Bilangan</h1>
+    <p class="lead">Belajar menyusun bilangan dari nilai tempatnya, dan mengurai bilangan menjadi ribuan, ratusan, puluhan, dan satuan — lengkap dengan alat peraga interaktif dan kuis.</p>
+
+    <div class="screen-wrap" style="margin-top:30px;">
+      <div class="machine" id="heroMachine"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= KONSEP ================= -->
+<section id="konsep" class="page active">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">01 · Konsep</div>
+      <h2>Dua arah, satu ide</h2>
+      <p>Setiap bilangan tersusun dari beberapa nilai tempat. Komposisi menggabungkannya menjadi satu bilangan utuh, dekomposisi menguraikannya kembali.</p>
+    </div>
+
+    <div class="concept-grid">
+      <div class="card concept-card">
+        <span class="tag compose">Komposisi</span>
+        <h3>Menggabungkan nilai tempat</h3>
+        <p style="color:var(--muted);">Beberapa nilai tempat digabung menjadi satu bilangan.</p>
+        <div class="eq-row">
+          <span class="chip" style="background:var(--ribuan);">3.000</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--ratusan);">400</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--puluhan);">20</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--satuan);">5</span>
+          <span class="plus">=</span>
+          <span class="chip" style="background:var(--ink);">3.425</span>
+        </div>
+      </div>
+
+      <div class="card concept-card">
+        <span class="tag decompose">Dekomposisi</span>
+        <h3>Menguraikan bilangan</h3>
+        <p style="color:var(--muted);">Satu bilangan diuraikan menjadi nilai tempat penyusunnya.</p>
+        <div class="eq-row">
+          <span class="chip" style="background:var(--ink);">3.425</span>
+          <span class="plus">=</span>
+          <span class="chip" style="background:var(--ribuan);">3.000</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--ratusan);">400</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--puluhan);">20</span><span class="plus">+</span>
+          <span class="chip" style="background:var(--satuan);">5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BANGUN (COMPOSITION BUILDER) ================= -->
+<section id="bangun" class="page">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">02 · Latihan</div>
+      <h2>Komposisi-Menggabungkan Bilangan</h2>
+      <p>Setiap kolom sudah otomatis menampilkan nilai angkanya. Ketuk salah satu kolom untuk mengubah nilai angkanya sendiri, atau ketuk kolom hitam untuk mengisi jawaban — keduanya memakai papan angka di bawah.</p>
+    </div>
+
+    <div class="level-toggle" id="levelToggleBuild"></div>
+
+    <div class="card builder">
+      <div class="builder-cols" id="builderCols"></div>
+      <div class="builder-readout">
+        <div class="builder-question">Berapa hasil penjumlahan semua nilai angka di atas?</div>
+        <input class="screen mono builder-input" id="builderInput" type="text" readonly placeholder="?" onclick="selectTarget('answer')">
+        <div class="keypad">
+          <button onclick="keypadPress('1')">1</button>
+          <button onclick="keypadPress('2')">2</button>
+          <button onclick="keypadPress('3')">3</button>
+          <button onclick="keypadPress('4')">4</button>
+          <button onclick="keypadPress('5')">5</button>
+          <button onclick="keypadPress('6')">6</button>
+          <button onclick="keypadPress('7')">7</button>
+          <button onclick="keypadPress('8')">8</button>
+          <button onclick="keypadPress('9')">9</button>
+          <button class="key-clear" onclick="keypadPress('C')">C</button>
+          <button onclick="keypadPress('0')">0</button>
+          <button class="key-back" onclick="keypadPress('back')">⌫</button>
+        </div>
+        <div class="feedback" id="builderFeedback"></div>
+        <div class="decompose-actions">
+          <button class="btn btn-primary" onclick="checkBuilder()">Periksa Jawaban</button>
+          <button class="btn btn-ghost" onclick="renderBuilder()">Angka Baru</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= URAI (DECOMPOSITION) ================= -->
+<section id="urai" class="page">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">03 · Latihan</div>
+      <h2>Dekomposisi-Uraikan bilangan ini</h2>
+      <p>Bilangan di bawah tersusun dari beberapa nilai angka. Isi nilai angka pada tiap kolom (bukan hanya angkanya), lalu periksa jawabanmu.</p>
+    </div>
+
+    <div class="level-toggle" id="levelToggleUrai"></div>
+
+    <div class="card decompose-card">
+      <div class="target-number">
+        <div class="screen mono" id="uraiTarget">0</div>
+        <div class="sub">Uraikan bilangan di atas menjadi nilai angka penyusunnya. Contoh: pada 3.425, nilai angka ratusannya adalah 400.</div>
+      </div>
+      <div class="decompose-inputs" id="uraiInputs"></div>
+      <div class="feedback" id="uraiFeedback"></div>
+      <div class="decompose-actions">
+        <button class="btn btn-primary" onclick="checkDecompose()">Periksa Jawaban</button>
+        <button class="btn btn-ghost" onclick="newDecomposeTarget()">Bilangan Baru</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KUIS ================= -->
+<section id="kuis" class="page">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">04 · Kuis</div>
+      <h2>Uji pemahamanmu</h2>
+      <p>10 soal campuran komposisi dan dekomposisi. Pilih jawaban yang benar.</p>
+    </div>
+
+    <div class="card quiz-card" id="quizCard">
+      <div class="quiz-top">
+        <div class="quiz-progress" id="quizProgress">Soal 1 / 10</div>
+        <div class="quiz-score" id="quizScore">Skor: 0</div>
+      </div>
+      <div class="progress-bar"><div class="fill" id="quizFill"></div></div>
+      <div id="quizBody"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">2026-Ferlink By Robie Ferli-All Right Reserved — Matematika Kelas 5.</div>
+</footer>
+
+<script>
+/* ================= shared helpers ================= */
+const PV_ALL = [100000,10000,1000,100,10,1];
+const PV_NAME = {100000:'Ratusan Ribu',10000:'Puluhan Ribu',1000:'Ribuan',100:'Ratusan',10:'Puluhan',1:'Satuan'};
+const PV_COLOR = {100000:'var(--ratusan-ribu)',10000:'var(--puluhan-ribu)',1000:'var(--ribuan)',100:'var(--ratusan)',10:'var(--puluhan)',1:'var(--satuan)'};
+function fmt(n){ return n.toLocaleString('id-ID'); }
+function pvForLevel(level){ // level = number of digits: 4,5,6
+  return PV_ALL.slice(PV_ALL.length - level);
+}
+
+/* ================= hero machine (decorative) ================= */
+(function(){
+  const el = document.getElementById('heroMachine');
+  const demo = {1000:3,100:4,10:2,1:5};
+  let html = '';
+  PV_ALL.slice(2).forEach((pv,i)=>{
+    const count = demo[pv];
+    let blocks = '';
+    for(let b=0;b<count;b++){
+      blocks += `<div class="b" style="background:${PV_COLOR[pv]};animation-delay:${(i*4+b)*0.06}s"></div>`;
+    }
+    html += `<div class="col"><div class="blockstack">${blocks}</div><div class="label">${PV_NAME[pv]}</div></div>`;
+  });
+  html += `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:130px;"><span class="arrow" style="margin-bottom:34px;">→</span></div>`;
+  html += `<div class="col"><div class="screen" style="font-size:1.6rem;">3.425</div></div>`;
+  el.innerHTML = html;
+})();
+
+/* ================= BUILDER (composition) ================= */
+let buildLevel = 4;
+let buildValues = {};
+let buildCorrectTotal = 0;
+let buildInputStr = '';
+let activeTarget = 'answer'; // 'answer' or a place-value number (pv)
+
+function initBuildToggle(){
+  const wrap = document.getElementById('levelToggleBuild');
+  wrap.innerHTML = '';
+  [[4,'Ribuan (4 angka)'],[5,'Puluhan Ribu (5 angka)'],[6,'Ratusan Ribu (6 angka)']].forEach(([lvl,label])=>{
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.className = lvl===buildLevel ? 'active' : '';
+    b.onclick = ()=>{ buildLevel = lvl; renderBuilder(); initBuildToggle(); };
+    wrap.appendChild(b);
+  });
+}
+
+function renderBuilder(){
+  const pvs = pvForLevel(buildLevel);
+  buildValues = {};
+  buildCorrectTotal = 0;
+  pvs.forEach(pv=>{
+    const digit = randInt(1,9);
+    buildValues[pv] = digit;
+    buildCorrectTotal += digit * pv;
+  });
+
+  const cols = document.getElementById('builderCols');
+  cols.innerHTML = '';
+  pvs.forEach((pv, idx)=>{
+    const col = document.createElement('div');
+    col.className = 'pv-col';
+    col.innerHTML = `
+      <div class="name">${PV_NAME[pv]}</div>
+      <div class="value-chip" id="chip-${pv}" style="background:${PV_COLOR[pv]}" onclick="selectTarget(${pv})">${fmt(buildValues[pv]*pv)}</div>`;
+    cols.appendChild(col);
+
+    if(idx < pvs.length - 1){
+      const plus = document.createElement('div');
+      plus.className = 'col-plus';
+      plus.innerHTML = `<div class="spacer"></div><div class="plus-mark">+</div>`;
+      cols.appendChild(plus);
+    }
+  });
+
+  buildInputStr = '';
+  document.getElementById('builderInput').value = '';
+  const fb = document.getElementById('builderFeedback');
+  fb.textContent = '';
+  fb.className = 'feedback';
+
+  selectTarget('answer');
+}
+
+function selectTarget(target){
+  activeTarget = target;
+  document.querySelectorAll('.value-chip').forEach(el => el.classList.remove('selected'));
+  document.getElementById('builderInput').classList.remove('selected');
+  if(target === 'answer'){
+    document.getElementById('builderInput').classList.add('selected');
+  } else {
+    const chip = document.getElementById(`chip-${target}`);
+    if(chip) chip.classList.add('selected');
+  }
+}
+
+function keypadPress(key){
+  if(activeTarget === 'answer'){
+    if(key === 'C'){
+      buildInputStr = '';
+    } else if(key === 'back'){
+      buildInputStr = buildInputStr.slice(0, -1);
+    } else if(buildInputStr.length < 7){
+      buildInputStr += key;
+    }
+    document.getElementById('builderInput').value = buildInputStr;
+  } else {
+    const pv = activeTarget;
+    if(key === 'C' || key === 'back'){
+      buildValues[pv] = 0;
+    } else {
+      buildValues[pv] = parseInt(key, 10);
+    }
+    buildCorrectTotal = 0;
+    Object.keys(buildValues).forEach(k => { buildCorrectTotal += buildValues[k] * Number(k); });
+    document.getElementById(`chip-${pv}`).textContent = fmt(buildValues[pv] * pv);
+    // nilai berubah, minta siswa mengisi ulang jawabannya
+    buildInputStr = '';
+    document.getElementById('builderInput').value = '';
+  }
+  const fb = document.getElementById('builderFeedback');
+  fb.textContent = '';
+  fb.className = 'feedback';
+}
+
+function checkBuilder(){
+  const val = parseInt(buildInputStr || 'NaN', 10);
+  const fb = document.getElementById('builderFeedback');
+  if(val === buildCorrectTotal){
+    fb.textContent = 'Benar! Semua nilai angka sudah tepat dijumlahkan.';
+    fb.className = 'feedback good';
+  } else {
+    fb.textContent = 'Belum tepat, coba jumlahkan lagi tiap nilai angka di atas.';
+    fb.className = 'feedback bad';
+  }
+}
+
+/* ================= URAI (decomposition) ================= */
+let uraiLevel = 4;
+let uraiTarget = 0;
+let uraiPvs = [];
+
+function initUraiToggle(){
+  const wrap = document.getElementById('levelToggleUrai');
+  wrap.innerHTML = '';
+  [[4,'Ribuan (4 angka)'],[5,'Puluhan Ribu (5 angka)'],[6,'Ratusan Ribu (6 angka)']].forEach(([lvl,label])=>{
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.className = lvl===uraiLevel ? 'active' : '';
+    b.onclick = ()=>{ uraiLevel = lvl; newDecomposeTarget(); initUraiToggle(); };
+    wrap.appendChild(b);
+  });
+}
+
+function newDecomposeTarget(){
+  uraiPvs = pvForLevel(uraiLevel);
+  const min = uraiPvs[0]; // largest place value, e.g. 1000 for level 4
+  const max = min * 10 - 1;
+  uraiTarget = Math.floor(Math.random() * (max - min + 1)) + min;
+  document.getElementById('uraiTarget').textContent = fmt(uraiTarget);
+  document.getElementById('uraiFeedback').textContent = '';
+  document.getElementById('uraiFeedback').className = 'feedback';
+
+  const inputs = document.getElementById('uraiInputs');
+  inputs.innerHTML = '';
+  uraiPvs.forEach((pv, idx)=>{
+    const f = document.createElement('div');
+    f.className = 'di-field';
+    const plusHtml = idx === 0 ? '' : '<span class="plus-sign">+</span>';
+    f.innerHTML = `<label>${PV_NAME[pv]}</label><div class="di-input-row">${plusHtml}<input type="number" min="0" max="${9*pv}" step="${pv}" id="in-${pv}" placeholder="0"></div>`;
+    inputs.appendChild(f);
+  });
+}
+
+function checkDecompose(){
+  let ok = true;
+  let n = uraiTarget;
+  uraiPvs.forEach(pv=>{
+    const digit = Math.floor(n / pv) % 10;
+    const nilaiAngka = digit * pv;
+    const val = parseInt(document.getElementById(`in-${pv}`).value || '0', 10);
+    if(val !== nilaiAngka) ok = false;
+  });
+  const fb = document.getElementById('uraiFeedback');
+  if(ok){
+    fb.textContent = 'Benar! Semua nilai angka sudah tepat.';
+    fb.className = 'feedback good';
+  } else {
+    fb.textContent = 'Belum tepat, coba periksa lagi tiap nilai angkanya (ingat: bukan cuma angkanya, tapi nilainya).';
+    fb.className = 'feedback bad';
+  }
+}
+
+/* ================= KUIS ================= */
+let quizQuestions = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function makeComposeQuestion(){
+  const level = [4,5,6][randInt(0,2)];
+  const pvs = pvForLevel(level);
+  const min = pvs[0];
+  const target = randInt(min, min*10-1);
+  const parts = pvs.map(pv=>{
+    const d = Math.floor(target/pv)%10;
+    return d>0 ? `${fmt(d*pv)}` : null;
+  }).filter(Boolean);
+  const prompt = `${parts.join(' + ')} = ...?`;
+  const options = new Set([target]);
+  while(options.size < 4){
+    const delta = randInt(1,90) * (Math.random()<0.5?-1:1);
+    const alt = target + delta;
+    if(alt > 0) options.add(alt);
+  }
+  return { prompt, options: shuffle([...options]), answer: target };
+}
+
+function makeDecomposeQuestion(){
+  const level = [4,5,6][randInt(0,2)];
+  const pvs = pvForLevel(level);
+  const min = pvs[0];
+  const target = randInt(min, min*10-1);
+  const pv = pvs[randInt(0,pvs.length-1)];
+  const digit = Math.floor(target/pv)%10;
+  const correct = digit*pv;
+  const prompt = `Pada bilangan <b>${fmt(target)}</b>, berapa nilai angka pada tempat <b>${PV_NAME[pv]}</b>?`;
+  const options = new Set([correct]);
+  while(options.size < 4){
+    const altDigit = randInt(0,9);
+    const alt = altDigit*pv;
+    if(alt !== correct || options.size===0) options.add(alt);
+    if(options.size>=4) break;
+  }
+  // ensure exactly 4 unique, fill more if needed
+  while(options.size < 4){ options.add(randInt(1,9)*pv); }
+  return { prompt, options: shuffle([...options]).slice(0,4).includes(correct) ? shuffle([...options]) : shuffle([...[...options].slice(0,3), correct]), answer: correct };
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function buildQuiz(){
+  quizQuestions = [];
+  for(let i=0;i<10;i++){
+    quizQuestions.push(i%2===0 ? makeComposeQuestion() : makeDecomposeQuestion());
+  }
+  quizIndex = 0;
+  quizScore = 0;
+  renderQuiz();
+}
+
+function renderQuiz(){
+  document.getElementById('quizProgress').textContent = `Soal ${quizIndex+1} / ${quizQuestions.length}`;
+  document.getElementById('quizScore').textContent = `Skor: ${quizScore}`;
+  document.getElementById('quizFill').style.width = `${(quizIndex/quizQuestions.length)*100}%`;
+
+  const body = document.getElementById('quizBody');
+
+  if(quizIndex >= quizQuestions.length){
+    document.getElementById('quizFill').style.width = `100%`;
+    body.innerHTML = `
+      <div class="quiz-done">
+        <div style="color:var(--muted);font-weight:800;font-size:0.85rem;text-transform:uppercase;">Selesai</div>
+        <div class="big-score">${quizScore} / ${quizQuestions.length}</div>
+        <p>${quizScore>=8?'Kerja bagus, kamu sudah sangat menguasai materi ini!':quizScore>=5?'Sudah cukup baik, terus berlatih ya!':'Yuk coba lagi, latih lagi bagian Bangun dan Urai di atas.'}</p>
+        <button class="btn btn-primary" style="margin-top:10px;" onclick="buildQuiz()">Coba Lagi</button>
+      </div>`;
+    return;
+  }
+
+  const q = quizQuestions[quizIndex];
+  quizAnswered = false;
+  body.innerHTML = `
+    <div class="quiz-question"><span class="qnum">Soal ${quizIndex+1}</span>${q.prompt}</div>
+    <div class="quiz-options">
+      ${q.options.map(opt => `<button class="qopt" data-val="${opt}" onclick="answerQuiz(this, ${q.answer})">${fmt(opt)}</button>`).join('')}
+    </div>
+    <div class="quiz-footer"><button class="btn btn-ghost" id="nextBtn" style="visibility:hidden;" onclick="nextQuiz()">Soal Berikutnya →</button></div>
+  `;
+}
+
+function answerQuiz(btn, answer){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const val = parseInt(btn.dataset.val, 10);
+  const opts = document.querySelectorAll('.qopt');
+  opts.forEach(o=>{
+    o.disabled = true;
+    if(parseInt(o.dataset.val,10) === answer) o.classList.add('correct');
+  });
+  if(val === answer){
+    quizScore++;
+  } else {
+    btn.classList.add('wrong');
+  }
+  document.getElementById('quizScore').textContent = `Skor: ${quizScore}`;
+  document.getElementById('nextBtn').style.visibility = 'visible';
+}
+
+function nextQuiz(){
+  quizIndex++;
+  renderQuiz();
+}
+
+/* ================= page switching ================= */
+const PAGE_IDS = ['konsep','bangun','urai','kuis'];
+function showPage(id){
+  if(!PAGE_IDS.includes(id)) id = 'konsep';
+  PAGE_IDS.forEach(pid=>{
+    document.getElementById(pid).classList.toggle('active', pid === id);
+  });
+  document.querySelectorAll('#navLinks button').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.page === id);
+  });
+  document.getElementById('heroBanner').style.display = (id === 'konsep') ? '' : 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+  history.replaceState(null, '', '#' + id);
+}
+
+/* ================= init ================= */
+initBuildToggle(); renderBuilder();
+initUraiToggle(); newDecomposeTarget();
+buildQuiz();
+showPage((location.hash || '#konsep').slice(1));
+</script>
+
+</body>
+</html>

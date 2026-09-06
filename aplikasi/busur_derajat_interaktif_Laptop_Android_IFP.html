@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aplikasi Pembelajaran Sudut & Busur Derajat Interaktif</title>
+    <!-- Font Google Ceria untuk Anak SD -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        
+        body { 
+            font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif; 
+            overflow: hidden; 
+            /* Latar belakang papan tulis / kertas bergaris ceria */
+            background-color: #f0f8ff; 
+            background-image: 
+                radial-gradient(#e0eec6 2px, transparent 2px),
+                linear-gradient(to right, #e8f4f8 1px, transparent 1px),
+                linear-gradient(to bottom, #e8f4f8 1px, transparent 1px);
+            background-size: 30px 30px, 20px 20px, 20px 20px;
+        }
+
+        /* Toolbar Utama yang Ramah Anak */
+        #toolbar {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            padding: 12px 24px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 4px solid #4ea8de;
+            z-index: 100;
+        }
+
+        .btn {
+            background: #f1f2f6;
+            border: 3px solid #ced6e0;
+            color: #2f3542;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #ced6e0;
+        }
+
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #ced6e0;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #ced6e0;
+        }
+
+        /* Variasi Warna Tombol Mode Aktif */
+        #btnPointer.active { background: #ff7675; border-color: #d63031; color: white; box-shadow: 0 4px 0 #d63031; }
+        #btnPen.active     { background: #fdcb6e; border-color: #e17055; color: white; box-shadow: 0 4px 0 #e17055; }
+        #btnLine.active    { background: #55efc4; border-color: #00b894; color: white; box-shadow: 0 4px 0 #00b894; }
+
+        .divider {
+            width: 3px;
+            height: 32px;
+            background-color: #dfe6e9;
+            border-radius: 2px;
+            margin: 0 4px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2d3436;
+            font-size: 15px;
+            font-weight: 600;
+            background: #eccc68;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 2px solid #ffa502;
+        }
+
+        input[type="range"] {
+            accent-color: #ff4757;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            border: 3px solid #dfe6e9;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: transparent;
+            transition: transform 0.2s;
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.15);
+        }
+
+        /* Canvas */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            touch-action: none;
+        }
+
+        /* Busur Container */
+        #protractor-container {
+            position: absolute;
+            top: 200px;
+            left: 300px;
+            width: 360px;
+            height: 190px;
+            z-index: 10;
+            cursor: move;
+            transform-origin: 180px 180px;
+            touch-action: none;
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15));
+        }
+
+        /* Handle Rotasi Busur */
+        #rotate-handle {
+            position: absolute;
+            top: -28px;
+            left: 166px;
+            width: 28px;
+            height: 28px;
+            background: #ff4757;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: grab;
+            touch-action: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 12;
+            transition: transform 0.2s;
+        }
+
+        #rotate-handle:hover {
+            transform: scale(1.2);
+        }
+
+        /* Handle Resize Busur */
+        #resize-handle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: #1e90ff;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            touch-action: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            z-index: 12;
+            transition: transform 0.2s;
+        }
+
+        #resize-handle:hover {
+            transform: scale(1.2);
+        }
+
+/* Elemen Copyright Pojok Kiri Bawah */
+#copyright-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 15px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #333333;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #b0bec5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000; /* Memastikan tetap berada di atas peta */
+    pointer-events: none; /* Agar tidak mengganggu klik/geser pada peta */
+}
+
+
+        /* ===== Navigasi FERLINK ===== */
+        #ferlink-nav {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 2000;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        #ferlink-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            background: #ffffff;
+            color: #24527a;
+            border: 3px solid #4ea8de;
+            border-radius: 18px;
+            padding: 9px 14px;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 4px 0 #b7dff4;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+        #ferlink-nav a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #b7dff4;
+        }
+        #ferlink-nav a:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b7dff4;
+        }
+        @media (max-width: 800px) {
+            #ferlink-nav {
+                top: 8px;
+                left: 8px;
+            }
+            #ferlink-nav a {
+                min-height: 44px;
+                padding: 8px 11px;
+                font-size: 13px;
+            }
+        }
+
+        /* ===== Responsif Laptop + Android + IFP ===== */
+        html, body {
+            width: 100%;
+            height: 100%;
+            overscroll-behavior: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        @media (max-width: 800px) {
+            #toolbar {
+                left: 8px;
+                right: 8px;
+                bottom: max(8px, env(safe-area-inset-bottom));
+                transform: none;
+                width: auto;
+                padding: 8px;
+                gap: 6px;
+                border-width: 3px;
+                border-radius: 22px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            #toolbar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .btn {
+                flex: 0 0 auto;
+                padding: 10px 12px;
+                font-size: 13px;
+                min-height: 44px;
+            }
+
+            .divider {
+                flex: 0 0 3px;
+                height: 30px;
+            }
+
+            input[type="color"] {
+                flex: 0 0 42px;
+                width: 42px;
+                height: 42px;
+            }
+
+            .slider-container {
+                flex: 0 0 auto;
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+
+            #copyright-tag {
+                bottom: calc(78px + env(safe-area-inset-bottom));
+                left: 8px;
+                font-size: 11px;
+                padding: 5px 9px;
+            }
+        }
+
+        @media (min-width: 801px) {
+            #toolbar {
+                max-width: calc(100vw - 30px);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Canvas Coretan & Garis Lurus -->
+
+    <!-- Navigasi FERLINK -->
+    <nav id="ferlink-nav" aria-label="Navigasi FERLINK">
+        <a href="../matematika.html">← Matematika</a>
+        <a href="../index.html" title="Kembali ke dashboard FERLINK">🏠 FERLINK</a>
+        
+    </nav>
+
+    <canvas id="paintCanvas"></canvas>
+
+    <!-- Busur Derajat (SVG Container) -->
+    <div id="protractor-container">
+        <div id="rotate-handle" title="Putar Busur">🔄</div>
+        <div id="resize-handle" title="Tarik untuk Ubah Ukuran Busur">🔍</div>
+        <svg id="protractorSvg" width="360" height="190" viewBox="0 0 360 190">
+            <!-- Background Transparan Busur Ceria -->
+            <path d="M 10 180 A 170 170 0 0 1 350 180 Z" fill="rgba(255, 255, 255, 0.75)" stroke="#4ea8de" stroke-width="4"/>
+            
+            <!-- Garis Garis Derajat dan Teks Skala -->
+            <g id="ticks" stroke="#2d3436" stroke-width="1"></g>
+
+
+
+            <!-- Titik Pusat dan Base Line -->
+            <line x1="10" y1="180" x2="350" y2="180" stroke="#ff4757" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="180" cy="180" r="7" fill="#ff4757" stroke="white" stroke-width="2"/>
+        </svg>
+    </div>
+
+<!-- 1. SISIPKAN KODE COPYRIGHT DI SINI -->
+        <div id="copyright-tag">
+            © 2026 Robie Ferli. All Rights Reserved.
+        </div>
+
+    <!-- Toolbar Bawah Ceria -->
+    <div id="toolbar">
+        <button class="btn active" id="btnPointer" onclick="setMode('pointer')">👆 Geser Busur</button>
+        <button class="btn" id="btnPen" onclick="setMode('pen')">✏️ Coretan Pen</button>
+        <button class="btn" id="btnLine" onclick="setMode('line')">📏 Garis Lurus</button>
+        
+        <div class="divider"></div>
+
+        <input type="color" id="penColor" value="#ff4757" title="Ubah Warna">
+        
+        <div class="slider-container">
+            <span>📏 Ukuran Busur:</span>
+            <input type="range" id="scaleSlider" min="0.5" max="2.0" step="0.05" value="1.0" style="width: 80px;">
+        </div>
+
+        <div class="divider"></div>
+
+        <button class="btn" style="background: #ff7675; color: white; border-color: #d63031;" onclick="clearCanvas()">🗑️ Hapus Gambar</button>
+        <button class="btn" style="background: #74b9ff; color: white; border-color: #0984e3;" onclick="resetProtractor()">🔄 Reset Busur</button>
+    </div>
+
+    <script>
+        // Setup Canvas
+        // Versi ini menggunakan Pointer Events agar mouse, touch, dan stylus
+        // bekerja dengan mekanisme yang sama di laptop, Android, dan IFP.
+        const canvas = document.getElementById('paintCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let canvasSnapshot;
+
+        function resizeCanvas() {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(canvas, 0, 0);
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // State Aplikasi
+        let currentMode = 'pointer'; 
+        let isDrawing = false;
+        let startPointX = 0, startPointY = 0;
+        let penColor = '#ff4757';
+
+        // Elemen Busur
+        const protractor = document.getElementById('protractor-container');
+        const rotateHandle = document.getElementById('rotate-handle');
+        const resizeHandle = document.getElementById('resize-handle');
+        const scaleSlider = document.getElementById('scaleSlider');
+
+        let posX = 300, posY = 200, angle = 0, scale = 1.0;
+        let isDragging = false, isRotating = false, isResizing = false;
+        let startX, startY, initialScale = 1.0;
+
+        // --- Render Skala Busur SVG ---
+        function generateTicks() {
+            const ticksGroup = document.getElementById('ticks');
+            const cx = 180, cy = 180, r = 170;
+
+            for (let i = 0; i <= 180; i++) {
+                const rad = (i * Math.PI) / 180;
+                let tickLen = 8;
+                
+                if (i % 10 === 0) tickLen = 16;
+                else if (i % 5 === 0) tickLen = 12;
+
+                const x1 = cx - (r - tickLen) * Math.cos(rad);
+                const y1 = cy - (r - tickLen) * Math.sin(rad);
+                const x2 = cx - r * Math.cos(rad);
+                const y2 = cy - r * Math.sin(rad);
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+                line.setAttribute("stroke-width", i % 10 === 0 ? "2" : "1");
+                line.setAttribute("stroke", i % 10 === 0 ? "#2d3436" : "#636e72");
+                ticksGroup.appendChild(line);
+
+                // Angka Skala (Luar & Dalam)
+                if (i % 10 === 0) {
+                    const textRad = (i * Math.PI) / 180;
+                    
+                    // Skala Luar (0 - 180)
+                    const txLuar = cx - (r - 26) * Math.cos(textRad);
+                    const tyLuar = cy - (r - 26) * Math.sin(textRad);
+                    addSvgText(ticksGroup, txLuar, tyLuar + 4, 180 - i, "10px", "#2d3436");
+
+                    // Skala Dalam (180 - 0)
+                    const txDalam = cx - (r - 40) * Math.cos(textRad);
+                    const tyDalam = cy - (r - 40) * Math.sin(textRad);
+                    addSvgText(ticksGroup, txDalam, tyDalam + 4, i, "9px", "#d63031");
+                }
+            }
+        }
+
+        function addSvgText(parent, x, y, content, fontSize, color="#333") {
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y);
+            text.setAttribute("font-size", fontSize);
+            text.setAttribute("font-weight", "bold");
+            text.setAttribute("font-family", "'Fredoka', cursive, sans-serif");
+            text.setAttribute("fill", color);
+            text.setAttribute("text-anchor", "middle");
+            text.textContent = content;
+            parent.appendChild(text);
+        }
+        generateTicks();
+
+        // --- Kontrol Mode & Switch ---
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btnPointer').classList.toggle('active', mode === 'pointer');
+            document.getElementById('btnPen').classList.toggle('active', mode === 'pen');
+            document.getElementById('btnLine').classList.toggle('active', mode === 'line');
+            
+            if (mode !== 'pointer') {
+                protractor.style.pointerEvents = 'none';
+            } else {
+                protractor.style.pointerEvents = 'auto';
+            }
+        }
+
+        document.getElementById('penColor').addEventListener('change', (e) => {
+            penColor = e.target.value;
+        });
+
+        // --- Logika Canvas (Mouse + Touch + Stylus) ---
+        // Pointer Events membuat satu sistem untuk laptop, Android dan IFP.
+        canvas.addEventListener('pointerdown', (e) => {
+            if (currentMode === 'pointer') return;
+
+            e.preventDefault();
+            canvas.setPointerCapture?.(e.pointerId);
+
+            isDrawing = true;
+            startPointX = e.clientX;
+            startPointY = e.clientY;
+
+            ctx.strokeStyle = penColor;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            if (currentMode === 'pen') {
+                ctx.beginPath();
+                ctx.moveTo(startPointX, startPointY);
+            } else if (currentMode === 'line') {
+                canvasSnapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        canvas.addEventListener('pointermove', (e) => {
+            if (!isDrawing || currentMode === 'pointer') return;
+
+            e.preventDefault();
+
+            if (currentMode === 'pen') {
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+            } else if (currentMode === 'line') {
+                ctx.putImageData(canvasSnapshot, 0, 0);
+                ctx.beginPath();
+                ctx.moveTo(startPointX, startPointY);
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+            }
+        });
+
+        function stopCanvasDrawing(e) {
+            if (!isDrawing) return;
+            e.preventDefault?.();
+            isDrawing = false;
+            try { canvas.releasePointerCapture?.(e.pointerId); } catch (_) {}
+        }
+
+        canvas.addEventListener('pointerup', stopCanvasDrawing);
+        canvas.addEventListener('pointercancel', stopCanvasDrawing);
+        canvas.addEventListener('pointerleave', (e) => {
+            // Pointer capture keeps drawing continuous on touch devices.
+            if (isDrawing && e.pointerType === 'mouse') stopCanvasDrawing(e);
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- Logika Drag, Rotasi & Resize Busur ---
+        // Pointer Events: mouse, jari dan stylus.
+        protractor.addEventListener('pointerdown', (e) => {
+            if (currentMode !== 'pointer' || e.target === rotateHandle || e.target === resizeHandle) return;
+
+            e.preventDefault();
+            protractor.setPointerCapture?.(e.pointerId);
+
+            isDragging = true;
+            startX = e.clientX - posX;
+            startY = e.clientY - posY;
+        });
+
+        rotateHandle.addEventListener('pointerdown', (e) => {
+            if (currentMode !== 'pointer') return;
+
+            e.preventDefault();
+            e.stopPropagation();
+            rotateHandle.setPointerCapture?.(e.pointerId);
+
+            isRotating = true;
+        });
+
+        resizeHandle.addEventListener('pointerdown', (e) => {
+            if (currentMode !== 'pointer') return;
+
+            e.preventDefault();
+            e.stopPropagation();
+            resizeHandle.setPointerCapture?.(e.pointerId);
+
+            isResizing = true;
+            startX = e.clientX;
+            initialScale = scale;
+        });
+
+        scaleSlider.addEventListener('input', (e) => {
+            scale = parseFloat(e.target.value);
+            updateProtractorTransform();
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!isDragging && !isRotating && !isResizing) return;
+
+            e.preventDefault();
+
+            if (isDragging) {
+                posX = e.clientX - startX;
+                posY = e.clientY - startY;
+                updateProtractorTransform();
+
+            } else if (isRotating) {
+                const centerXPusat = posX + (180 * scale);
+                const cyPusat = posY + (180 * scale);
+                const radians = Math.atan2(
+                    e.clientY - cyPusat,
+                    e.clientX - centerXPusat
+                );
+                angle = radians * (180 / Math.PI) + 90;
+                updateProtractorTransform();
+
+            } else if (isResizing) {
+                const deltaX = e.clientX - startX;
+                let newScale = initialScale + (deltaX * 0.005);
+                newScale = Math.min(Math.max(newScale, 0.5), 2.5);
+
+                scale = newScale;
+                scaleSlider.value = scale;
+                updateProtractorTransform();
+            }
+        }, { passive: false });
+
+        function stopProtractorInteraction(e) {
+            isDragging = false;
+            isRotating = false;
+            isResizing = false;
+
+            try { protractor.releasePointerCapture?.(e.pointerId); } catch (_) {}
+            try { rotateHandle.releasePointerCapture?.(e.pointerId); } catch (_) {}
+            try { resizeHandle.releasePointerCapture?.(e.pointerId); } catch (_) {}
+        }
+
+        window.addEventListener('pointerup', stopProtractorInteraction);
+        window.addEventListener('pointercancel', stopProtractorInteraction);
+
+        function updateProtractorTransform() {
+            protractor.style.left = `${posX}px`;
+            protractor.style.top = `${posY}px`;
+            protractor.style.transform = `rotate(${angle}deg) scale(${scale})`;
+        }
+
+        function resetProtractor() {
+            scale = 1.0;
+            scaleSlider.value = 1.0;
+            posX = window.innerWidth / 2 - 180;
+            posY = window.innerHeight / 2 - 90;
+            angle = 0;
+            updateProtractorTransform();
+        }
+
+        // Posisi Awal Busur
+        resetProtractor();
+    </script>
+</body>
+</html>
