@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Edukasi: Kebutuhan vs Keinginan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* Container Navigasi Kembali */
+        .nav-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+            width: 100%;
+            max-width: 750px;
+            flex-wrap: wrap;
+        }
+
+        /* Tombol Navigasi */
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            background: #ffffff;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-nav:hover {
+            transform: translateY(-2px);
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .score-board {
+            background: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 4px;
+            font-weight: bold;
+            color: #34495e;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .timer-warning {
+            color: #e74c3c !important;
+            animation: pulse 0.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* Desain Rak Toko 2 Baris Kayu (Etalase) */
+        .shelf-container {
+            width: 100%;
+            max-width: 750px;
+            background: linear-gradient(to bottom, #8e44ad, #2c3e50);
+            border-radius: 12px;
+            padding: 10px 10px 12px 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border: 4px solid #5d4037;
+        }
+
+        .shelf-title {
+            color: #f1c40f;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .shelves-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shelf-wood {
+            background: #a1887f;
+            border-top: 6px solid #8d6e63;
+            border-bottom: 10px solid #4e342e;
+            border-radius: 4px;
+            padding: 6px 8px;
+            display: flex;
+            gap: 10px;
+            justify-content: space-around;
+            min-height: 95px;
+            align-items: flex-end;
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Item Barang */
+        .item {
+            background: white;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            touch-action: none;
+            width: 72px;
+            z-index: 2;
+        }
+
+        .item:active {
+            cursor: grabbing;
+            transform: scale(1.08);
+        }
+
+        .item .icon {
+            font-size: 26px;
+            margin-bottom: 2px;
+        }
+
+        .item .name {
+            font-size: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* Area Troli Belanja (Bawah) */
+        .trolley-container {
+            width: 100%;
+            max-width: 750px;
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .trolley-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .trolley-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            color: white;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .trolley-title.kebutuhan { background-color: #27ae60; }
+        .trolley-title.keinginan { background-color: #e67e22; }
+
+        /* Ilustrasi Troli Belanja */
+        .trolley-graphic {
+            width: 100%;
+            height: 180px;
+            background-color: #ffffff;
+            border-top: 4px solid #7f8c8d;
+            border-left: 5px solid #95a5a6;
+            border-right: 5px solid #95a5a6;
+            border-bottom: 8px solid #7f8c8d;
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            padding: 8px;
+            gap: 5px;
+            position: relative;
+            transition: background-color 0.3s;
+            overflow-y: auto;
+            background-image: 
+                linear-gradient(rgba(189, 195, 199, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 195, 199, 0.3) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+
+        /* Roda Troli */
+        .trolley-wheels {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: -5px;
+        }
+
+        .wheel {
+            width: 20px;
+            height: 20px;
+            background: #34495e;
+            border: 4px solid #bdc3c7;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .trolley-graphic.hovered {
+            background-color: #e8f8f5;
+        }
+
+        /* Feedback Pop-up Icon */
+        .feedback-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 10;
+        }
+
+        .feedback-overlay.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* Modal Game Over */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 { color: #2c3e50; margin-bottom: 10px; }
+        .modal-content p { color: #7f8c8d; margin-bottom: 20px; font-size: 16px; }
+        .btn-restart {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 550px) {
+            .trolley-container { flex-direction: column; }
+            .trolley-graphic { height: 140px; }
+            .shelf-wood { flex-wrap: wrap; justify-content: center; min-height: auto; }
+            .item { width: 65px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Navigasi Kembali -->
+    <div class="nav-container">
+        <a href="../index.html" class="btn-nav">🏠 Beranda FERLINK</a>
+        <a href="../ipas.html" class="btn-nav">🌿 Kembali ke IPAS</a>
+    </div>
+
+    <header>
+        <h1>Game Kebutuhan vs Keinginan</h1>
+        <div class="score-board">
+            <div>⏰ Waktu: <span id="timer">01:00</span></div>
+            <div>⭐ Skor: <span id="score">0</span></div>
+            <div>🔄 Ronde: <span id="round">1</span></div>
+        </div>
+    </header>
+
+    <!-- Rak Toko 2 Baris (Etalase) -->
+    <div class="shelf-container">
+        <div class="shelf-title">🏬 Rak Toko Supermarket</div>
+        <div class="shelves-wrapper">
+            <div class="shelf-wood" id="shelf-row-1"></div>
+            <div class="shelf-wood" id="shelf-row-2"></div>
+        </div>
+    </div>
+
+    <!-- Troli Belanja -->
+    <div class="trolley-container">
+        <div class="trolley-wrapper">
+            <div class="trolley-title kebutuhan">🛒 TROLI KEBUTUHAN</div>
+            <div class="trolley-graphic trolley" id="kebutuhan-trolley" data-type="kebutuhan">
+                <div class="feedback-overlay" id="fb-kebutuhan"></div>
+            </div>
+            <div class="trolley-wheels">
+                <div class="wheel"></div>
+                <div class="wheel"></div>
+            </div>
+        </div>
+
+        <div class="trolley-wrapper">
+            <div class="trolley-title keinginan">🛒 TROLI KEINGINAN</div>
+            <div class="trolley-graphic trolley" id="keinginan-trolley" data-type="keinginan">
+                <div class="feedback-overlay" id="fb-keinginan"></div>
+            </div>
+            <div class="trolley-wheels">
+                <div class="wheel"></div>
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Game Over -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2>Waktu Habis! ⌛</h2>
+            <p>Skor Akhir Anda: <strong id="finalScore">0</strong></p>
+            <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        const masterItems = [
+            // Kebutuhan
+            { name: "Nasi", category: "kebutuhan", icon: "🍚" },
+            { name: "Pakaian", category: "kebutuhan", icon: "👕" },
+            { name: "Rumah", category: "kebutuhan", icon: "🏠" },
+            { name: "Air Minum", category: "kebutuhan", icon: "🥛" },
+            { name: "Obat", category: "kebutuhan", icon: "💊" },
+            { name: "Buku Pelajaran", category: "kebutuhan", icon: "📚" },
+            { name: "Sabun Mandi", category: "kebutuhan", icon: "🧼" },
+            { name: "Sayur & Buah", category: "kebutuhan", icon: "🥦" },
+            { name: "Minyak Goreng", category: "kebutuhan", icon: "🍾" },
+            { name: "Sepatu Sekolah", category: "kebutuhan", icon: "👟" },
+            { name: "Sikat Gigi", category: "kebutuhan", icon: "🪥" },
+            { name: "Telur", category: "kebutuhan", icon: "🥚" },
+            { name: "Seragam", category: "kebutuhan", icon: "👔" },
+            { name: "Roti", category: "kebutuhan", icon: "🍞" },
+            { name: "Lampu Rumah", category: "kebutuhan", icon: "💡" },
+            { name: "Payung Hujan", category: "kebutuhan", icon: "☂️" },
+
+            // Keinginan
+            { name: "Console Game", category: "keinginan", icon: "🎮" },
+            { name: "Mobil Mewah", category: "keinginan", icon: "🏎️" },
+            { name: "Kacamata Hitam", category: "keinginan", icon: "🕶️" },
+            { name: "Mainan Robot", category: "keinginan", icon: "🤖" },
+            { name: "Sepatu Branded", category: "keinginan", icon: "👠" },
+            { name: "Perhiasan", category: "keinginan", icon: "💎" },
+            { name: "Kamera Pro", category: "keinginan", icon: "📷" },
+            { name: "Jalan-jalan", category: "keinginan", icon: "✈️" },
+            { name: "Drone", category: "keinginan", icon: "🛸" },
+            { name: "Jam Mewah", category: "keinginan", icon: "⌚" },
+            { name: "Headphone VR", category: "keinginan", icon: "🥽" },
+            { name: "Komik", category: "keinginan", icon: "📙" },
+            { name: "Cokelat Mewah", category: "keinginan", icon: "🍫" },
+            { name: "Skateboard", category: "keinginan", icon: "🛹" },
+            { name: "Boneka Besar", category: "keinginan", icon: "🧸" },
+            { name: "Smartwatch", category: "keinginan", icon: "⌚" }
+        ];
+
+        let currentItems = [];
+        let score = 0;
+        let round = 1;
+        let draggedItem = null;
+        let timeLeft = 60;
+        let timerInterval = null;
+
+        const shelfRow1 = document.getElementById('shelf-row-1');
+        const shelfRow2 = document.getElementById('shelf-row-2');
+        const scoreEl = document.getElementById('score');
+        const roundEl = document.getElementById('round');
+        const timerEl = document.getElementById('timer');
+        const trolleys = document.querySelectorAll('.trolley');
+        const modalEl = document.getElementById('gameOverModal');
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(164.81, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                
+                timerEl.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 10) {
+                    timerEl.classList.add('timer-warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            document.getElementById('finalScore').textContent = score;
+            modalEl.style.display = 'flex';
+        }
+
+        function restartGame() {
+            modalEl.style.display = 'none';
+            score = 0;
+            round = 1;
+            timeLeft = 60;
+            scoreEl.textContent = score;
+            roundEl.textContent = round;
+            timerEl.classList.remove('timer-warning');
+            trolleys.forEach(trolley => {
+                const items = trolley.querySelectorAll('.item');
+                items.forEach(item => item.remove());
+            });
+            startTimer();
+            loadRound();
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function loadRound() {
+            shelfRow1.innerHTML = '';
+            shelfRow2.innerHTML = '';
+            
+            const shuffled = shuffle([...masterItems]);
+            currentItems = shuffled.slice(0, 8);
+
+            currentItems.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.classList.add('item');
+                itemEl.setAttribute('draggable', 'true');
+                itemEl.dataset.category = item.category;
+
+                itemEl.innerHTML = `
+                    <div class="icon">${item.icon}</div>
+                    <div class="name">${item.name}</div>
+                `;
+
+                itemEl.addEventListener('dragstart', handleDragStart);
+                itemEl.addEventListener('dragend', handleDragEnd);
+
+                itemEl.addEventListener('touchstart', handleTouchStart, {passive: false});
+                itemEl.addEventListener('touchmove', handleTouchMove, {passive: false});
+                itemEl.addEventListener('touchend', handleTouchEnd);
+
+                if (index < 4) {
+                    shelfRow1.appendChild(itemEl);
+                } else {
+                    shelfRow2.appendChild(itemEl);
+                }
+            });
+        }
+
+        function handleDragStart() {
+            draggedItem = this;
+            setTimeout(() => this.style.display = 'none', 0);
+        }
+
+        function handleDragEnd() {
+            setTimeout(() => {
+                if (draggedItem) {
+                    draggedItem.style.display = 'flex';
+                    draggedItem = null;
+                }
+            }, 0);
+        }
+
+        trolleys.forEach(trolley => {
+            trolley.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                trolley.classList.add('hovered');
+            });
+
+            trolley.addEventListener('dragleave', () => {
+                trolley.classList.remove('hovered');
+            });
+
+            trolley.addEventListener('drop', (e) => {
+                e.preventDefault();
+                trolley.classList.remove('hovered');
+                if (draggedItem) {
+                    checkAnswer(draggedItem, trolley);
+                    draggedItem = null;
+                }
+            });
+        });
+
+        let touchItem = null;
+        let touchClone = null;
+
+        function handleTouchStart(e) {
+            touchItem = this;
+            const touch = e.touches[0];
+            
+            touchClone = touchItem.cloneNode(true);
+            touchClone.style.position = 'fixed';
+            touchClone.style.opacity = '0.8';
+            touchClone.style.pointerEvents = 'none';
+            touchClone.style.zIndex = '1000';
+            touchClone.style.left = `${touch.clientX - 35}px`;
+            touchClone.style.top = `${touch.clientY - 35}px`;
+            document.body.appendChild(touchClone);
+
+            touchItem.style.opacity = '0.4';
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!touchClone) return;
+            const touch = e.touches[0];
+            touchClone.style.left = `${touch.clientX - 35}px`;
+            touchClone.style.top = `${touch.clientY - 35}px`;
+        }
+
+        function handleTouchEnd(e) {
+            if (!touchItem || !touchClone) return;
+
+            const touch = e.changedTouches[0];
+            document.body.removeChild(touchClone);
+            touchClone = null;
+
+            touchItem.style.opacity = '1';
+
+            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            const trolley = targetEl ? targetEl.closest('.trolley') : null;
+
+            if (trolley) {
+                checkAnswer(touchItem, trolley);
+            }
+            touchItem = null;
+        }
+
+        function checkAnswer(itemEl, trolleyEl) {
+            const itemCategory = itemEl.dataset.category;
+            const trolleyType = trolleyEl.dataset.type;
+            const feedbackOverlay = trolleyEl.querySelector('.feedback-overlay');
+
+            if (itemCategory === trolleyType) {
+                playSound('correct');
+                showFeedback(feedbackOverlay, '✅', '#27ae60');
+                
+                itemEl.setAttribute('draggable', 'false');
+                itemEl.style.display = 'flex';
+                itemEl.style.cursor = 'default';
+                itemEl.style.transform = 'scale(0.75)';
+                itemEl.style.margin = '0';
+                trolleyEl.appendChild(itemEl);
+
+                score += 10;
+                scoreEl.textContent = score;
+            } else {
+                playSound('wrong');
+                showFeedback(feedbackOverlay, '❌', '#e74c3c');
+                itemEl.style.display = 'flex';
+                
+                score = Math.max(0, score - 5);
+                scoreEl.textContent = score;
+            }
+
+            checkRoundComplete();
+        }
+
+        function showFeedback(element, symbol, color) {
+            element.textContent = symbol;
+            element.style.color = color;
+            element.classList.add('show');
+            setTimeout(() => element.classList.remove('show'), 800);
+        }
+
+        function checkRoundComplete() {
+            if (shelfRow1.children.length === 0 && shelfRow2.children.length === 0) {
+                setTimeout(() => {
+                    round++;
+                    roundEl.textContent = round;
+                    loadRound();
+                }, 800);
+            }
+        }
+
+        loadRound();
+        startTimer();
+    </script>
+</body>
+</html>
