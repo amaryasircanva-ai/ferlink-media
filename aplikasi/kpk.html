@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Kelipatan & KPK - Matematika Kelas 5</title>
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #0d47a1;
+            --light-blue: #e3f2fd;
+            --accent-purple: #8e24aa;
+            --accent-yellow: #fbc02d;
+            --accent-orange: #f57c00;
+            --accent-green: #43a047;
+            --light-green: #e8f5e9;
+            --dark-text: #2c3e50;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: var(--dark-text);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: var(--dark-blue);
+            padding: 10px;
+            position: sticky;
+            top: 75px;
+            z-index: 99;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: white;
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .nav-ext {
+            background-color: var(--accent-orange);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .nav-ext:hover {
+            background-color: #e65100;
+            transform: translateY(-2px);
+        }
+
+        /* CONTAINER & SECTIONS */
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 6px solid var(--primary-blue);
+        }
+
+        h2.section-title {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* DASHBOARD GRID */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dash-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .dash-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .dash-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
+
+        /* MATERI SLIDER */
+        .slide-container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .slide { display: none; }
+        .slide.active { display: block; }
+
+        .slide-header {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .slide-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .slide-content li { margin-bottom: 8px; }
+
+        .slide-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            align-items: center;
+        }
+
+        .btn-action {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover { background-color: var(--dark-blue); }
+        .btn-action:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* INTERAKTIF: PAPAN GRID 1-100 */
+        .controls-panel {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: var(--light-blue);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .grid-100 {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+            margin-top: 15px;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        /* WARNA KELIPATAN GRID */
+        .cell-a { background-color: #bbdefb !important; color: #0d47a1; border-color: #2196f3; }
+        .cell-b { background-color: #fff9c4 !important; color: #f57f17; border-color: #fbc02d; }
+        .cell-both { background-color: #c8e6c9 !important; color: #1b5e20; border-color: #4caf50; font-size: 1.1rem; }
+        .cell-kpk { 
+            background-color: #ffcc80 !important; 
+            color: #e65100; 
+            border: 3px solid #f57c00 !important;
+            box-shadow: 0 0 10px rgba(245, 124, 0, 0.6);
+            transform: scale(1.08);
+        }
+
+        .legend-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #999;
+        }
+
+        .summary-box {
+            background: white;
+            border: 2px dashed var(--primary-blue);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        /* INTERAKTIF: GAME LOMPAT */
+        .track-container {
+            overflow-x: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 8px var(--shadow);
+            margin-top: 15px;
+        }
+
+        .number-line {
+            display: flex;
+            min-width: 900px;
+            position: relative;
+            padding-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        .step-point {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid #90caf9;
+            font-weight: bold;
+            padding-bottom: 8px;
+        }
+
+        .step-point::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 12px;
+            background: #1976d2;
+        }
+
+        .marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .marker-a { top: -35px; }
+        .marker-b { top: -10px; }
+
+        /* KUIS OPTIONS */
+        .quiz-option {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.4rem; }
+            .nav-btn, .nav-ext { font-size: 0.8rem; padding: 6px 12px; }
+            .grid-100 { grid-template-columns: repeat(5, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Petualangan Kelipatan & KPK</h1>
+        <p>Media Pembelajaran Matematika Kelas 5 SD - Hitung Loncat & KPK</p>
+    </header>
+
+    <nav>
+        <a href="../index.html" class="nav-ext">⬅️ Ferlink</a>
+        <a href="../matematika.html" class="nav-ext">🔙 Menu Matematika</a>
+
+        <button class="nav-btn active" onclick="showPage('home')">🏠 Utama</button>
+        <button class="nav-btn" onclick="showPage('materi')">📖 Materi KPK</button>
+        <button class="nav-btn" onclick="showPage('grid')">🎨 Papan Warna 1-100</button>
+        <button class="nav-btn" onclick="showPage('lompat')">🐸 Game Lompat</button>
+        <button class="nav-btn" onclick="showPage('kuis')">🏆 Kuis KPK</button>
+    </nav>
+
+    <div class="container">
+
+        <!-- DASHBOARD HOME -->
+        <section id="home" class="page-section active">
+            <div class="card">
+                <h2 class="section-title">Selamat Datang, Jagoan Matematika! 🔢</h2>
+                <p>Mari belajar menentukan **Kelipatan**, **Kelipatan Persekutuan**, dan **KPK** secara seru dan visual!</p>
+                
+                <div class="grid-dashboard">
+                    <div class="dash-card" onclick="showPage('materi')">
+                        <div class="icon">📖</div>
+                        <h3>1. Materi Belajar</h3>
+                        <p>Pahami alur konsep dari hitung loncat sampai menemukan KPK.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('grid')">
+                        <div class="icon">🎨</div>
+                        <h3>2. Papan Warna 1–100</h3>
+                        <p>Visualisasikan angka kelipatan dengan gabungan warna interaktif.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('lompat')">
+                        <div class="icon">🐸</div>
+                        <h3>3. Game Lompat Hewan</h3>
+                        <p>Lihat Kelinci dan Katak melompat untuk menemukan titik temu pertama.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('kuis')">
+                        <div class="icon">🏆</div>
+                        <h3>4. Kuis Tantangan</h3>
+                        <p>Uji pemahamanmu dan raih skor tertinggi!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MATERI SLIDER -->
+        <section id="materi" class="page-section">
+            <div class="slide-container">
+                
+                <div class="slide active">
+                    <div class="slide-header">Langkah 1: Apa itu Kelipatan Bilangan?</div>
+                    <div class="slide-content">
+                        <p><strong>Kelipatan</strong> adalah hasil mengalikan suatu bilangan dengan bilangan asli (1, 2, 3, 4, dst), atau simpelnya seperti <strong>hitung loncat</strong>.</p>
+                        <br>
+                        <p><strong>Contoh Kelipatan 3:</strong></p>
+                        <ul>
+                            <li>3 × 1 = <strong>3</strong></li>
+                            <li>3 × 2 = <strong>6</strong></li>
+                            <li>3 × 3 = <strong>9</strong></li>
+                            <li>3 × 4 = <strong>12</strong>, dan seterusnya.</li>
+                        </ul>
+                        <p><em>Deret kelipatan 3 adalah: 3, 6, 9, 12, 15, 18, 21, 24, ...</em></p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-header">Langkah 2: Kelipatan Persekutuan (Angka Sekutu)</div>
+                    <div class="slide-content">
+                        <p><strong>Kelipatan Persekutuan</strong> adalah angka-angka kelipatan yang <strong>sama (bersekutu)</strong> dari dua bilangan atau lebih.</p>
+                        <br>
+                        <p>Mari kita bandingkan Kelipatan 4 dan 6:</p>
+                        <ul>
+                            <li>Kelipatan 4: 4, 8, <strong style="color:red">12</strong>, 16, 20, <strong style="color:red">24</strong>, 28, 32, <strong style="color:red">36</strong>...</li>
+                            <li>Kelipatan 6: 6, <strong style="color:red">12</strong>, 18, <strong style="color:red">24</strong>, 30, <strong style="color:red">36</strong>, 42...</li>
+                        </ul>
+                        <br>
+                        <p>Angka yang sama-sama ada di deret 4 dan 6 adalah: <strong>12, 24, 36, ...</strong></p>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-header">Langkah 3: Kelipatan Persekutuan Terkecil (KPK)</div>
+                    <div class="slide-content">
+                        <p><strong>KPK</strong> adalah nilai <strong>paling kecil</strong> di antara angka-angka kelipatan persekutuan yang telah kita temukan sebelumnya.</p>
+                        <br>
+                        <p>Dari langkah sebelumnya, Kelipatan Persekutuan 4 dan 6 adalah <strong>12, 24, 36, ...</strong></p>
+                        <p>Manakah angka yang paling kecil?</p>
+                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--accent-orange); margin-top: 10px;">
+                            👉 Angka paling kecil adalah 12!
+                        </p>
+                        <p>Jadi, <strong>KPK dari 4 dan 6 adalah 12</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action" id="prevSlideBtn" onclick="changeSlide(-1)">⬅️ Sebelumnya</button>
+                    <span id="slideIndicator" style="font-weight: bold; color: var(--primary-blue);">Halaman 1 / 3</span>
+                    <button class="btn-action" id="nextSlideBtn" onclick="changeSlide(1)">Selanjutnya ➡️</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PAPAN WARNA GRID 1-100 -->
+        <section id="grid" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🎨 Papan Warna Kelipatan 1–100</h2>
+                <p>Pilih dua angka di bawah ini, lalu perhatikan bagaimana warna-warna angka bertemu!</p>
+
+                <div class="controls-panel">
+                    <div class="input-group">
+                        <label>Bilangan Pertama (A):</label>
+                        <input type="number" id="numA" value="3" min="1" max="20">
+                    </div>
+                    <div class="input-group">
+                        <label>Bilangan Kedua (B):</label>
+                        <input type="number" id="numB" value="4" min="1" max="20">
+                    </div>
+                    <button class="btn-action" onclick="renderGrid()">🔍 Tampilkan Warna</button>
+                </div>
+
+                <div class="legend-box">
+                    <div class="legend-item"><div class="legend-color" style="background: #bbdefb;"></div> Kelipatan A</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #fff9c4;"></div> Kelipatan B</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #c8e6c9;"></div> Kelipatan Persekutuan</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #ffcc80; border: 2px solid #f57c00;"></div> KPK (Terkecil ⭐)</div>
+                </div>
+
+                <div class="grid-100" id="grid100Container"></div>
+
+                <div class="summary-box" id="gridSummary">
+                    <!-- Rincian hasil akan muncul di sini via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME LOMPAT HEWAN -->
+        <section id="lompat" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🐸 Simulasi Lompat Garis Bilangan</h2>
+                <p>Kelinci 🐰 melompat sejauh **A** langkah, dan Katak 🐸 melompat sejauh **B** langkah. Di angka manakah mereka mendarat bersama untuk pertama kali?</p>
+
+                <div class="controls-panel">
+                    <div class="input-group">
+                        <label>Langkah Kelinci 🐰:</label>
+                        <input type="number" id="stepA" value="2" min="1" max="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Langkah Katak 🐸:</label>
+                        <input type="number" id="stepB" value="5" min="1" max="10">
+                    </div>
+                    <button class="btn-action" onclick="renderLompat()">🚀 Jalankan Simulasi</button>
+                </div>
+
+                <div class="track-container">
+                    <div class="number-line" id="numberLineTrack"></div>
+                </div>
+
+                <div class="summary-box" id="lompatSummary" style="margin-top: 15px;"></div>
+            </div>
+        </section>
+
+        <!-- KUIS EVALUASI -->
+        <section id="kuis" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🏆 Kuis Tantangan KPK</h2>
+                <div id="quizContainer">
+                    <div id="quizQuestion" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;">
+                        Pertanyaan akan muncul di sini...
+                    </div>
+                    <div id="quizOptions"></div>
+                    <div id="quizFeedback" style="margin-top: 15px; font-weight: bold;"></div>
+                </div>
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="quizScore" style="font-weight: bold; color: var(--primary-blue);">Skor: 0</span>
+                    <button class="btn-action" id="nextQuizBtn" onclick="nextQuestion()" style="display: none;">Soal Berikutnya ➡️</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // ==================== NAVIGASI HALAMAN ====================
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            const pages = ['home', 'materi', 'grid', 'lompat', 'kuis'];
+            const btnIndex = pages.indexOf(pageId);
+            if (btnIndex !== -1) {
+                document.querySelectorAll('.nav-btn')[btnIndex].classList.add('active');
+            }
+
+            if(pageId === 'grid') renderGrid();
+            if(pageId === 'lompat') renderLompat();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== MATERI SLIDER LOGIC ====================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function updateSlideDisplay() {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === currentSlide);
+            });
+            document.getElementById('slideIndicator').innerText = `Halaman ${currentSlide + 1} / ${slides.length}`;
+            document.getElementById('prevSlideBtn').disabled = (currentSlide === 0);
+            document.getElementById('nextSlideBtn').disabled = (currentSlide === slides.length - 1);
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlideDisplay();
+        }
+
+        // ==================== KETENTUAN MATEMATIKA (KPK & FPB) ====================
+        function getGCD(a, b) {
+            return b === 0 ? a : getGCD(b, a % b);
+        }
+        function getLCM(a, b) {
+            return (a * b) / getGCD(a, b);
+        }
+
+        // ==================== LOGIC PAPAN WARNA GRID 1-100 ====================
+        function renderGrid() {
+            const a = parseInt(document.getElementById('numA').value) || 1;
+            const b = parseInt(document.getElementById('numB').value) || 1;
+            const kpk = getLCM(a, b);
+
+            const container = document.getElementById('grid100Container');
+            container.innerHTML = '';
+
+            let multA = [], multB = [], multCommon = [];
+
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.innerText = i;
+
+                const isA = (i % a === 0);
+                const isB = (i % b === 0);
+
+                if (isA) multA.push(i);
+                if (isB) multB.push(i);
+
+                if (isA && isB) {
+                    multCommon.push(i);
+                    if (i === kpk) {
+                        cell.classList.add('cell-kpk');
+                        cell.innerText = i + ' ⭐';
+                    } else {
+                        cell.classList.add('cell-both');
+                    }
+                } else if (isA) {
+                    cell.classList.add('cell-a');
+                } else if (isB) {
+                    cell.classList.add('cell-b');
+                }
+
+                container.appendChild(cell);
+            }
+
+            // Summary Text
+            const summary = document.getElementById('gridSummary');
+            summary.innerHTML = `
+                <p><strong>🔹 Kelipatan ${a}:</strong> ${multA.slice(0, 10).join(', ')}...</p>
+                <p><strong>🔸 Kelipatan ${b}:</strong> ${multB.slice(0, 10).join(', ')}...</p>
+                <p><strong>🤝 Kelipatan Persekutuan:</strong> ${multCommon.length > 0 ? multCommon.join(', ') : 'Tidak ada di bawah 100'}</p>
+                <p style="font-size: 1.1rem; margin-top: 8px; color: var(--accent-orange);">
+                    <strong>⭐ KPK dari ${a} dan ${b} adalah: ${kpk}</strong>
+                </p>
+            `;
+        }
+
+        // ==================== LOGIC GAME LOMPAT HEWAN ====================
+        function renderLompat() {
+            const stepA = parseInt(document.getElementById('stepA').value) || 1;
+            const stepB = parseInt(document.getElementById('stepB').value) || 1;
+            const kpk = getLCM(stepA, stepB);
+
+            const track = document.getElementById('numberLineTrack');
+            track.innerHTML = '';
+
+            const maxPoint = Math.min(Math.max(kpk + 5, 20), 40);
+
+            for (let i = 0; i <= maxPoint; i++) {
+                const point = document.createElement('div');
+                point.className = 'step-point';
+                point.innerText = i;
+
+                const isLandA = (i > 0 && i % stepA === 0);
+                const isLandB = (i > 0 && i % stepB === 0);
+
+                if (isLandA) {
+                    const markA = document.createElement('span');
+                    markA.className = 'marker marker-a';
+                    markA.innerText = '🐰';
+                    point.appendChild(markA);
+                }
+
+                if (isLandB) {
+                    const markB = document.createElement('span');
+                    markB.className = 'marker marker-b';
+                    markB.innerText = '🐸';
+                    point.appendChild(markB);
+                }
+
+                if (i === kpk) {
+                    point.style.backgroundColor = '#ffe0b2';
+                    point.style.borderRadius = '8px';
+                }
+
+                track.appendChild(point);
+            }
+
+            document.getElementById('lompatSummary').innerHTML = `
+                <p>🐰 Kelinci melompat setiap kelipatan <strong>${stepA}</strong>.</p>
+                <p>🐸 Katak melompat setiap kelipatan <strong>${stepB}</strong>.</p>
+                <p style="font-size: 1.1rem; font-weight: bold; color: var(--primary-blue); margin-top: 5px;">
+                    🎉 Mereka bertemu pertama kali di batu nomor <u>${kpk}</u>! (KPK = ${kpk})
+                </p>
+            `;
+        }
+
+        // ==================== LOGIC KUIS ====================
+        const quizData = [
+            {
+                q: "1. Manakah di bawah ini yang merupakan kelipatan dari 5?",
+                options: ["12", "18", "25", "32"],
+                answer: 2
+            },
+            {
+                q: "2. Tiga angka pertama dari kelipatan 4 adalah...",
+                options: ["4, 6, 8", "4, 8, 12", "1, 2, 4", "4, 10, 14"],
+                answer: 1
+            },
+            {
+                q: "3. Kelipatan persekutuan dari 2 dan 3 adalah...",
+                options: ["6, 12, 18", "5, 10, 15", "4, 8, 12", "2, 3, 6"],
+                answer: 0
+            },
+            {
+                q: "4. Apakah KPK dari 3 dan 5?",
+                options: ["8", "10", "15", "30"],
+                answer: 2
+            },
+            {
+                q: "5. Lampu A menyala setiap 4 detik, Lampu B menyala setiap 6 detik. Setiap berapa detik kedua lampu menyala bersamaan?",
+                options: ["10 detik", "12 detik", "24 detik", "16 detik"],
+                answer: 1
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let score = 0;
+
+        function loadQuizQuestion() {
+            const q = quizData[currentQuizIdx];
+            document.getElementById('quizQuestion').innerText = q.q;
+            const optContainer = document.getElementById('quizOptions');
+            optContainer.innerHTML = '';
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('nextQuizBtn').style.display = 'none';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIdx) {
+            const q = quizData[currentQuizIdx];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selectedIdx === q.answer) {
+                options[selectedIdx].classList.add('correct');
+                document.getElementById('quizFeedback').innerText = '✅ Hebat! Jawabannya Tepat.';
+                document.getElementById('quizFeedback').style.color = 'green';
+                score += 20;
+            } else {
+                options[selectedIdx].classList.add('wrong');
+                options[q.answer].classList.add('correct');
+                document.getElementById('quizFeedback').innerText = '❌ Jawaban kurang tepat.';
+                document.getElementById('quizFeedback').style.color = 'red';
+            }
+
+            document.getElementById('quizScore').innerText = `Skor: ${score}`;
+            document.getElementById('nextQuizBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuizIdx++;
+            if (currentQuizIdx < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('quizContainer').innerHTML = `
+                    <h3>🎉 Kuis Selesai!</h3>
+                    <p style="font-size: 1.2rem; margin-top: 10px;">Skor Akhir Kamu: <strong>${score}</strong> / ${quizData.length * 20}</p>
+                `;
+                document.getElementById('nextQuizBtn').style.display = 'none';
+            }
+        }
+
+        // Initialize on page load
+        updateSlideDisplay();
+        loadQuizQuestion();
+    </script>
+</body>
+</html>

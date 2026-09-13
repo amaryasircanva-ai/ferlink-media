@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan SDA Indonesia - IPAS Kelas 5</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #e8f5e9;
+            --accent-green: #4caf50;
+            --primary-blue: #0277bd;
+            --light-blue: #e1f5fe;
+            --accent-orange: #f57c00;
+            --light-yellow: #fffde7;
+            --dark-text: #2c3e50;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f7f4;
+            color: var(--dark-text);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background: linear-gradient(135deg, var(--primary-green), #1b5e20);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: #1b5e20;
+            padding: 10px;
+            position: sticky;
+            top: 75px;
+            z-index: 99;
+        }
+
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: white;
+            color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .nav-ext {
+    background-color: var(--accent-orange);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.nav-ext:hover {
+    background-color: #e65100;
+    transform: translateY(-2px);
+}
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        /* SECTION VISIBILITY */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS & PANELS */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            border-left: 6px solid var(--primary-green);
+        }
+
+        h2.section-title {
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* HOME / DASHBOARD */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dash-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-green);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .dash-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .dash-card h3 {
+            color: var(--primary-green);
+            margin-bottom: 8px;
+        }
+
+        /* MATERI INTERAKTIF SLIDER */
+        .slide-container {
+            position: relative;
+            min-height: 380px;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .slide {
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 8px;
+        }
+
+        .slide-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .slide-content li {
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .badge-green { background-color: var(--light-green); color: var(--primary-green); }
+        .badge-orange { background-color: #fff3e0; color: var(--accent-orange); }
+
+        .slide-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            align-items: center;
+        }
+
+        .btn-action {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #1b5e20;
+        }
+
+        .btn-action:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* GAME 1: DRAG & DROP */
+        .drag-game-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .items-source {
+            flex: 1;
+            min-width: 250px;
+            background: var(--light-yellow);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px dashed #fbc02d;
+        }
+
+        .drop-targets {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+        }
+
+        .drop-box {
+            background: white;
+            border: 2px dashed var(--primary-blue);
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 120px;
+            transition: background 0.3s;
+        }
+
+        .drop-box.hovered {
+            background: var(--light-blue);
+        }
+
+        .drop-box h4 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .draggable-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 14px;
+            margin: 5px;
+            border-radius: 20px;
+            display: inline-block;
+            cursor: grab;
+            font-weight: 600;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            user-select: none;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        /* GAME 2: SIMULASI KOTA */
+        .sim-dashboard {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .sim-stat {
+            flex: 1;
+            min-width: 140px;
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .sim-stat-val {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .sim-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .sim-btn {
+            background: white;
+            border: 2px solid var(--primary-green);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .sim-btn:hover {
+            background: var(--light-green);
+        }
+
+        /* MEDIA 3: PETA INTERAKTIF */
+        .map-container {
+            position: relative;
+            background: #e0f2fe;
+            border-radius: 14px;
+            padding: 20px;
+            min-height: 320px;
+            border: 2px solid var(--primary-blue);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .map-locations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .map-pin {
+            background: var(--primary-green);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .map-pin:hover {
+            transform: scale(1.1);
+            background: var(--accent-orange);
+        }
+
+        .map-info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 90px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        /* GAME 4: KUIS */
+        .quiz-option {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.4rem; }
+            .nav-btn { font-size: 0.8rem; padding: 6px 12px; }
+            .card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Petualangan SDA Indonesia</h1>
+        <p>Media Pembelajaran IPAS Interaktif Kelas 5 SD - Kurikulum Merdeka</p>
+    </header>
+
+<nav>
+    <!-- Tombol Navigasi Kembali -->
+    <a href="../index.html" class="nav-ext">⬅️ Ferlink</a>
+    <a href="../ipas.html" class="nav-ext">🔙 Menu IPAS</a>
+
+    <!-- Tombol Navigasi Halaman Utama SDA -->
+    <button class="nav-btn active" onclick="showPage('home')">🏠 Utama</button>
+    <button class="nav-btn" onclick="showPage('materi')">📖 Materi Belajar</button>
+    <button class="nav-btn" onclick="showPage('game-pilah')">🧩 Game 1: Pilah SDA</button>
+    <button class="nav-btn" onclick="showPage('simulasi')">🏙️ Game 2: Simulasi Kota</button>
+    <button class="nav-btn" onclick="showPage('peta')">🗺️ Media 3: Peta SDA</button>
+    <button class="nav-btn" onclick="showPage('kuis')">🏆 Game 4: Kuis BUMI</button>
+</nav>
+
+    <div class="container">
+
+        <!-- ==================== PAGE 0: HOME / DASHBOARD ==================== -->
+        <section id="home" class="page-section active">
+            <div class="card">
+                <h2 class="section-title">Selamat Datang, Petualang Muda! 👋</h2>
+                <p>Mari jelajahi kekayaan <strong>Sumber Daya Alam (SDA) Indonesia</strong>! Pilih menu pembelajaran di bawah ini atau ikuti urutan belajar untuk pengalaman terbaik.</p>
+                
+                <div class="grid-dashboard">
+                    <div class="dash-card" onclick="showPage('materi')">
+                        <div class="icon">📖</div>
+                        <h3>1. Materi Belajar</h3>
+                        <p>Pelajari konsep SDA Hayati, Non-Hayati, serta Pemanfaatannya.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('game-pilah')">
+                        <div class="icon">🧩</div>
+                        <h3>2. Game Pilah SDA</h3>
+                        <p>Latih pemahamanmu dengan memilah jenis-jenis SDA.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('simulasi')">
+                        <div class="icon">🏙️</div>
+                        <h3>3. Simulasi Kota</h3>
+                        <p>Jadilah walikota dan kelola kelestarian alam kotamu!</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('peta')">
+                        <div class="icon">🗺️</div>
+                        <h3>4. Peta Nusantara</h3>
+                        <p>Jelajahi sebaran kekayaan alam di berbagai daerah Indonesia.</p>
+                    </div>
+
+                    <div class="dash-card" onclick="showPage('kuis')">
+                        <div class="icon">🏆</div>
+                        <h3>5. Kuis Petualangan</h3>
+                        <p>Uji kemampuanmu dan dapatkan skor tertinggi!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 1: MATERI BELAJAR ==================== -->
+        <section id="materi" class="page-section">
+            <div class="slide-container">
+                
+                <!-- SLIDE 1 -->
+                <div class="slide active">
+                    <div class="slide-header">Kartu 1: Apa itu Sumber Daya Alam (SDA)?</div>
+                    <div class="slide-content">
+                        <p><strong>Sumber Daya Alam (SDA)</strong> adalah segala sesuatu yang ada di alam dan dapat dimanfaatkan oleh manusia untuk memenuhi kebutuhan hidup sehari-hari.</p>
+                        <br>
+                        <p><strong>Contoh di sekitar kita:</strong></p>
+                        <ul>
+                            <li>🌾 <strong>Padi & Sayuran:</strong> Untuk bahan makanan harian.</li>
+                            <li>💧 <strong>Air:</strong> Untuk minum, mencuci, dan mengairi sawah.</li>
+                            <li>🪵 <strong>Pohon:</strong> Bahan pembuatan meja, kursi, dan kertas.</li>
+                            <li>⛽ <strong>Minyak Bumi:</strong> Bahan bakar kendaraan bermotor.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="slide">
+                    <div class="slide-header">Kartu 2: Pengelompokan SDA (Hayati vs Non-Hayati)</div>
+                    <div class="slide-content">
+                        <p>Berdasarkan asalnya, SDA dibagi menjadi dua kelompok utama:</p>
+                        <br>
+                        <p><span class="badge badge-green">1. SDA Hayati (Biotik)</span></p>
+                        <p>Berasal dari makhluk hidup (tumbuhan dan hewan).</p>
+                        <ul>
+                            <li><strong>Hasil Tumbuhan:</strong> Padi, kayu, kelapa sawit, teh, karet.</li>
+                            <li><strong>Hasil Hewan:</strong> Daging sapi, ikan, telur, susu, wol.</li>
+                        </ul>
+                        <br>
+                        <p><span class="badge badge-orange">2. SDA Non-Hayati (Abiotik)</span></p>
+                        <p>Berasal dari benda mati.</p>
+                        <ul>
+                            <li><strong>Contoh:</strong> Air, tanah, udara, sinar matahari, serta barang tambang (emas, batu bara, minyak bumi).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="slide">
+                    <div class="slide-header">Kartu 3: Sifat Sifat Kelestarian SDA</div>
+                    <div class="slide-content">
+                        <p>Berdasarkan kelestariannya, SDA dibedakan menjadi:</p>
+                        <br>
+                        <p><strong>♻️ SDA Dapat Diperbarui:</strong></p>
+                        <p>SDA yang jumlahnya melimpah atau dapat dibudidayakan kembali jika habis.</p>
+                        <p><em>Contoh: Air, tumbuhan, hewan, dan tanah.</em></p>
+                        <br>
+                        <p><strong>⏳ SDA Tidak Dapat Diperbarui:</strong></p>
+                        <p>SDA yang jumlahnya terbatas dan butuh waktu jutaan tahun untuk terbentuk kembali.</p>
+                        <p><em>Contoh: Minyak bumi, batu bara, gas alam, dan bijih logam.</em></p>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4 -->
+                <div class="slide">
+                    <div class="slide-header">Kartu 4: Pemanfaatan SDA di Indonesia</div>
+                    <div class="slide-content">
+                        <p>Indonesia kaya akan SDA! Berikut cara kita memanfaatkannya:</p>
+                        <ul>
+                            <li><strong>🌾 Pertanian & Perkebunan:</strong> Menghasilkan beras, jagung, tebu, dan teh.</li>
+                            <li><strong>🐟 Perikanan & Kelautan:</strong> Ikan laut, udang, dan rumput laut (Negara Maritim).</li>
+                            <li><strong>🪵 Kehutanan:</strong> Kayu jati dan rotan untuk furnitur.</li>
+                            <li><strong>⛏️ Pertambangan:</strong> Batu bara untuk pembangkit listrik & minyak untuk bahan bakar.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5 -->
+                <div class="slide">
+                    <div class="slide-header">Kartu 5: Menjaga Kelestarian SDA</div>
+                    <div class="slide-content">
+                        <p>Jika SDA dimanfaatkan secara berlebihan tanpa dijaga, alam akan rusak (banjir, longsor, atau kepunahan).</p>
+                        <br>
+                        <p><strong>Upaya Pelestarian Alam:</strong></p>
+                        <ul>
+                            <li>🌳 <strong>Reboisasi:</strong> Menanam kembali hutan yang gundul.</li>
+                            <li>💡 <strong>Hemat Energi:</strong> Mematikan lampu dan kran air jika tidak dipakai.</li>
+                            <li>☀️ <strong>Energi Alternatif:</strong> Menggunakan panel surya (sinar matahari).</li>
+                            <li>♻️ <strong>Prinsip 3R:</strong> Reduce, Reuse, Recycle sampah plastik.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SLIDE NAVIGATION -->
+                <div class="slide-nav">
+                    <button class="btn-action" id="prevSlideBtn" onclick="changeSlide(-1)">⬅️ Sebelumnya</button>
+                    <span id="slideIndicator" style="font-weight: bold; color: var(--primary-green);">Halaman 1 / 5</span>
+                    <button class="btn-action" id="nextSlideBtn" onclick="changeSlide(1)">Selanjutnya ➡️</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 2: GAME DRAG & DROP ==================== -->
+        <section id="game-pilah" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🧩 Mini-Game: Pilah & Kelompokkan SDA</h2>
+                <p>Tarik (drag) atau klik nama benda di kotak kuning, lalu masukkan ke dalam kategori yang tepat di sebelah kanan!</p>
+
+                <div class="drag-game-area">
+                    <div class="items-source" id="itemsContainer">
+                        <h4>Pilihan SDA:</h4>
+                        <div id="itemList">
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item1" data-type="renewable">🌾 Padi</div>
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item2" data-type="nonrenewable">⛽ Minyak Bumi</div>
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item3" data-type="renewable">🐟 Ikan Laut</div>
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item4" data-type="nonrenewable">🪨 Batu Bara</div>
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item5" data-type="renewable">☀️ Sinar Matahari</div>
+                            <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="item6" data-type="nonrenewable">🥇 Emas</div>
+                        </div>
+                    </div>
+
+                    <div class="drop-targets">
+                        <div class="drop-box" ondrop="drop(event, 'renewable')" ondragover="allowDrop(event)">
+                            <h4>🌱 SDA Dapat Diperbarui</h4>
+                            <div class="dropped-holder" id="renewableHolder"></div>
+                        </div>
+
+                        <div class="drop-box" ondrop="drop(event, 'nonrenewable')" ondragover="allowDrop(event)">
+                            <h4>⏳ SDA Tidak Dapat Diperbarui</h4>
+                            <div class="dropped-holder" id="nonrenewableHolder"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; text-align: right;">
+                    <button class="btn-action" onclick="resetDragGame()">🔄 Reset Game</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 3: SIMULASI KOTA ==================== -->
+        <section id="simulasi" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🏙️ Simulasi Kota Impian & Keseimbangan Alam</h2>
+                <p>Kamu adalah Walikota! Kelola pembangunan kota dengan tetap memperhatikan kelestarian alam.</p>
+                <br>
+
+                <div class="sim-dashboard">
+                    <div class="sim-stat">
+                        <div>💰 Uang Kota</div>
+                        <div class="sim-stat-val" id="simMoney">Rp 100 Juta</div>
+                    </div>
+                    <div class="sim-stat">
+                        <div>🌿 Kebersihan Alam</div>
+                        <div class="sim-stat-val" id="simEco">80%</div>
+                    </div>
+                    <div class="sim-stat">
+                        <div>⚡ Pasokan Energi</div>
+                        <div class="sim-stat-val" id="simEnergy">50 MW</div>
+                    </div>
+                </div>
+
+                <p><strong>Pilih Aksi Pembangunan:</strong></p>
+                <div class="sim-controls">
+                    <button class="sim-btn" onclick="simAction('mine')">
+                        ⛏️ Tambang Batu Bara
+                        <br><small>+Rp 50 Juta | -20% Alam | +30 MW</small>
+                    </button>
+                    <button class="sim-btn" onclick="simAction('solar')">
+                        ☀️ Pasang Panel Surya
+                        <br><small>-Rp 30 Juta | +5% Alam | +20 MW</small>
+                    </button>
+                    <button class="sim-btn" onclick="simAction('tree')">
+                        🌳 Reboisasi Hutan
+                        <br><small>-Rp 20 Juta | +25% Alam | 0 MW</small>
+                    </button>
+                </div>
+
+                <div style="margin-top: 20px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                    <strong>Status Pesan:</strong> <span id="simMessage">Pilih aksi untuk memulai pembangunan.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 4: PETA INTERAKTIF ==================== -->
+        <section id="peta" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🗺️ Peta Kekayaan Alam Nusantara</h2>
+                <p>Klik titik lokasi pulau di bawah ini untuk melihat potensi Sumber Daya Alam di daerah tersebut!</p>
+
+                <div class="map-container">
+                    <div style="text-align: center; font-weight: bold; color: var(--primary-blue); margin-top: 10px;">
+                        🇮🇩 PETA KEKAYAAN SDA INDONESIA
+                    </div>
+
+                    <div class="map-locations">
+                        <div class="map-pin" onclick="showMapInfo('sumatra')">📍 Sumatra</div>
+                        <div class="map-pin" onclick="showMapInfo('jawa')">📍 Jawa</div>
+                        <div class="map-pin" onclick="showMapInfo('kalimantan')">📍 Kalimantan</div>
+                        <div class="map-pin" onclick="showMapInfo('sulawesi')">📍 Sulawesi</div>
+                        <div class="map-pin" onclick="showMapInfo('papua')">📍 Papua</div>
+                    </div>
+
+                    <div class="map-info-card" id="mapInfoCard">
+                        <p style="color: #666; text-align: center;">Klik salah satu titik daerah di atas untuk menampilkan data SDA.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 5: KUIS EVALUASI ==================== -->
+        <section id="kuis" class="page-section">
+            <div class="card">
+                <h2 class="section-title">🏆 Kuis Petualangan BUMI</h2>
+                <div id="quizContainer">
+                    <div id="quizQuestion" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;">
+                        Pertanyaan akan muncul di sini...
+                    </div>
+                    <div id="quizOptions"></div>
+                    <div id="quizFeedback" style="margin-top: 15px; font-weight: bold;"></div>
+                </div>
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="quizScore" style="font-weight: bold; color: var(--primary-green);">Skor: 0</span>
+                    <button class="btn-action" id="nextQuizBtn" onclick="nextQuestion()" style="display: none;">Soal Berikutnya ➡️</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // ==================== NAVIGASI HALAMAN ====================
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            // Highlight active menu button
+            const btnIndex = ['home', 'materi', 'game-pilah', 'simulasi', 'peta', 'kuis'].indexOf(pageId);
+            if (btnIndex !== -1) {
+                document.querySelectorAll('.nav-btn')[btnIndex].classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== MATERI SLIDER LOGIC ====================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function updateSlideDisplay() {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === currentSlide);
+            });
+            document.getElementById('slideIndicator').innerText = `Halaman ${currentSlide + 1} / ${slides.length}`;
+            document.getElementById('prevSlideBtn').disabled = (currentSlide === 0);
+            document.getElementById('nextSlideBtn').disabled = (currentSlide === slides.length - 1);
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlideDisplay();
+        }
+
+        // ==================== DRAG AND DROP GAME LOGIC ====================
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev, targetType) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            const itemType = draggedElement.getAttribute('data-type');
+
+            if (itemType === targetType) {
+                if (targetType === 'renewable') {
+                    document.getElementById('renewableHolder').appendChild(draggedElement);
+                } else {
+                    document.getElementById('nonrenewableHolder').appendChild(draggedElement);
+                }
+                draggedElement.style.background = '#d4edda';
+                draggedElement.style.borderColor = '#28a745';
+            } else {
+                alert('⚠️ Kurang tepat! Coba ingat kembali sifat kelestarian benda ini.');
+            }
+        }
+
+        function resetDragGame() {
+            const itemList = document.getElementById('itemList');
+            const items = document.querySelectorAll('.draggable-item');
+            items.forEach(item => {
+                item.style.background = 'white';
+                item.style.borderColor = '#ddd';
+                itemList.appendChild(item);
+            });
+            document.getElementById('renewableHolder').innerHTML = '';
+            document.getElementById('nonrenewableHolder').innerHTML = '';
+        }
+
+        // ==================== SIMULASI KOTA LOGIC ====================
+        let simData = { money: 100, eco: 80, energy: 50 };
+
+        function updateSimUI() {
+            document.getElementById('simMoney').innerText = `Rp ${simData.money} Juta`;
+            document.getElementById('simEco').innerText = `${simData.eco}%`;
+            document.getElementById('simEnergy').innerText = `${simData.energy} MW`;
+        }
+
+        function simAction(type) {
+            const msgBox = document.getElementById('simMessage');
+            if (type === 'mine') {
+                simData.money += 50;
+                simData.eco = Math.max(0, simData.eco - 20);
+                simData.energy += 30;
+                msgBox.innerText = '⛏️ Hasil tambang menambah kas kota, tapi pencemaran udara meningkat!';
+            } else if (type === 'solar') {
+                if (simData.money < 30) { alert('Uang kota tidak cukup!'); return; }
+                simData.money -= 30;
+                simData.eco = Math.min(100, simData.eco + 5);
+                simData.energy += 20;
+                msgBox.innerText = '☀️ Energi bersih bertambah ramah lingkungan!';
+            } else if (type === 'tree') {
+                if (simData.money < 20) { alert('Uang kota tidak cukup!'); return; }
+                simData.money -= 20;
+                simData.eco = Math.min(100, simData.eco + 25);
+                msgBox.innerText = '🌳 Udara menjadi segar dan risiko banjir berkurang!';
+            }
+            updateSimUI();
+        }
+
+        // ==================== PETA INTERAKTIF LOGIC ====================
+        const mapData = {
+            sumatra: { title: '🌴 Sumatra', desc: 'Terkenal dengan perkebunan Kelapa Sawit, Kopi, Karet, serta tambang Minyak Bumi dan Batu Bara.' },
+            jawa: { title: '🌾 Jawa', desc: 'Pusat pertanian Padi, Tebu, Teh, serta kawasan perikanan pantai utara Jawa.' },
+            kalimantan: { title: '🪵 Kalimantan', desc: 'Kaya akan hutan alami (Kayu Jati/Rotan) serta tambang Batu Bara dan Intan.' },
+            sulawesi: { title: '🐟 Sulawesi', desc: 'Unggul dalam perikanan laut, budidaya Udang, serta hasil tambang Nikel.' },
+            papua: { title: '🥇 Papua', desc: 'Memiliki hutan hujan tropis yang luas, potensi Kayu, serta tambang Emas terbesar (Grasberg).' }
+        };
+
+        function showMapInfo(region) {
+            const info = mapData[region];
+            const card = document.getElementById('mapInfoCard');
+            card.innerHTML = `
+                <h3 style="color: var(--primary-green); margin-bottom: 5px;">${info.title}</h3>
+                <p>${info.desc}</p>
+            `;
+        }
+
+        // ==================== KUIS LOGIC ====================
+const quizData = [
+    {
+        q: "1. Manakah di bawah ini yang termasuk contoh Sumber Daya Alam Hayati?",
+        options: ["Batu Bara", "Ikan Laut dan Padi", "Minyak Bumi", "Emas dan Perak"],
+        answer: 1
+    },
+    {
+        q: "2. Mengapa batu bara dan minyak bumi disebut SDA tidak dapat diperbarui?",
+        options: ["Karena harganya murah", "Karena jumlahnya melimpah", "Karena butuh jutaan tahun untuk terbentuk kembali", "Karena dapat ditanam di sawah"],
+        answer: 2
+    },
+    {
+        q: "3. Kegiatan menanam kembali pohon di hutan yang telah gundul disebut...",
+        options: ["Reboisasi", "Irigasi", "Eksploitasi", "Erosi"],
+        answer: 0
+    },
+    {
+        q: "4. Wilayah Indonesia yang terkenal sebagai penghasil utama kayu jati dan batu bara adalah pulau...",
+        options: ["Jawa", "Bali", "Kalimantan", "Lombok"],
+        answer: 2
+    },
+    {
+        q: "5. Tindakan di rumah yang menunjukkan perilaku hemat Sumber Daya Alam adalah...",
+        options: ["Menyalakan lampu pada siang hari", "Membiarkan kran air terus mengalir", "Mematikan kran air setelah selesai digunakan", "Membuang sampah ke sungai"],
+        answer: 2
+    },
+    {
+        q: "6. Sumber Daya Alam yang dimanfaatkan manusia sebagai sumber energi panas terbesar di bumi adalah...",
+        options: ["Angin", "Sinar Matahari", "Batu Bara", "Gas Alam"],
+        answer: 1
+    },
+    {
+        q: "7. Hasil olahan dari kelapa sawit umumnya dimanfaatkan manusia sebagai bahan pembuat...",
+        options: ["Bensin dan Solar", "Minyak Goreng dan Sabun", "Kertas dan Pensil", "Pakaian dan Kain"],
+        answer: 1
+    },
+    {
+        q: "8. Manakah pasangan SDA dan cara pemanfaatannya yang tepat di bawah ini?",
+        options: ["Sapi - Diambil kayunya", "Pohon Jati - Diambil dagingnya", "Minyak Bumi - Bahan bakar kendaraan", "Air - Bahan bakar kompor listrik"],
+        answer: 2
+    },
+    {
+        q: "9. Indonesia disebut sebagai negara maritim karena...",
+        options: ["Memiliki wilayah daratan yang sangat luas", "Sebagian besar wilayahnya berupa perairan/lautan", "Memiliki banyak gunung berapi", "Sering mengalami musim hujan"],
+        answer: 1
+    },
+    {
+        q: "10. Penggunaan energi alternatif seperti panel surya bertujuan untuk...",
+        options: ["Meningkatkan penggunaan minyak bumi", "Menggantikan energi yang dapat mencemari lingkungan", "Membuat listrik menjadi lebih mahal", "Menghabiskan sumber daya alam yang ada"],
+        answer: 1
+    }
+
+        ];
+
+        let currentQuizIdx = 0;
+        let score = 0;
+
+        function loadQuizQuestion() {
+            const q = quizData[currentQuizIdx];
+            document.getElementById('quizQuestion').innerText = q.q;
+            const optContainer = document.getElementById('quizOptions');
+            optContainer.innerHTML = '';
+            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('nextQuizBtn').style.display = 'none';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIdx) {
+            const q = quizData[currentQuizIdx];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selectedIdx === q.answer) {
+                options[selectedIdx].classList.add('correct');
+                document.getElementById('quizFeedback').innerText = '✅ Benar sekali!';
+                document.getElementById('quizFeedback').style.color = 'green';
+                score += 10;
+            } else {
+                options[selectedIdx].classList.add('wrong');
+                options[q.answer].classList.add('correct');
+                document.getElementById('quizFeedback').innerText = '❌ Kurang tepat.';
+                document.getElementById('quizFeedback').style.color = 'red';
+            }
+
+            document.getElementById('quizScore').innerText = `Skor: ${score}`;
+            document.getElementById('nextQuizBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuizIdx++;
+            if (currentQuizIdx < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('quizContainer').innerHTML = `
+                    <h3>🎉 Kuis Selesai!</h3>
+                    <p style="font-size: 1.2rem; margin-top: 10px;">Skor Akhir Kamu: <strong>${score}</strong> / ${quizData.length * 10}</p>
+                `;
+                document.getElementById('nextQuizBtn').style.display = 'none';
+            }
+        }
+
+        // Initialize Slider & Quiz on load
+        updateSlideDisplay();
+        loadQuizQuestion();
+    </script>
+</body>
+</html>

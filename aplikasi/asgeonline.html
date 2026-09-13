@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asgeonline - FERLINK</title>
+    
+    <!-- CSS Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: #e0f7fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background: #0288d1;
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back-ferlink {
+            background: #ffffff;
+            color: #0288d1;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            border: 2px solid #b3e5fc;
+        }
+        .btn-back-ferlink:hover {
+            background: #e1f5fe;
+            transform: translateX(-3px);
+        }
+
+        h1 { font-size: 22px; font-weight: 700; }
+
+        .nav-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-btn {
+            background: #03a9f4;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Fredoka', cursive;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #ffeb3b;
+            color: #d84315;
+            border-color: #ff9800;
+        }
+
+        #main-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Panel Kontrol Garis */
+        #astro-control-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid #ab47bc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 280px;
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4a148c;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .astro-btn {
+            background: #f3e5f5;
+            border: 2px solid #ab47bc;
+            color: #4a148c;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Fredoka', cursive;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .astro-btn.active {
+            background: #ab47bc;
+            color: white;
+        }
+
+        #instruction-box {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 3px solid #0288d1;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* Copyright Tag */
+        #copyright-tag {
+            position: absolute;
+            bottom: 12px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #333333;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #b0bec5;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        /* STYLES HALAMAN KUIS & PEMBUAT */
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #e0f7fa;
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Card Kuis */
+        .quiz-card {
+            background: white;
+            border: 4px solid #ff9800;
+            border-radius: 25px;
+            padding: 25px;
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .quiz-header {
+            font-size: 20px;
+            color: #e65100;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #fff8e1;
+            border: 2px solid #ffe082;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-family: 'Fredoka', cursive;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            color: #424242;
+        }
+
+        .option-btn:hover {
+            background: #ffe082;
+            transform: scale(1.02);
+        }
+
+        .result-box {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .btn-restart {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-family: 'Fredoka', cursive;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* Card Pembuat */
+        .creator-card {
+            background: white;
+            border: 4px solid #0288d1;
+            border-radius: 25px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .avatar-box {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .creator-name {
+            font-size: 24px;
+            color: #0288d1;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .creator-title {
+            font-size: 15px;
+            color: #0097a7;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .creator-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed #81c784;
+            margin-bottom: 15px;
+        }
+
+        .badge-list {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 10px 15px; }
+            h1 { font-size: 18px; }
+            .btn-back-ferlink { font-size: 12px; padding: 6px 12px; }
+            .tab-btn { font-size: 12px; padding: 6px 10px; }
+            #instruction-box { font-size: 13px; width: 85%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="../ipas.html" class="btn-back-ferlink">
+                ⬅️ Kembali ke IPAS
+            </a>
+            <h1>🌍 Asgeonline</h1>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="btn-geo" onclick="showGeografis()">1. Geografis</button>
+            <button class="tab-btn" id="btn-astro" onclick="showAstronomis()">2. Astronomis</button>
+            <button class="tab-btn" id="btn-quiz" onclick="showKuis()">3. Kuis 🎯</button>
+            <button class="tab-btn" id="btn-creator" onclick="showPembuat()">4. Pembuat 👤</button>
+        </div>
+    </header>
+
+    <div id="main-container">
+        <!-- ELEMEN PETA -->
+        <div id="map"></div>
+
+        <!-- COPYRIGHT TAG -->
+        <div id="copyright-tag">
+            © 2026 Ferlink by Robie Ferli. All Rights Reserved.
+        </div>
+
+        <!-- PANEL KONTROL GARIS ASTRONOMIS -->
+        <div id="astro-control-panel">
+            <div class="panel-title">Kontrol Garis Astronomis</div>
+            
+            <button class="astro-btn active" id="toggle-grid" onclick="toggleLine('grid')">
+                <span>🌐 Jaring Lintang & Bujur Dunia</span>
+                <span id="st-grid">ON</span>
+            </button>
+            
+            <button class="astro-btn active" id="toggle-khatulistiwa" onclick="toggleLine('khatulistiwa')">
+                <span>🔴 Garis Khatulistiwa (0°)</span>
+                <span id="st-khatulistiwa">ON</span>
+            </button>
+
+            <button class="astro-btn active" id="toggle-batas" onclick="toggleLine('batas')">
+                <span>⭐ Batas Indonesia (6°LU-11°LS & 95°BT-141°BT)</span>
+                <span id="st-batas">ON</span>
+            </button>
+        </div>
+
+        <div id="instruction-box">Klik penanda di peta untuk mempelajari wilayahnya! 💡</div>
+
+        <!-- HALAMAN KUIS TANTANGAN -->
+        <div id="quiz-page" class="content-overlay">
+            <div class="quiz-card">
+                <div class="quiz-header">🎯 Kuis Tantangan Asgeonline</div>
+                <div id="quiz-body">
+                    <!-- Dinamis Diisi JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN PEMBUAT APLIKASI -->
+        <div id="creator-page" class="content-overlay">
+            <div class="creator-card">
+                <div class="avatar-box">👨‍🏫</div>
+                <div class="creator-name">Robie Ferli</div>
+                <div class="creator-title">Pengembang FERLINK & Asgeonline</div>
+                
+                <div class="creator-desc">
+                    Aplikasi <b>Asgeonline</b> (Astronomi & Geografi Online) dirancang khusus sebagai media pembelajaran interaktif mata pelajaran IPAS Sekolah Dasar. Membantu siswa memahami posisi geografis dan astronomis Indonesia secara visual dan menyenangkan! 🚀
+                </div>
+
+                <div class="badge-list">
+                    <span class="badge">🏫 IPAS SD</span>
+                    <span class="badge">💡 Media Interaktif</span>
+                    <span class="badge">© FERLINK 2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inisialisasi Peta
+        const map = L.map('map').setView([-2.5489, 118.0149], 4);
+
+        // Peta Esri (Stabil & Bebas API Key)
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 10,
+            minZoom: 2,
+            attribution: 'Tiles © Esri'
+        }).addTo(map);
+
+        // Group Layers
+        const geoGroup = L.layerGroup().addTo(map);
+        const gridGroup = L.layerGroup();
+        const khatulistiwaGroup = L.layerGroup();
+        const batasGroup = L.layerGroup();
+
+        // Data Penanda Geografis
+        const geoMarkers = [
+            { lat: 25.0, lng: 100.0, label: "🌏 BENUA ASIA", desc: "Indonesia berbatasan dengan Benua Asia di sebelah utara." },
+            { lat: -25.0, lng: 135.0, label: "🦘 BENUA AUSTRALIA", desc: "Indonesia berbatasan dengan Benua Australia di sebelah selatan." },
+            { lat: -12.0, lng: 90.0, label: "🌊 SAMUDRA HINDIA", desc: "Samudra Hindia mengapit Indonesia di sebelah barat dan selatan." },
+            { lat: 5.0, lng: 140.0, label: "🌊 SAMUDRA PASIFIK", desc: "Samudra Pasifik mengapit Indonesia di sebelah timur laut." }
+        ];
+
+        geoMarkers.forEach(item => {
+            const marker = L.marker([item.lat, item.lng]).addTo(geoGroup);
+            marker.bindPopup(`<b>${item.label}</b><br>${item.desc}`);
+        });
+
+        // Garis Jaring-Jaring Global
+        for (let lat = -80; lat <= 80; lat += 10) {
+            if (lat !== 0) {
+                const labelText = lat > 0 ? `${lat}° LU` : `${Math.abs(lat)}° LS`;
+                L.polyline([[lat, -180], [lat, 180]], {color: '#78909c', weight: 1, dashArray: '4, 4'})
+                    .addTo(gridGroup)
+                    .bindTooltip(labelText, {permanent: false, direction: 'right'});
+            }
+        }
+
+        for (let lng = -180; lng <= 180; lng += 10) {
+            const labelText = lng >= 0 ? `${lng}° BT` : `${Math.abs(lng)}° BB`;
+            L.polyline([[-90, lng], [90, lng]], {color: '#78909c', weight: 1, dashArray: '4, 4'})
+                .addTo(gridGroup)
+                .bindTooltip(labelText, {permanent: false, direction: 'top'});
+        }
+
+        // Garis Khatulistiwa (0°)
+        L.polyline([[0, -180], [0, 180]], {color: '#d50000', weight: 4})
+            .addTo(khatulistiwaGroup)
+            .bindTooltip("Garis Khatulistiwa (0°)", {permanent: true, direction: "top"});
+
+        // Garis Batas Astronomis Indonesia
+        L.polyline([[6, 85], [6, 150]], {color: '#8e24aa', weight: 3, dashArray: '6, 6'}).addTo(batasGroup)
+            .bindTooltip("6° LU (Batas Utara)", {permanent: true, direction: "top"});
+        L.polyline([[-11, 85], [-11, 150]], {color: '#8e24aa', weight: 3, dashArray: '6, 6'}).addTo(batasGroup)
+            .bindTooltip("11° LS (Batas Selatan)", {permanent: true, direction: "bottom"});
+
+        L.polyline([[15, 95], [-20, 95]], {color: '#1e88e5', weight: 3, dashArray: '6, 6'}).addTo(batasGroup)
+            .bindTooltip("95° BT (Batas Barat)", {permanent: true, direction: "left"});
+        L.polyline([[15, 141], [-20, 141]], {color: '#1e88e5', weight: 3, dashArray: '6, 6'}).addTo(batasGroup)
+            .bindTooltip("141° BT (Batas Timur)", {permanent: true, direction: "right"});
+
+        // State Tombol Garis
+        const state = { grid: true, khatulistiwa: true, batas: true };
+
+        function toggleLine(type) {
+            state[type] = !state[type];
+            const btn = document.getElementById(`toggle-${type}`);
+            const statusText = document.getElementById(`st-${type}`);
+
+            if (state[type]) {
+                btn.classList.add('active');
+                statusText.innerText = "ON";
+                if (type === 'grid') map.addLayer(gridGroup);
+                if (type === 'khatulistiwa') map.addLayer(khatulistiwaGroup);
+                if (type === 'batas') map.addLayer(batasGroup);
+            } else {
+                btn.classList.remove('active');
+                statusText.innerText = "OFF";
+                if (type === 'grid') map.removeLayer(gridGroup);
+                if (type === 'khatulistiwa') map.removeLayer(khatulistiwaGroup);
+                if (type === 'batas') map.removeLayer(batasGroup);
+            }
+        }
+
+        // NAVIGASI TAB UTAMA
+        function setActiveTab(btnId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(btnId).classList.add('active');
+
+            // Sembunyikan halaman kuis & pembuat secara default
+            document.getElementById('quiz-page').style.display = 'none';
+            document.getElementById('creator-page').style.display = 'none';
+        }
+
+        function showGeografis() {
+            setActiveTab('btn-geo');
+            document.getElementById('astro-control-panel').style.display = 'none';
+            document.getElementById('instruction-box').style.display = 'block';
+            document.getElementById('instruction-box').innerText = "Klik penanda Benua dan Samudra pada peta!";
+
+            map.removeLayer(gridGroup);
+            map.removeLayer(khatulistiwaGroup);
+            map.removeLayer(batasGroup);
+            map.addLayer(geoGroup);
+
+            map.invalidateSize();
+            map.setView([-2.5489, 118.0149], 4);
+        }
+
+        function showAstronomis() {
+            setActiveTab('btn-astro');
+            document.getElementById('astro-control-panel').style.display = 'flex';
+            document.getElementById('instruction-box').style.display = 'block';
+            document.getElementById('instruction-box').innerText = "Nyalakan jaring bumi dan garis batas untuk melihat posisi astronomis Indonesia!";
+
+            map.removeLayer(geoGroup);
+            if (state.grid) map.addLayer(gridGroup);
+            if (state.khatulistiwa) map.addLayer(khatulistiwaGroup);
+            if (state.batas) map.addLayer(batasGroup);
+
+            map.invalidateSize();
+            map.setView([-2.5489, 118.0149], 4);
+        }
+
+        function showKuis() {
+            setActiveTab('btn-quiz');
+            document.getElementById('astro-control-panel').style.display = 'none';
+            document.getElementById('instruction-box').style.display = 'none';
+            document.getElementById('quiz-page').style.display = 'flex';
+            startQuiz();
+        }
+
+        function showPembuat() {
+            setActiveTab('btn-creator');
+            document.getElementById('astro-control-panel').style.display = 'none';
+            document.getElementById('instruction-box').style.display = 'none';
+            document.getElementById('creator-page').style.display = 'flex';
+        }
+
+        // SISTEM KUIS INTERAKTIF
+        const quizData = [
+            {
+                q: "Indonesia diapit oleh dua benua, yaitu Benua...",
+                options: ["Asia dan Eropa", "Asia dan Australia", "Amerika dan Afrika", "Australia dan Antartika"],
+                answer: 1
+            },
+            {
+                q: "Samudra yang mengapit wilayah Indonesia adalah...",
+                options: ["Samudra Pasifik dan Atlantik", "Samudra Hindia dan Arktik", "Samudra Hindia dan Pasifik", "Samudra Atlantik dan Hindia"],
+                answer: 2
+            },
+            {
+                q: "Batas paling utara dan paling selatan garis lintang Indonesia adalah...",
+                options: ["6° LU - 11° LS", "10° LU - 15° LS", "0° - 10° LS", "6° LS - 11° LU"],
+                answer: 0
+            },
+            {
+                q: "Batas paling barat dan timur garis bujur Indonesia adalah...",
+                options: ["90° BT - 140° BT", "95° BT - 141° BT", "100° BT - 150° BT", "95° BB - 141° BT"],
+                answer: 1
+            },
+            {
+                q: "Garis khayal 0° yang membagi bumi menjadi dua bagian (Utara & Selatan) dinamakan...",
+                options: ["Garis Bujur", "Garis Batas", "Garis Khatulistiwa", "Garis Pinggir"],
+                answer: 2
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQ = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const body = document.getElementById('quiz-body');
+            if (currentQ < quizData.length) {
+                const item = quizData[currentQ];
+                let optionsHtml = '';
+                item.options.forEach((opt, idx) => {
+                    optionsHtml += `<button class="option-btn" onclick="checkAnswer(${idx})">${opt}</button>`;
+                });
+
+                body.innerHTML = `
+                    <div style="font-size: 14px; color: #ff9800; font-weight:700; margin-bottom: 8px;">Soal No. ${currentQ + 1} dari ${quizData.length}</div>
+                    <div class="question-text">${item.q}</div>
+                    <div class="options-grid">${optionsHtml}</div>
+                `;
+            } else {
+                let message = score >= 80 ? "🎉 Luar Biasa! Kamu Hebat Sekali!" : "👍 Bagus! Ayo Belajar Lagi Supaya Dapat Nilai 100!";
+                body.innerHTML = `
+                    <div class="result-box">Nilai Kamu: ${score} / 100</div>
+                    <p style="font-size: 16px; color: #555;">${message}</p>
+                    <button class="btn-restart" onclick="startQuiz()">🔄 Coba Lagi</button>
+                `;
+            }
+        }
+
+        function checkAnswer(selectedIdx) {
+            if (selectedIdx === quizData[currentQ].answer) {
+                score += 20;
+            }
+            currentQ++;
+            renderQuestion();
+        }
+    </script>
+</body>
+</html>
