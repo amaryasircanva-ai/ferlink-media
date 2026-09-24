@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Warna Interaktif - Seni Rupa Kelas 5</title>
+    <style>
+        :root {
+            --primary-bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --accent-color: #4a90e2;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--accent-color);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #7f8c8d;
+            font-size: 15px;
+        }
+
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--accent-color);
+            background: white;
+            color: var(--accent-color);
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Color Controls */
+        .color-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .color-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .color-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .color-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.2);
+        }
+
+        .drop-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .drop-btn:hover {
+            background: #cbd5e1;
+        }
+
+        /* Mixing Dish */
+        .mixing-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dish {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 8px solid #cbd5e1;
+            background-color: #f5f5f5;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.2);
+            transition: background-color 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-box {
+            text-align: center;
+            width: 100%;
+        }
+
+        .result-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .result-category {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .recipe-list {
+            margin-top: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .recipe-list ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .recipe-badge {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-reset {
+            flex: 1;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-check {
+            flex: 1;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Quiz Banner */
+        .quiz-card {
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-size: 14px;
+            color: #0369a1;
+            font-weight: bold;
+        }
+
+        .quiz-target {
+            font-size: 20px;
+            color: #0c4a6e;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .quiz-score {
+            font-size: 13px;
+            color: #0284c7;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧪 Lab Warna Interaktif</h1>
+        <p>Materi Seni Rupa Kelas 5 - Pencampuran Warna Cat (RYB)</p>
+    </header>
+
+    <div class="mode-switcher">
+        <button class="mode-btn active" id="btn-free" onclick="switchMode('free')">Mode Bebas</button>
+        <button class="mode-btn" id="btn-quiz" onclick="switchMode('quiz')">Mode Tantangan (Kuis)</button>
+    </div>
+
+    <div id="quiz-banner" class="quiz-card hidden">
+        <div class="quiz-title">TANTANGAN:</div>
+        <div class="quiz-target" id="quiz-target-text">Buatlah Warna Hijau!</div>
+        <div class="quiz-score">Skor Kamu: <span id="score-val">0</span></div>
+    </div>
+
+    <div class="app-grid">
+        <!-- Panel Tetes Cat -->
+        <div class="panel">
+            <h2>Pilih Warna Cat (Teteskan)</h2>
+            <div class="color-buttons">
+                <div class="color-row">
+                    <div class="color-label">
+                        <div class="color-dot" style="background: #e63946;"></div> Merah (Primer)
+                    </div>
+                    <button class="drop-btn" onclick="addDrop('red')">+ 1 Tetes</button>
+                </div>
+
+                <div class="color-row">
+                    <div class="color-label">
+                        <div class="color-dot" style="background: #ffb703;"></div> Kuning (Primer)
+                    </div>
+                    <button class="drop-btn" onclick="addDrop('yellow')">+ 1 Tetes</button>
+                </div>
+
+                <div class="color-row">
+                    <div class="color-label">
+                        <div class="color-dot" style="background: #219ebc;"></div> Biru (Primer)
+                    </div>
+                    <button class="drop-btn" onclick="addDrop('blue')">+ 1 Tetes</button>
+                </div>
+
+                <div class="color-row">
+                    <div class="color-label">
+                        <div class="color-dot" style="background: #ffffff;"></div> Putih (Netral)
+                    </div>
+                    <button class="drop-btn" onclick="addDrop('white')">+ 1 Tetes</button>
+                </div>
+
+                <div class="color-row">
+                    <div class="color-label">
+                        <div class="color-dot" style="background: #2b2d42;"></div> Hitam (Netral)
+                    </div>
+                    <button class="drop-btn" onclick="addDrop('black')">+ 1 Tetes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Wadah Pencampur -->
+        <div class="panel mixing-area">
+            <h2>Wadah Adukan Cat</h2>
+            
+            <div class="dish" id="mixing-dish"></div>
+
+            <div class="result-box">
+                <div class="result-name" id="color-name">Wadah Kosong</div>
+                <div class="result-category" id="color-cat">Teteskan warna di sebelah kiri</div>
+            </div>
+
+            <div class="recipe-list">
+                <strong>Resep Tetesan:</strong>
+                <ul id="recipe-badges">
+                    <li>Belum ada cat</li>
+                </ul>
+            </div>
+
+            <div class="action-btns">
+                <button class="btn-reset" onclick="resetDish()">🧹 Cuci Kuas</button>
+                <button class="btn-check hidden" id="btn-submit-quiz" onclick="checkQuiz()">✅ Cek Jawaban</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State Aplikasi
+    let drops = { red: 0, yellow: 0, blue: 0, white: 0, black: 0 };
+    let currentMode = 'free';
+    let score = 0;
+    let currentQuizIndex = 0;
+
+    const quizQuestions = [
+        { targetName: 'Hijau', hint: 'Kuning + Biru' },
+        { targetName: 'Jingga / Oranye', hint: 'Merah + Kuning' },
+        { targetName: 'Ungu', hint: 'Merah + Biru' },
+        { targetName: 'Merah Muda', hint: 'Merah + Putih' },
+        { targetName: 'Hijau Tua', hint: 'Kuning + Biru + Hitam' },
+        { targetName: 'Cokelat', hint: 'Merah + Kuning + Biru' }
+    ];
+
+    function addDrop(color) {
+        drops[color]++;
+        updateUI();
+    }
+
+    function resetDish() {
+        drops = { red: 0, yellow: 0, blue: 0, white: 0, black: 0 };
+        updateUI();
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.getElementById('btn-free').classList.toggle('active', mode === 'free');
+        document.getElementById('btn-quiz').classList.toggle('active', mode === 'quiz');
+        
+        document.getElementById('quiz-banner').classList.toggle('hidden', mode === 'free');
+        document.getElementById('btn-submit-quiz').classList.toggle('hidden', mode === 'free');
+        
+        if (mode === 'quiz') {
+            score = 0;
+            currentQuizIndex = 0;
+            document.getElementById('score-val').innerText = score;
+            loadQuiz();
+        }
+        resetDish();
+    }
+
+    function loadQuiz() {
+        let q = quizQuestions[currentQuizIndex];
+        document.getElementById('quiz-target-text').innerText = `Buatlah Warna: "${q.targetName}"!`;
+    }
+
+    function computeColor() {
+        let { red: r, yellow: y, blue: b, white: w, black: k } = drops;
+        let total = r + y + b + w + k;
+
+        if (total === 0) {
+            return {
+                rgb: [245, 245, 245],
+                name: "Wadah Kosong",
+                category: "Teteskan warna di sebelah kiri"
+            };
+        }
+
+        let rybTotal = r + y + b;
+        let finalR = 245, finalG = 245, finalB = 245;
+        let name = "";
+        let category = "";
+
+        if (rybTotal === 0) {
+            if (w > 0 && k === 0) {
+                finalR = 255; finalG = 255; finalB = 255;
+                name = "Putih"; category = "Warna Netral";
+            } else if (k > 0 && w === 0) {
+                finalR = 40; finalG = 40; finalB = 40;
+                name = "Hitam"; category = "Warna Netral";
+            } else {
+                let gray = Math.round(255 * (w / (w + k)));
+                finalR = gray; finalG = gray; finalB = gray;
+                name = "Abu-abu"; category = "Warna Netral";
+            }
+        } else {
+            let pr = r / rybTotal;
+            let py = y / rybTotal;
+            let pb = b / rybTotal;
+
+            // Dasar Warna Campuran RYB
+            let cr = pr * 220 + py * 255 + pb * 20;
+            let cg = pr * 20 + py * 200 + pb * 100;
+            let cb = pr * 20 + py * 0 + pb * 220;
+
+            // Koreksi Warna Sekunder & Tersier
+            if (pr > 0 && py > 0 && pb === 0) { 
+                cg = (py / (pr + py)) * 140 + 30; // Jingga
+            } else if (py > 0 && pb > 0 && pr === 0) { 
+                cg = 160; cr = (py / (py + pb)) * 40; // Hijau
+            } else if (pr > 0 && pb > 0 && py === 0) { 
+                cg = 20; // Ungu
+            } else if (pr > 0 && py > 0 && pb > 0) { 
+                cr = 120; cg = 75; cb = 45; // Cokelat
+            }
+
+            // Kategori Nama Utama
+            if (pr >= 0.8) { name = "Merah"; category = "Warna Primer"; }
+            else if (py >= 0.8) { name = "Kuning"; category = "Warna Primer"; }
+            else if (pb >= 0.8) { name = "Biru"; category = "Warna Primer"; }
+            else if (pr > 0 && py > 0 && pb === 0) { name = "Jingga / Oranye"; category = "Warna Sekunder"; }
+            else if (py > 0 && pb > 0 && pr === 0) { name = "Hijau"; category = "Warna Sekunder"; }
+            else if (pr > 0 && pb > 0 && py === 0) { name = "Ungu"; category = "Warna Sekunder"; }
+            else { name = "Cokelat"; category = "Warna Tersier / Campuran"; }
+
+            // Aplikasi Tint (Putih) & Shade (Hitam)
+            if (w > 0 && k === 0) {
+                let factor = w / (rybTotal + w);
+                cr = cr + (255 - cr) * factor * 0.75;
+                cg = cg + (255 - cg) * factor * 0.75;
+                cb = cb + (255 - cb) * factor * 0.75;
+                name += " Muda";
+                category += " + Tint (Muda)";
+            } else if (k > 0 && w === 0) {
+                let factor = k / (rybTotal + k);
+                cr = cr * (1 - factor * 0.65);
+                cg = cg * (1 - factor * 0.65);
+                cb = cb * (1 - factor * 0.65);
+                name += " Tua";
+                category += " + Shade (Tua)";
+            } else if (w > 0 && k > 0) {
+                name += " (Kusam)";
+                category += " + Tone";
+            }
+
+            finalR = Math.round(cr);
+            finalG = Math.round(cg);
+            finalB = Math.round(cb);
+        }
+
+        return { rgb: [finalR, finalG, finalB], name, category };
+    }
+
+    function updateUI() {
+        let result = computeColor();
+        
+        // Update Warna Dish
+        document.getElementById('mixing-dish').style.backgroundColor = `rgb(${result.rgb[0]}, ${result.rgb[1]}, ${result.rgb[2]})`;
+        document.getElementById('color-name').innerText = result.name;
+        document.getElementById('color-cat').innerText = result.category;
+
+        // Update Resep Badges
+        let badgeContainer = document.getElementById('recipe-badges');
+        badgeContainer.innerHTML = '';
+        
+        let hasDrops = false;
+        const colorLabels = { red: 'Merah', yellow: 'Kuning', blue: 'Biru', white: 'Putih', black: 'Hitam' };
+        
+        for (let key in drops) {
+            if (drops[key] > 0) {
+                hasDrops = true;
+                let li = document.createElement('li');
+                li.className = 'recipe-badge';
+                li.innerText = `${drops[key]} ${colorLabels[key]}`;
+                badgeContainer.appendChild(li);
+            }
+        }
+
+        if (!hasDrops) {
+            badgeContainer.innerHTML = '<li>Belum ada cat</li>';
+        }
+    }
+
+    function checkQuiz() {
+        let result = computeColor();
+        let target = quizQuestions[currentQuizIndex].targetName;
+
+        if (result.name.toLowerCase().includes(target.toLowerCase())) {
+            alert("🎉 HEBAT! Jawaban kamu Benar!");
+            score += 10;
+            document.getElementById('score-val').innerText = score;
+            currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
+            loadQuiz();
+            resetDish();
+        } else {
+            alert(`❌ Masih kurang tepat. Hasil kamu: "${result.name}". Coba sesuaikan racikannya lagi!`);
+        }
+    }
+</script>
+</body>
+</html>
