@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seni Rupa - FERLINK Media Pembelajaran</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Trebuchet MS",Arial,sans-serif;background:#f2ffff;color:#24324a;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;width:255px;height:100vh;background:linear-gradient(180deg,#dff6ff,#eefaff);border-right:3px solid #c9efff;padding:20px 15px;overflow-y:auto;z-index:100}
+.logo{text-align:center;margin-bottom:20px}.logo-icon{font-size:48px;margin-bottom:5px}
+.logo h1{font-size:37px;letter-spacing:3px;background:linear-gradient(90deg,#1976ff,#8e44ff,#ff3d81,#ff9800);-webkit-background-clip:text;color:transparent;font-weight:900}
+.logo p{font-size:12px;color:#42627d;font-weight:bold}
+.menu{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.menu a{display:flex;align-items:center;gap:12px;text-decoration:none;padding:13px 15px;border-radius:18px;background:white;color:#263b67;font-weight:bold;border:2px solid #d9eaff;transition:.2s;box-shadow:0 3px 8px rgba(50,100,150,.06)}
+.menu a:hover{transform:translateX(5px);border-color:#7abaff;box-shadow:0 5px 15px rgba(30,120,220,.15)}
+.menu-icon{font-size:25px}.menu .active{background:linear-gradient(90deg,#168e91,#18a4a7);color:white;border-color:#168e91;box-shadow:0 5px 15px rgba(22,142,145,.25)}
+
+.main{margin-left:255px;min-height:100vh;padding:25px 35px 50px;background:radial-gradient(circle at 10% 10%,rgba(255,255,255,.9),transparent 25%),#f2ffff}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}
+.welcome h2{font-size:30px;color:#126b6e;margin-bottom:5px}.welcome p{color:#4d7073;font-size:15px}
+.back-btn{text-decoration:none;background:white;color:#168e91;padding:10px 18px;border-radius:15px;font-weight:bold;border:2px solid #a9e4e2;transition:.2s;box-shadow:0 3px 8px rgba(22,142,145,.1)}
+.back-btn:hover{background:#168e91;color:white}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#168e91,#18a4a7);color:white;border-radius:25px;padding:30px 35px;margin-bottom:28px;min-height:145px;box-shadow:0 10px 25px rgba(22,142,145,.20)}
+.hero::after{content:"🎨 🖌️ 🖍️ 🖼️";position:absolute;right:30px;bottom:15px;font-size:48px;opacity:.75}
+.hero h2{font-size:28px;margin-bottom:10px}.hero h2 span{color:#ffe34d}
+.hero p{font-size:15px;max-width:700px;line-height:1.6}
+
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section-title{font-size:25px;color:#168e91}
+.section-title span{font-size:28px}
+
+.content-grid{display:grid;grid-template-columns:repeat(3,minmax(250px,1fr));gap:20px;margin-bottom:35px}
+.content-card{position:relative;background:white;border-radius:22px;padding:22px;border:2px solid #a9e4e2;transition:.25s;overflow:hidden}
+.content-card:hover{transform:translateY(-7px);box-shadow:0 12px 25px rgba(22,142,145,.15)}
+.card-icon{font-size:45px;margin-bottom:12px}
+.content-card h3{font-size:18px;color:#126b6e;margin-bottom:8px}
+.content-card p{font-size:13px;color:#557073;line-height:1.5;margin-bottom:15px}
+.card-button{display:inline-block;text-decoration:none;background:#18a4a7;color:white;padding:9px 15px;border-radius:12px;font-size:12px;font-weight:bold;transition:.2s}
+.card-button:hover{background:#126b6e}
+.new-badge{position:absolute;right:15px;top:15px;background:#ff9800;color:white;font-size:10px;font-weight:bold;padding:5px 8px;border-radius:10px}
+
+.footer-message{margin-top:30px;background:#e4fafa;border:2px solid #a9e4e2;border-radius:20px;text-align:center;padding:14px;color:#126b6e;font-weight:bold;font-size:14px}
+.mobile-menu{display:none;border:none;background:#168e91;color:white;border-radius:12px;padding:10px 13px;font-size:22px;cursor:pointer}
+
+@media(max-width:1024px){.content-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:850px){.sidebar{transform:translateX(-100%);transition:.3s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.mobile-menu{display:block}.header{flex-direction:column;align-items:flex-start}}
+@media(max-width:600px){.content-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+<div class="logo"><div class="logo-icon">🎓📚</div><h1>FERLINK</h1><p>Media Pembelajaran Interaktif</p></div>
+<nav class="menu">
+<a href="index.html"><span class="menu-icon">🏠</span>Beranda</a>
+<a href="index.html#pembelajaran"><span class="menu-icon">📚</span>Pembelajaran</a>
+<a href="index.html#game"><span class="menu-icon">🎮</span>Game Pembelajaran</a>
+<a href="index.html#alat"><span class="menu-icon">🛠️</span>Alat Belajar</a>
+<a href="index.html#guru"><span class="menu-icon">👨‍🏫</span>Untuk Guru</a>
+<a href="#" class="active"><span class="menu-icon">🎨</span>Seni Rupa</a>
+</nav>
+</aside>
+
+<main class="main">
+<header class="header">
+<div class="welcome">
+<button class="mobile-menu" onclick="toggleMenu()">☰</button>
+<h2>🎨 Ruang Belajar Seni Rupa</h2>
+<p>Salurkan kreativitasmu melalui warna, garis, dan bentuk! ✨</p>
+</div>
+<a href="index.html" class="back-btn">← Kembali ke Beranda</a>
+</header>
+
+<section class="hero">
+<h2>🖌️ Wujudkan Kreativitas Tanpa Batas!</h2>
+<p>Selamat datang di ruang pembelajaran seni rupa interaktif. Di sini kamu bisa belajar mengenai unsur-unsur seni rupa, teknik menggambar, memadukan warna, dan membuat karya yang indah. 🌈</p>
+</section>
+
+<div class="section-header">
+<h2 class="section-title"><span>📚</span> Materi & Aplikasi Seni Rupa</h2>
+</div>
+
+<div class="content-grid">
+<!-- Kartu Aplikasi/Materi Seni Rupa Anda -->
+<div class="content-card">
+<span class="new-badge">UTAMA</span>
+<div class="card-icon">🎨</div>
+<h3>Aplikasi Pembelajaran Seni Rupa</h3>
+<p>Media interaktif utama untuk mengeksplorasi teknik dasar seni rupa, warna, dan pola kreatif.</p>
+<!-- Ubah atribut href di bawah ini ke file aplikasi seni rupa buatan Anda, misal: "aplikasi/seni_rupa.html" -->
+<a href="#" class="card-button">Buka Aplikasi →</a>
+</div>
+
+<div class="content-card">
+<span class="new-badge">SERU!</span>
+<div class="card-icon">🌈</div>
+<h3>Mengenal Perpaduan Warna</h3>
+<p>Belajar mencampur warna primer, sekunder, dan bagaimana warna menciptakan suasana hati.</p>
+<a href="#" class="card-button">Mulai Belajar →</a>
+</div>
+
+<div class="content-card">
+<div class="card-icon">✏️</div>
+<h3>Garis & Bentuk Dasar</h3>
+<p>Mengenal berbagai jenis garis dan bentuk geometris sebagai dasar membuat gambar yang menakjubkan.</p>
+<a href="#" class="card-button">Mulai Belajar →</a>
+</div>
+
+<div class="content-card">
+<div class="card-icon">✂️</div>
+<h3>Seni Lipat & Kerajinan</h3>
+<p>Kumpulan panduan membuat prakarya kreatif dan seni lipat kertas yang menyenangkan.</p>
+<a href="#" class="card-button">Coba Sekarang →</a>
+</div>
+
+<div class="content-card">
+<div class="card-icon">🖼️</div>
+<h3>Galeri Karya Siswa</h3>
+<p>Lihat berbagai pameran karya seni digital yang telah dibuat oleh teman-temanmu di FERLINK!</p>
+<a href="#" class="card-button">Lihat Galeri →</a>
+</div>
+
+<div class="content-card">
+<div class="card-icon">🧠</div>
+<h3>Kuis Seni Rupa</h3>
+<p>Uji pemahamanmu tentang teori seni, alat menggambar, dan warna lewat kuis interaktif yang seru.</p>
+<a href="#" class="card-button">Mainkan Kuis →</a>
+</div>
+</div>
+
+<div class="footer-message">✨ Setiap anak adalah seniman. Teruslah berkarya dan ciptakan hal-hal indah! 🎨🖌️</div>
+</main>
+
+<script>
+function toggleMenu(){document.getElementById("sidebar").classList.toggle("open")}
+</script>
+</body>
+</html>
