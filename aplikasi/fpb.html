@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan FPB - Metode Mendaftar Faktor</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        .font-fredoka {
+            font-family: 'Fredoka', cursive;
+        }
+        .bounce-short {
+            animation: bounceShort 0.6s ease infinite alternate;
+        }
+        @keyframes bounceShort {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+        }
+        /* Custom scrollbar for better visual */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        canvas#confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Tombol navigasi mengambang kembali ke halaman utama */
+        .floating-home-btn {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+            border: 2px solid rgba(255,255,255,0.85);
+            transition: all 0.2s ease;
+        }
+
+        .floating-home-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.28);
+        }
+
+        .floating-home-btn:active {
+            transform: scale(0.96);
+        }
+
+        .floating-home-btn i {
+            font-size: 15px;
+        }
+
+        @media (max-width: 640px) {
+            .floating-home-btn {
+                left: 12px;
+                bottom: 12px;
+                padding: 10px 13px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between selection:bg-amber-200">
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Tombol Mengambang Kembali ke Halaman Utama -->
+    <a href="../index.html"
+       class="floating-home-btn"
+       title="Kembali ke Halaman Utama"
+       aria-label="Kembali ke Halaman Utama">
+        <i class="fa-solid fa-house"></i>
+        <span>Halaman Utama</span>
+    </a>
+
+    <!-- Navigation Header -->
+    <header class="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-sm shadow-inner">
+                    <i class="fa-solid fa-shapes text-2xl text-yellow-100"></i>
+                </div>
+                <div>
+                    <h1 class="font-fredoka text-xl md:text-2xl font-bold tracking-wide">Petualangan FPB</h1>
+                    <p class="text-xs text-amber-100 font-medium">Metode Mendaftar Faktor • SD Kelas 5</p>
+                </div>
+            </div>
+
+            <!-- Global Quick Stats / Sound Toggle -->
+            <div class="flex items-center space-x-2">
+                <button id="soundToggleBtn" onclick="toggleSound()" class="bg-white/20 hover:bg-white/30 text-white text-sm font-semibold py-1.5 px-3 rounded-xl transition flex items-center gap-1.5 backdrop-blur-sm">
+                    <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+                    <span id="soundText" class="hidden sm:inline">Suara: ON</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white/10 backdrop-blur-md border-t border-white/10">
+            <div class="max-w-6xl mx-auto px-2 flex justify-start md:justify-center overflow-x-auto no-scrollbar py-1 gap-1 md:gap-2">
+              
+                <button onclick="switchTab('tab-belajar')" id="btn-tab-belajar" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition bg-white text-amber-600 shadow-sm">
+                    <i class="fa-solid fa-book-open"></i> 📖 Visualisasi Step-by-Step
+                </button>
+                <button onclick="switchTab('tab-simulasi')" id="btn-tab-simulasi" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition text-white hover:bg-white/10">
+                    <i class="fa-solid fa-apple-whole"></i> 🍏 Simulasi Soal Cerita
+                </button>
+                <button onclick="switchTab('tab-kuis')" id="btn-tab-kuis" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition text-white hover:bg-white/10">
+                    <i class="fa-solid fa-gamepad"></i> ✏️ Latihan Kuis Interaktif
+                </button>
+                <button onclick="switchTab('tab-guru')" id="btn-tab-guru" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition text-white hover:bg-white/10">
+                    <i class="fa-solid fa-chalkboard-user"></i> 👨‍🏫 Panduan Guru
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- TAB 1: BELAJAR & VISUALISASI -->
+        <section id="tab-belajar" class="tab-content space-y-6">
+            <!-- Intro & Input Controls -->
+            <div class="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-slate-200/80">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="font-fredoka text-xl text-slate-800 flex items-center gap-2">
+                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-xl text-sm font-bold">Metode Mendaftar</span>
+                            Mencari FPB dari Dua Bilangan
+                        </h2>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1">Pilih angka preset atau masukkan dua angka pilihanmu untuk melihat langkah demi langkah secara mendalam!</p>
+                    </div>
+
+                    <!-- Preset Buttons -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Contoh:</span>
+                        <button onclick="setLearnPreset(8, 12)" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs rounded-xl border border-amber-200 transition">8 & 12</button>
+                        <button onclick="setLearnPreset(12, 18)" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs rounded-xl border border-amber-200 transition">12 & 18</button>
+                        <button onclick="setLearnPreset(15, 20)" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs rounded-xl border border-amber-200 transition">15 & 20</button>
+                        <button onclick="setLearnPreset(24, 36)" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs rounded-xl border border-amber-200 transition">24 & 36</button>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 items-end">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Bilangan Pertama (A):</label>
+                        <input type="number" id="numA" min="1" max="100" value="12" class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-2xl font-fredoka text-lg font-semibold text-slate-700 focus:outline-none focus:border-amber-400 focus:bg-white transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Bilangan Kedua (B):</label>
+                        <input type="number" id="numB" min="1" max="100" value="18" class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-2xl font-fredoka text-lg font-semibold text-slate-700 focus:outline-none focus:border-amber-400 focus:bg-white transition">
+                    </div>
+                    <div>
+                        <button onclick="processLearnFPB()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-fredoka text-base py-2.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Hitung & Visualisasikan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Steps Container -->
+            <div id="visualizationContainer" class="space-y-6">
+                <!-- Dynamically generated via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: SIMULASI SOAL CERITA -->
+        <section id="tab-simulasi" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-slate-200/80">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-fredoka text-xl text-slate-800">Simulasi Konkrit Soal Cerita FPB</h2>
+                        <p class="text-xs md:text-sm text-slate-500">Membagi Buah Apel & Jeruk ke Dalam Kantong Plastik secara Sama Rata</p>
+                    </div>
+                </div>
+
+                <!-- Story Problem Card -->
+                <div class="mt-4 p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl text-emerald-900 text-sm leading-relaxed">
+                    <p class="font-semibold text-base mb-1">🧺 Soal Cerita:</p>
+                    <p>
+                        Ibu baru saja membeli <strong class="text-emerald-700 font-bold">12 Apel 🍎</strong> dan <strong class="text-orange-600 font-bold">18 Jeruk 🍊</strong>. 
+                        Ibu ingin membagikan seluruh buah tersebut ke dalam beberapa kantong plastik sehingga <strong>setiap kantong berisi jumlah apel yang SAMA dan jumlah jeruk yang SAMA RATA</strong> tanpa ada sisa.
+                    </p>
+                    <p class="mt-2 text-emerald-800 font-bold">
+                        👉 Berapa kantong plastik TERBANYAK (FPB) yang bisa dibuat Ibu?
+                    </p>
+                </div>
+
+                <!-- Interactive Bag Controls -->
+                <div class="mt-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <label class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-emerald-500"></i>
+                            Pilih Jumlah Kantong Plastik yang Akan Dibuat:
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <button onclick="changeBagCount(-1)" class="w-10 h-10 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl font-bold text-lg text-slate-700 flex items-center justify-center shadow-sm transition">-</button>
+                            <span id="bagCountDisplay" class="font-fredoka text-2xl font-bold text-emerald-600 w-12 text-center">1</span>
+                            <button onclick="changeBagCount(1)" class="w-10 h-10 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl font-bold text-lg text-slate-700 flex items-center justify-center shadow-sm transition">+</button>
+                        </div>
+                    </div>
+
+                    <input type="range" id="bagSlider" min="1" max="18" value="1" oninput="updateBagSimulation(this.value)" class="w-full mt-4 accent-emerald-500 cursor-pointer">
+                    <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
+                        <span>1 Kantong</span>
+                        <span>6 Kantong (FPB)</span>
+                        <span>12 Kantong</span>
+                        <span>18 Kantong</span>
+                    </div>
+                </div>
+
+                <!-- Status Feedback Banner -->
+                <div id="simulationStatus" class="mt-4 p-4 rounded-2xl transition-all">
+                    <!-- Dynamic status text generated via JS -->
+                </div>
+
+                <!-- Visual Bags Container -->
+                <div id="bagsGrid" class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <!-- Dynamically rendered bags -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: LATIHAN KUIS INTERAKTIF -->
+        <section id="tab-kuis" class="tab-content hidden space-y-6">
+            <!-- Quiz Header Stats -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-fredoka text-xl text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-500"></i> Kuis Interaktif FPB
+                    </h2>
+                    <p class="text-xs text-slate-500">Selesaikan langkah-langkah berpemandu untuk mengumpulkan skor!</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="bg-amber-50 border border-amber-200 px-4 py-2 rounded-2xl text-center">
+                        <span class="block text-[10px] font-bold uppercase tracking-wider text-amber-600">Skor Anda</span>
+                        <span id="quizScore" class="font-fredoka text-xl font-bold text-amber-600">0</span>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-200 px-4 py-2 rounded-2xl text-center">
+                        <span class="block text-[10px] font-bold uppercase tracking-wider text-rose-600">Streak 🌟</span>
+                        <span id="quizStreak" class="font-fredoka text-xl font-bold text-rose-600">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Quiz Card -->
+            <div id="quizContainer" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 relative">
+                <!-- Question Title -->
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-100 mb-6 flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <span id="quizLevelBadge" class="bg-indigo-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Level 1</span>
+                        <h3 id="quizQuestionTitle" class="font-fredoka text-lg text-indigo-900 mt-1">Carilah FPB dari 6 dan 9</h3>
+                    </div>
+                    <button onclick="nextQuizQuestion()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 underline">Ganti Soal 🔄</button>
+                </div>
+
+                <!-- Step 1 Input: Factors of A -->
+                <div id="quizStep1" class="space-y-3 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <label class="block font-bold text-slate-700 text-sm">
+                        Langkah 1: Tuliskan SEMUA faktor dari <span id="quizNumAText" class="text-amber-600 font-extrabold">6</span>
+                    </label>
+                    <p class="text-xs text-slate-500">Pisahkan dengan koma. Contoh: <code class="bg-slate-200 px-1 rounded">1, 2, 3, 6</code></p>
+                    <div class="flex gap-2">
+                        <input type="text" id="quizInputA" placeholder="Masukkan faktor..." class="flex-grow px-4 py-2 bg-white border border-slate-300 rounded-xl font-fredoka text-slate-800 focus:outline-none focus:border-indigo-500">
+                        <button onclick="checkQuizStep(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition">Periksa</button>
+                    </div>
+                    <p id="quizFeedback1" class="text-xs font-semibold hidden"></p>
+                </div>
+
+                <!-- Step 2 Input: Factors of B -->
+                <div id="quizStep2" class="space-y-3 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 opacity-50 pointer-events-none">
+                    <label class="block font-bold text-slate-700 text-sm">
+                        Langkah 2: Tuliskan SEMUA faktor dari <span id="quizNumBText" class="text-indigo-600 font-extrabold">9</span>
+                    </label>
+                    <p class="text-xs text-slate-500">Pisahkan dengan koma.</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="quizInputB" placeholder="Masukkan faktor..." class="flex-grow px-4 py-2 bg-white border border-slate-300 rounded-xl font-fredoka text-slate-800 focus:outline-none focus:border-indigo-500">
+                        <button onclick="checkQuizStep(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition">Periksa</button>
+                    </div>
+                    <p id="quizFeedback2" class="text-xs font-semibold hidden"></p>
+                </div>
+
+                <!-- Step 3 Input: Common Factors -->
+                <div id="quizStep3" class="space-y-3 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 opacity-50 pointer-events-none">
+                    <label class="block font-bold text-slate-700 text-sm">
+                        Langkah 3: Tuliskan Faktor Persekutuan (faktor yang SAMA)
+                    </label>
+                    <p class="text-xs text-slate-500">Faktor yang ada pada kedua bilangan di atas.</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="quizInputCommon" placeholder="Contoh: 1, 3" class="flex-grow px-4 py-2 bg-white border border-slate-300 rounded-xl font-fredoka text-slate-800 focus:outline-none focus:border-indigo-500">
+                        <button onclick="checkQuizStep(3)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition">Periksa</button>
+                    </div>
+                    <p id="quizFeedback3" class="text-xs font-semibold hidden"></p>
+                </div>
+
+                <!-- Step 4 Input: FPB Selection -->
+                <div id="quizStep4" class="space-y-3 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 opacity-50 pointer-events-none">
+                    <label class="block font-bold text-slate-700 text-sm">
+                        Langkah 4: Berapakah Faktor Persekutuan TERBESAR (FPB)?
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="number" id="quizInputFPB" placeholder="FPB = ?" class="flex-grow px-4 py-2 bg-white border border-slate-300 rounded-xl font-fredoka text-slate-800 focus:outline-none focus:border-indigo-500">
+                        <button onclick="checkQuizStep(4)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl transition">Selesai ✨</button>
+                    </div>
+                    <p id="quizFeedback4" class="text-xs font-semibold hidden"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PANDUAN GURU & MODUL AJAR -->
+        <section id="tab-guru" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-6">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-fredoka text-xl text-slate-800">Panduan Pembelajaran untuk Guru</h2>
+                        <p class="text-xs md:text-sm text-slate-500">Strategi Pedagogis Mengajarkan Materi FPB Metode Mendaftar (Kelas 5 SD)</p>
+                    </div>
+                </div>
+
+                <!-- Module Sections -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Section 1: Prerequisite Skills -->
+                    <div class="bg-sky-50 border border-sky-100 p-5 rounded-2xl">
+                        <h3 class="font-fredoka text-sky-900 text-base mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-sky-600"></i> Materi Prasyarat
+                        </h3>
+                        <ul class="space-y-2 text-xs text-sky-900 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-sky-500 mt-0.5"></i>
+                                <span><strong>Perkalian & Pembagian Dasar (1-100):</strong> Siswa harus lancar membagi habis tanpa sisa.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-sky-500 mt-0.5"></i>
+                                <span><strong>Konsep Faktor Bilangan:</strong> Memahami bahwa faktor adalah pembagi habis suatu bilangan (pasangan perkalian).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-sky-500 mt-0.5"></i>
+                                <span><strong>Pengurutan Bilangan:</strong> Mampu mengurutkan angka dari terkecil ke terbesar.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Section 2: Teaching Flow -->
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl">
+                        <h3 class="font-fredoka text-emerald-900 text-base mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-trend-up text-emerald-600"></i> Alur Pembelajaran Bertahap
+                        </h3>
+                        <ol class="space-y-2 text-xs text-emerald-900 leading-relaxed list-decimal list-inside">
+                            <li><strong>Tahap Konkrit:</strong> Gunakan Tab 2 (Simulasi Buah) untuk memperlihatkan pembagian benda nyata ke dalam wadah.</li>
+                            <li><strong>Tahap Semikonkrit:</strong> Gunakan Tab 1 untuk melihat daftar angka, lingkaran warna, dan penjelasannya.</li>
+                            <li><strong>Tahap Abstrak:</strong> Gunakan Tab 3 (Kuis) agar siswa berlatih secara mandiri dan sistematis.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Section 3: Word Problem Key Terms -->
+                    <div class="bg-amber-50 border border-amber-100 p-5 rounded-2xl">
+                        <h3 class="font-fredoka text-amber-900 text-base mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-key text-amber-600"></i> Kata Kunci Soal Cerita FPB
+                        </h3>
+                        <p class="text-xs text-amber-800 mb-2">Bantu siswa mengenali soal FPB melalui kata-kata kunci berikut:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-amber-800 shadow-sm">"Paling banyak"</span>
+                            <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-amber-800 shadow-sm">"Sama rata"</span>
+                            <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-amber-800 shadow-sm">"Jumlah yang sama"</span>
+                            <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-amber-800 shadow-sm">"Sama banyak"</span>
+                            <span class="bg-white px-2.5 py-1 rounded-lg text-xs font-bold text-amber-800 shadow-sm">"Membagi ke wadah/kantong"</span>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Common Misconceptions -->
+                    <div class="bg-rose-50 border border-rose-100 p-5 rounded-2xl">
+                        <h3 class="font-fredoka text-rose-900 text-base mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Miskonsepsi Umum Siswa
+                        </h3>
+                        <ul class="space-y-2 text-xs text-rose-900 leading-relaxed">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Tertukar dengan KPK:</strong> Siswa sering bingung memilih kelipatan vs faktor. Tekankan bahwa *Faktor* nilainya $\le$ bilangan.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Faktor yang Terlewat:</strong> Siswa sering lupa mencantumkan angka 1 atau bilangan itu sendiri.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="font-medium">Media Pembelajaran Interaktif Matematika SD • FPB Metode Mendaftar Faktor</p>
+            <p class="mt-1 text-slate-400">Dirancang untuk memudahkan Pembelajaran Konseptual & Kontekstual Kelas 5</p>
+        </div>
+    </footer>
+
+    <script>
+        /* ------------------------------------------------------------------
+         * GLOBAL STATE & SOUND EFFECTS (WEB AUDIO API)
+         * ------------------------------------------------------------------ */
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const text = document.getElementById('soundText');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                text.innerText = 'Suara: ON';
+                playPopSound();
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+                text.innerText = 'Suara: OFF';
+            }
+        }
+
+        function playPopSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        function playSuccessSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime + idx * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + idx * 0.08);
+                osc.stop(audioCtx.currentTime + idx * 0.08 + 0.2);
+            });
+        }
+
+        function playErrorSound() {
+            if (!soundEnabled) return;
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(150, audioCtx.currentTime + 0.25);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.25);
+        }
+
+        /* ------------------------------------------------------------------
+         * TAB NAVIGATION LOGIC
+         * ------------------------------------------------------------------ */
+        function switchTab(tabId) {
+            playPopSound();
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-amber-600', 'shadow-sm');
+                btn.classList.add('text-white', 'hover:bg-white/10');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('bg-white', 'text-amber-600', 'shadow-sm');
+            activeBtn.classList.remove('text-white', 'hover:bg-white/10');
+        }
+
+        /* ------------------------------------------------------------------
+         * MATHEMATICAL HELPER FUNCTIONS
+         * ------------------------------------------------------------------ */
+        function getFactors(num) {
+            let factors = [];
+            for (let i = 1; i <= num; i++) {
+                if (num % i === 0) {
+                    factors.push(i);
+                }
+            }
+            return factors;
+        }
+
+        function getFactorPairs(num) {
+            let pairs = [];
+            for (let i = 1; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) {
+                    pairs.push([i, num / i]);
+                }
+            }
+            return pairs;
+        }
+
+        function getCommonFactors(arr1, arr2) {
+            return arr1.filter(val => arr2.includes(val));
+        }
+
+        /* ------------------------------------------------------------------
+         * TAB 1: STEP-BY-STEP VISUALIZATION ENGINE
+         * ------------------------------------------------------------------ */
+        function setLearnPreset(a, b) {
+            document.getElementById('numA').value = a;
+            document.getElementById('numB').value = b;
+            processLearnFPB();
+        }
+
+        function processLearnFPB() {
+            playPopSound();
+            const a = parseInt(document.getElementById('numA').value) || 1;
+            const b = parseInt(document.getElementById('numB').value) || 1;
+
+            const factorsA = getFactors(a);
+            const factorsB = getFactors(b);
+            const pairsA = getFactorPairs(a);
+            const pairsB = getFactorPairs(b);
+            const common = getCommonFactors(factorsA, factorsB);
+            const fpb = Math.max(...common);
+
+            const container = document.getElementById('visualizationContainer');
+            container.innerHTML = '';
+
+            // Step 1: Factors of A
+            container.appendChild(createStepCard(
+                "Langkah 1: Menemukan Faktor Bilangan A (" + a + ")",
+                "Faktor adalah bilangan yang dapat membagi habis " + a + " tanpa sisa.",
+                "amber",
+                `
+                <div class="mb-3">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Pasangan Perkalian:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${pairsA.map(p => `<span class="bg-amber-100/70 border border-amber-200 text-amber-900 text-xs font-semibold px-3 py-1.5 rounded-xl">${p[0]} × ${p[1]} = ${a}</span>`).join('')}
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Daftar Faktor ${a}:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${factorsA.map(f => `<span class="w-9 h-9 rounded-xl bg-amber-500 text-white font-fredoka text-sm font-bold flex items-center justify-center shadow-sm">${f}</span>`).join('')}
+                    </div>
+                </div>
+                `
+            ));
+
+            // Step 2: Factors of B
+            container.appendChild(createStepCard(
+                "Langkah 2: Menemukan Faktor Bilangan B (" + b + ")",
+                "Faktor adalah bilangan yang dapat membagi habis " + b + " tanpa sisa.",
+                "indigo",
+                `
+                <div class="mb-3">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Pasangan Perkalian:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${pairsB.map(p => `<span class="bg-indigo-100/70 border border-indigo-200 text-indigo-900 text-xs font-semibold px-3 py-1.5 rounded-xl">${p[0]} × ${p[1]} = ${b}</span>`).join('')}
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Daftar Faktor ${b}:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${factorsB.map(f => `<span class="w-9 h-9 rounded-xl bg-indigo-500 text-white font-fredoka text-sm font-bold flex items-center justify-center shadow-sm">${f}</span>`).join('')}
+                    </div>
+                </div>
+                `
+            ));
+
+            // Step 3: Common Factors
+            container.appendChild(createStepCard(
+                "Langkah 3: Menentukan Faktor Persekutuan (Faktor yang Sama)",
+                "Bandingkan faktor dari " + a + " dan " + b + ". Cari angka yang muncul di KEDUA daftar!",
+                "emerald",
+                `
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 flex-wrap text-sm">
+                        <span class="font-bold text-amber-700 w-24">Faktor ${a}:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${factorsA.map(f => {
+                                const isCommon = common.includes(f);
+                                return `<span class="px-2.5 py-1 rounded-lg text-xs font-bold ${isCommon ? 'bg-emerald-500 text-white ring-2 ring-emerald-300' : 'bg-slate-100 text-slate-500'}">${f}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap text-sm">
+                        <span class="font-bold text-indigo-700 w-24">Faktor ${b}:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${factorsB.map(f => {
+                                const isCommon = common.includes(f);
+                                return `<span class="px-2.5 py-1 rounded-lg text-xs font-bold ${isCommon ? 'bg-emerald-500 text-white ring-2 ring-emerald-300' : 'bg-slate-100 text-slate-500'}">${f}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-emerald-100">
+                        <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block mb-2">Faktor Persekutuan dari ${a} & ${b}:</span>
+                        <div class="flex flex-wrap gap-2">
+                            ${common.map(c => `<span class="px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl font-fredoka font-bold text-base flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-600"></i> ${c}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                `
+            ));
+
+            // Step 4: Final FPB Determination
+            container.appendChild(createStepCard(
+                "Langkah 4: Menentukan Faktor Persekutuan Terbesar (FPB)",
+                "Dari seluruh faktor persekutuan yang ditemukan, pilihlah yang nilainya PALING BESAR!",
+                "rose",
+                `
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-rose-500 to-amber-500 p-5 rounded-2xl text-white shadow-md">
+                    <div>
+                        <span class="text-xs font-bold text-rose-100 uppercase tracking-widest block">Kesimpulan Akhir</span>
+                        <h4 class="font-fredoka text-2xl font-bold mt-1">FPB dari ${a} dan ${b} adalah <span class="underline decoration-yellow-300 decoration-4">${fpb}</span></h4>
+                        <p class="text-xs text-rose-100 mt-1">Karena ${fpb} adalah faktor persekutuan bernilai tertinggi dari [ ${common.join(', ')} ]</p>
+                    </div>
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl font-bold bounce-short">
+                        👑
+                    </div>
+                </div>
+                `
+            ));
+        }
+
+        function createStepCard(title, subtitle, colorScheme, contentHtml) {
+            const card = document.createElement('div');
+            card.className = `bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-slate-200/80 transition`;
+            
+            card.innerHTML = `
+                <div class="mb-4">
+                    <h3 class="font-fredoka text-lg text-slate-800 flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-${colorScheme}-500 inline-block"></span>
+                        ${title}
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">${subtitle}</p>
+                </div>
+                <div>${contentHtml}</div>
+            `;
+            return card;
+        }
+
+        /* ------------------------------------------------------------------
+         * TAB 2: STORY PROBLEM FRUIT SIMULATION ENGINE
+         * ------------------------------------------------------------------ */
+        const TOTAL_APPLES = 12;
+        const TOTAL_ORANGES = 18;
+
+        function changeBagCount(delta) {
+            const slider = document.getElementById('bagSlider');
+            let newVal = parseInt(slider.value) + delta;
+            if (newVal < 1) newVal = 1;
+            if (newVal > 18) newVal = 18;
+            slider.value = newVal;
+            updateBagSimulation(newVal);
+        }
+
+        function updateBagSimulation(bags) {
+            bags = parseInt(bags);
+            document.getElementById('bagCountDisplay').innerText = bags;
+
+            const isApplesEven = (TOTAL_APPLES % bags === 0);
+            const isOrangesEven = (TOTAL_ORANGES % bags === 0);
+            const isValidDivision = isApplesEven && isOrangesEven;
+            const isFPB = (bags === 6);
+
+            const statusContainer = document.getElementById('simulationStatus');
+            const bagsGrid = document.getElementById('bagsGrid');
+
+            // Render Status
+            if (isValidDivision) {
+                playPopSound();
+                statusContainer.className = "mt-4 p-4 rounded-2xl border bg-emerald-50 border-emerald-200 text-emerald-900";
+                statusContainer.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl text-emerald-600"><i class="fa-solid fa-circle-check"></i></div>
+                        <div>
+                            <h4 class="font-fredoka text-base font-bold text-emerald-800">SAMA RATA! ✅ (${bags} Kantong)</h4>
+                            <p class="text-xs text-emerald-700">Setiap kantong berisi <strong>${TOTAL_APPLES / bags} Apel</strong> dan <strong>${TOTAL_ORANGES / bags} Jeruk</strong> tanpa ada sisa!</p>
+                            ${isFPB ? '<span class="inline-block mt-2 px-3 py-1 bg-amber-400 text-amber-950 font-bold text-xs rounded-xl shadow-sm">🌟 INI ADALAH FPB (Jumlah Kantong TERBANYAK yang mungkin dibuat!)</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                statusContainer.className = "mt-4 p-4 rounded-2xl border bg-rose-50 border-rose-200 text-rose-900";
+                statusContainer.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl text-rose-500"><i class="fa-solid fa-circle-xmark"></i></div>
+                        <div>
+                            <h4 class="font-fredoka text-base font-bold text-rose-800">TIDAK BISA SAMA RATA ❌ (${bags} Kantong)</h4>
+                            <p class="text-xs text-rose-700">
+                                ${!isApplesEven ? `12 Apel tidak bisa dibagi rata ke ${bags} kantong. ` : ''}
+                                ${!isOrangesEven ? `18 Jeruk tidak bisa dibagi rata ke ${bags} kantong.` : ''}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Render Bags Grid
+            bagsGrid.innerHTML = '';
+            for (let i = 1; i <= bags; i++) {
+                const bag = document.createElement('div');
+                bag.className = `p-3 rounded-2xl border ${isValidDivision ? 'bg-white border-emerald-200 shadow-sm' : 'bg-rose-50/50 border-rose-200 opacity-80'} text-center transition`;
+
+                const applesPerBag = Math.floor(TOTAL_APPLES / bags);
+                const orangesPerBag = Math.floor(TOTAL_ORANGES / bags);
+
+                bag.innerHTML = `
+                    <div class="font-fredoka text-xs font-bold text-slate-600 mb-2">Kantong ${i}</div>
+                    <div class="space-y-1">
+                        <div class="bg-slate-50 py-1 px-2 rounded-xl text-xs font-bold text-emerald-700 flex items-center justify-between">
+                            <span>🍎 Apel:</span>
+                            <span>${isValidDivision ? applesPerBag : 'Sisa/Gagal'}</span>
+                        </div>
+                        <div class="bg-slate-50 py-1 px-2 rounded-xl text-xs font-bold text-orange-700 flex items-center justify-between">
+                            <span>🍊 Jeruk:</span>
+                            <span>${isValidDivision ? orangesPerBag : 'Sisa/Gagal'}</span>
+                        </div>
+                    </div>
+                `;
+                bagsGrid.appendChild(bag);
+            }
+        }
+
+        /* ------------------------------------------------------------------
+         * TAB 3: GUIDED INTERACTIVE QUIZ ENGINE
+         * ------------------------------------------------------------------ */
+        const QUIZ_QUESTIONS = [
+            { a: 6, b: 9, fA: [1,2,3,6], fB: [1,3,9], common: [1,3], fpb: 3, level: "Level 1 (Mudah)" },
+            { a: 8, b: 12, fA: [1,2,4,8], fB: [1,2,3,4,6,12], common: [1,2,4], fpb: 4, level: "Level 2 (Sedang)" },
+            { a: 12, b: 18, fA: [1,2,3,4,6,12], fB: [1,2,3,6,9,18], common: [1,2,3,6], fpb: 6, level: "Level 2 (Sedang)" },
+            { a: 15, b: 25, fA: [1,3,5,15], fB: [1,5,25], common: [1,5], fpb: 5, level: "Level 3 (Tantangan)" },
+            { a: 20, b: 30, fA: [1,2,4,5,10,20], fB: [1,2,3,5,6,10,15,30], common: [1,2,5,10], fpb: 10, level: "Level 3 (Tantangan)" }
+        ];
+
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+        let quizStreak = 0;
+
+        function initQuiz() {
+            const q = QUIZ_QUESTIONS[currentQuizIdx];
+            document.getElementById('quizLevelBadge').innerText = q.level;
+            document.getElementById('quizQuestionTitle').innerText = `Carilah FPB dari ${q.a} dan ${q.b}`;
+            document.getElementById('quizNumAText').innerText = q.a;
+            document.getElementById('quizNumBText').innerText = q.b;
+
+            // Reset inputs
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`quizInput${i === 1 ? 'A' : i === 2 ? 'B' : i === 3 ? 'Common' : 'FPB'}`);
+                if (input) input.value = '';
+                const fb = document.getElementById(`quizFeedback${i}`);
+                if (fb) {
+                    fb.className = "text-xs font-semibold hidden";
+                    fb.innerText = "";
+                }
+            }
+
+            // Lock steps 2, 3, 4
+            setStepState(1, true);
+            setStepState(2, false);
+            setStepState(3, false);
+            setStepState(4, false);
+        }
+
+        function setStepState(stepNum, enabled) {
+            const stepEl = document.getElementById(`quizStep${stepNum}`);
+            if (enabled) {
+                stepEl.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                stepEl.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function parseInputArray(str) {
+            return str.split(/[\s,]+/).map(x => parseInt(x)).filter(x => !isNaN(x)).sort((a,b) => a - b);
+        }
+
+        function arraysEqual(a, b) {
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+
+        function checkQuizStep(step) {
+            const q = QUIZ_QUESTIONS[currentQuizIdx];
+
+            if (step === 1) {
+                const val = parseInputArray(document.getElementById('quizInputA').value);
+                const fb = document.getElementById('quizFeedback1');
+                if (arraysEqual(val, q.fA)) {
+                    playSuccessSound();
+                    fb.className = "text-xs font-bold text-emerald-600 block";
+                    fb.innerText = "✨ Benar! Faktor " + q.a + " adalah: " + q.fA.join(', ');
+                    setStepState(2, true);
+                } else {
+                    playErrorSound();
+                    fb.className = "text-xs font-bold text-rose-500 block";
+                    fb.innerText = "❌ Kurang tepat. Pastikan semua pembagi habis dari " + q.a + " dicantumkan (dari 1 sampai " + q.a + ").";
+                }
+            } else if (step === 2) {
+                const val = parseInputArray(document.getElementById('quizInputB').value);
+                const fb = document.getElementById('quizFeedback2');
+                if (arraysEqual(val, q.fB)) {
+                    playSuccessSound();
+                    fb.className = "text-xs font-bold text-emerald-600 block";
+                    fb.innerText = "✨ Benar! Faktor " + q.b + " adalah: " + q.fB.join(', ');
+                    setStepState(3, true);
+                } else {
+                    playErrorSound();
+                    fb.className = "text-xs font-bold text-rose-500 block";
+                    fb.innerText = "❌ Kurang tepat. Cek kembali faktor pembagi dari " + q.b + ".";
+                }
+            } else if (step === 3) {
+                const val = parseInputArray(document.getElementById('quizInputCommon').value);
+                const fb = document.getElementById('quizFeedback3');
+                if (arraysEqual(val, q.common)) {
+                    playSuccessSound();
+                    fb.className = "text-xs font-bold text-emerald-600 block";
+                    fb.innerText = "✨ Hebat! Faktor persekutuan yang sama: " + q.common.join(', ');
+                    setStepState(4, true);
+                } else {
+                    playErrorSound();
+                    fb.className = "text-xs font-bold text-rose-500 block";
+                    fb.innerText = "❌ Pilih angka yang muncul di Langkah 1 DAN Langkah 2!";
+                }
+            } else if (step === 4) {
+                const val = parseInt(document.getElementById('quizInputFPB').value);
+                const fb = document.getElementById('quizFeedback4');
+                if (val === q.fpb) {
+                    playSuccessSound();
+                    triggerConfetti();
+                    fb.className = "text-xs font-bold text-emerald-600 block";
+                    fb.innerText = "🎉 Luar Biasa! Jawabanmu sempurna!";
+
+                    quizScore += 20;
+                    quizStreak += 1;
+                    document.getElementById('quizScore').innerText = quizScore;
+                    document.getElementById('quizStreak').innerText = quizStreak;
+
+                    setTimeout(() => {
+                        nextQuizQuestion();
+                    }, 2500);
+                } else {
+                    playErrorSound();
+                    fb.className = "text-xs font-bold text-rose-500 block";
+                    fb.innerText = "❌ FPB adalah angka TERBESAR dari faktor persekutuan di Langkah 3.";
+                }
+            }
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIdx = (currentQuizIdx + 1) % QUIZ_QUESTIONS.length;
+            initQuiz();
+        }
+
+        /* ------------------------------------------------------------------
+         * CONFETTI CELEBRATION ENGINE
+         * ------------------------------------------------------------------ */
+        function triggerConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#f59e0b', '#10b981', '#6366f1', '#ec4899', '#3b82f6'];
+
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.7) * 14,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 10
+                });
+            }
+
+            let startTime = Date.now();
+
+            function animateConfetti() {
+                const elapsed = Date.now() - startTime;
+                if (elapsed > 2500) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    return;
+                }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3; // Gravity
+                    p.rotation += p.rotationSpeed;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animateConfetti);
+            }
+
+            animateConfetti();
+        }
+
+        /* ------------------------------------------------------------------
+         * INITIALIZATION
+         * ------------------------------------------------------------------ */
+        window.onload = function() {
+            // Process default learn tab
+            processLearnFPB();
+
+            // Init bag simulation
+            updateBagSimulation(1);
+
+            // Init quiz
+            initQuiz();
+        };
+    </script>
+</body>
+</html>
