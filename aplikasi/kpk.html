@@ -79,10 +79,16 @@
             transition: all 0.3s ease;
         }
 
-        .nav-btn:hover, .nav-btn.active {
+        .nav-btn:hover:not(.locked), .nav-btn.active {
             background-color: white;
             color: var(--primary-blue);
             transform: translateY(-2px);
+        }
+
+        .nav-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .nav-ext {
@@ -158,12 +164,20 @@
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             border: 2px solid transparent;
+            position: relative;
         }
 
-        .dash-card:hover {
+        .dash-card:hover:not(.locked) {
             transform: translateY(-5px);
             border-color: var(--primary-blue);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .dash-card.locked {
+            opacity: 0.6;
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+            border-color: #ccc;
         }
 
         .dash-card .icon {
@@ -223,6 +237,13 @@
 
         .btn-action:hover { background-color: var(--dark-blue); }
         .btn-action:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .btn-unlock {
+            background-color: var(--accent-green) !important;
+        }
+        .btn-unlock:hover {
+            background-color: #2e7d32 !important;
+        }
 
         /* INTERAKTIF: PAPAN GRID 1-100 */
         .controls-panel {
@@ -272,7 +293,6 @@
             transition: all 0.3s ease;
         }
 
-        /* WARNA KELIPATAN GRID */
         .cell-a { background-color: #bbdefb !important; color: #0d47a1; border-color: #2196f3; }
         .cell-b { background-color: #fff9c4 !important; color: #f57f17; border-color: #fbc02d; }
         .cell-both { background-color: #c8e6c9 !important; color: #1b5e20; border-color: #4caf50; font-size: 1.1rem; }
@@ -363,7 +383,7 @@
         .marker-a { top: -35px; }
         .marker-b { top: -10px; }
 
-        /* KUIS OPTIONS */
+        /* KUIS OPTIONS & FORM */
         .quiz-option {
             background: white;
             border: 2px solid #ddd;
@@ -392,6 +412,15 @@
             color: #721c24;
         }
 
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
         @media (max-width: 600px) {
             header h1 { font-size: 1.4rem; }
             .nav-btn, .nav-ext { font-size: 0.8rem; padding: 6px 12px; }
@@ -407,14 +436,14 @@
     </header>
 
     <nav>
-        <a href="../index.html" class="nav-ext">⬅️ Ferlink</a>
-        <a href="../matematika.html" class="nav-ext">🔙 Menu Matematika</a>
+        <a href="ferlink.html" class="nav-ext">⬅️ Ferlink</a>
+        <a href="ipas.html" class="nav-ext">🔙 Menu IPAS</a>
 
         <button class="nav-btn active" onclick="showPage('home')">🏠 Utama</button>
-        <button class="nav-btn" onclick="showPage('materi')">📖 Materi KPK</button>
-        <button class="nav-btn" onclick="showPage('grid')">🎨 Papan Warna 1-100</button>
-        <button class="nav-btn" onclick="showPage('lompat')">🐸 Game Lompat</button>
-        <button class="nav-btn" onclick="showPage('kuis')">🏆 Kuis KPK</button>
+        <button class="nav-btn" id="nav-materi" onclick="showPage('materi')">📖 1. Materi KPK</button>
+        <button class="nav-btn locked" id="nav-grid" onclick="showPage('grid')">🔒 2. Papan Warna</button>
+        <button class="nav-btn locked" id="nav-lompat" onclick="showPage('lompat')">🔒 3. Game Lompat</button>
+        <button class="nav-btn locked" id="nav-kuis" onclick="showPage('kuis')">🔒 4. Kuis KPK</button>
     </nav>
 
     <div class="container">
@@ -423,31 +452,31 @@
         <section id="home" class="page-section active">
             <div class="card">
                 <h2 class="section-title">Selamat Datang, Jagoan Matematika! 🔢</h2>
-                <p>Mari belajar menentukan **Kelipatan**, **Kelipatan Persekutuan**, dan **KPK** secara seru dan visual!</p>
+                <p>Silakan pelajari materi secara berurutan untuk membuka semua tantangan!</p>
                 
                 <div class="grid-dashboard">
-                    <div class="dash-card" onclick="showPage('materi')">
+                    <div class="dash-card" id="card-materi" onclick="showPage('materi')">
                         <div class="icon">📖</div>
                         <h3>1. Materi Belajar</h3>
                         <p>Pahami alur konsep dari hitung loncat sampai menemukan KPK.</p>
                     </div>
 
-                    <div class="dash-card" onclick="showPage('grid')">
-                        <div class="icon">🎨</div>
-                        <h3>2. Papan Warna 1–100</h3>
+                    <div class="dash-card locked" id="card-grid" onclick="showPage('grid')">
+                        <div class="icon" id="icon-grid">🔒</div>
+                        <h3 id="title-grid">2. Papan Warna (Terkecil)</h3>
                         <p>Visualisasikan angka kelipatan dengan gabungan warna interaktif.</p>
                     </div>
 
-                    <div class="dash-card" onclick="showPage('lompat')">
-                        <div class="icon">🐸</div>
-                        <h3>3. Game Lompat Hewan</h3>
+                    <div class="dash-card locked" id="card-lompat" onclick="showPage('lompat')">
+                        <div class="icon" id="icon-lompat">🔒</div>
+                        <h3 id="title-lompat">3. Game Lompat Hewan</h3>
                         <p>Lihat Kelinci dan Katak melompat untuk menemukan titik temu pertama.</p>
                     </div>
 
-                    <div class="dash-card" onclick="showPage('kuis')">
-                        <div class="icon">🏆</div>
-                        <h3>4. Kuis Tantangan</h3>
-                        <p>Uji pemahamanmu dan raih skor tertinggi!</p>
+                    <div class="dash-card locked" id="card-kuis" onclick="showPage('kuis')">
+                        <div class="icon" id="icon-kuis">🔒</div>
+                        <h3 id="title-kuis">4. Kuis Tantangan</h3>
+                        <p>Uji pemahamanmu dan kirim skor langsung ke Guru!</p>
                     </div>
                 </div>
             </div>
@@ -506,6 +535,7 @@
                     <button class="btn-action" id="prevSlideBtn" onclick="changeSlide(-1)">⬅️ Sebelumnya</button>
                     <span id="slideIndicator" style="font-weight: bold; color: var(--primary-blue);">Halaman 1 / 3</span>
                     <button class="btn-action" id="nextSlideBtn" onclick="changeSlide(1)">Selanjutnya ➡️</button>
+                    <button class="btn-action btn-unlock" id="finishMateriBtn" style="display: none;" onclick="unlockAndGo('grid')">Lanjut ke Papan Warna 🎨 🔓</button>
                 </div>
 
             </div>
@@ -538,8 +568,10 @@
 
                 <div class="grid-100" id="grid100Container"></div>
 
-                <div class="summary-box" id="gridSummary">
-                    <!-- Rincian hasil akan muncul di sini via JS -->
+                <div class="summary-box" id="gridSummary"></div>
+                
+                <div style="margin-top: 15px; text-align: right;">
+                    <button class="btn-action btn-unlock" onclick="unlockAndGo('lompat')">Lanjut ke Game Lompat 🐸 🔓</button>
                 </div>
             </div>
         </section>
@@ -567,6 +599,10 @@
                 </div>
 
                 <div class="summary-box" id="lompatSummary" style="margin-top: 15px;"></div>
+
+                <div style="margin-top: 15px; text-align: right;">
+                    <button class="btn-action btn-unlock" onclick="unlockAndGo('kuis')">Lanjut ke Kuis KPK 🏆 🔓</button>
+                </div>
             </div>
         </section>
 
@@ -581,7 +617,7 @@
                     <div id="quizOptions"></div>
                     <div id="quizFeedback" style="margin-top: 15px; font-weight: bold;"></div>
                 </div>
-                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;" id="quizFooter">
                     <span id="quizScore" style="font-weight: bold; color: var(--primary-blue);">Skor: 0</span>
                     <button class="btn-action" id="nextQuizBtn" onclick="nextQuestion()" style="display: none;">Soal Berikutnya ➡️</button>
                 </div>
@@ -591,8 +627,55 @@
     </div>
 
     <script>
+        // ==================== STATUS KUNCI ====================
+        const isUnlocked = {
+            home: true,
+            materi: true,
+            grid: false,
+            lompat: false,
+            kuis: false
+        };
+
+        function unlockAndGo(pageId) {
+            isUnlocked[pageId] = true;
+            
+            // Update UI Nav
+            const navBtn = document.getElementById('nav-' + pageId);
+            if(navBtn) {
+                navBtn.classList.remove('locked');
+                if(pageId === 'grid') navBtn.innerText = '🎨 2. Papan Warna';
+                if(pageId === 'lompat') navBtn.innerText = '🐸 3. Game Lompat';
+                if(pageId === 'kuis') navBtn.innerText = '🏆 4. Kuis KPK';
+            }
+
+            // Update UI Home Card
+            const card = document.getElementById('card-' + pageId);
+            if(card) {
+                card.classList.remove('locked');
+                if(pageId === 'grid') {
+                    document.getElementById('icon-grid').innerText = '🎨';
+                    document.getElementById('title-grid').innerText = '2. Papan Warna 1–100';
+                }
+                if(pageId === 'lompat') {
+                    document.getElementById('icon-lompat').innerText = '🐸';
+                    document.getElementById('title-lompat').innerText = '3. Game Lompat Hewan';
+                }
+                if(pageId === 'kuis') {
+                    document.getElementById('icon-kuis').innerText = '🏆';
+                    document.getElementById('title-kuis').innerText = '4. Kuis Tantangan';
+                }
+            }
+
+            showPage(pageId);
+        }
+
         // ==================== NAVIGASI HALAMAN ====================
         function showPage(pageId) {
+            if (!isUnlocked[pageId]) {
+                alert('🔒 Halaman ini masih terkunci! Selesaikan materi/tahap sebelumnya secara berurutan terlebih dahulu.');
+                return;
+            }
+
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             
@@ -620,7 +703,14 @@
             });
             document.getElementById('slideIndicator').innerText = `Halaman ${currentSlide + 1} / ${slides.length}`;
             document.getElementById('prevSlideBtn').disabled = (currentSlide === 0);
-            document.getElementById('nextSlideBtn').disabled = (currentSlide === slides.length - 1);
+            
+            if (currentSlide === slides.length - 1) {
+                document.getElementById('nextSlideBtn').style.display = 'none';
+                document.getElementById('finishMateriBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('nextSlideBtn').style.display = 'inline-block';
+                document.getElementById('finishMateriBtn').style.display = 'none';
+            }
         }
 
         function changeSlide(direction) {
@@ -630,15 +720,11 @@
             updateSlideDisplay();
         }
 
-        // ==================== KETENTUAN MATEMATIKA (KPK & FPB) ====================
-        function getGCD(a, b) {
-            return b === 0 ? a : getGCD(b, a % b);
-        }
-        function getLCM(a, b) {
-            return (a * b) / getGCD(a, b);
-        }
+        // ==================== MATH UTILS ====================
+        function getGCD(a, b) { return b === 0 ? a : getGCD(b, a % b); }
+        function getLCM(a, b) { return (a * b) / getGCD(a, b); }
 
-        // ==================== LOGIC PAPAN WARNA GRID 1-100 ====================
+        // ==================== LOGIC PAPAN WARNA ====================
         function renderGrid() {
             const a = parseInt(document.getElementById('numA').value) || 1;
             const b = parseInt(document.getElementById('numB').value) || 1;
@@ -677,7 +763,6 @@
                 container.appendChild(cell);
             }
 
-            // Summary Text
             const summary = document.getElementById('gridSummary');
             summary.innerHTML = `
                 <p><strong>🔹 Kelipatan ${a}:</strong> ${multA.slice(0, 10).join(', ')}...</p>
@@ -689,7 +774,7 @@
             `;
         }
 
-        // ==================== LOGIC GAME LOMPAT HEWAN ====================
+        // ==================== LOGIC GAME LOMPAT ====================
         function renderLompat() {
             const stepA = parseInt(document.getElementById('stepA').value) || 1;
             const stepB = parseInt(document.getElementById('stepB').value) || 1;
@@ -739,33 +824,13 @@
             `;
         }
 
-        // ==================== LOGIC KUIS ====================
+        // ==================== LOGIC KUIS & GOOGLE FORM ====================
         const quizData = [
-            {
-                q: "1. Manakah di bawah ini yang merupakan kelipatan dari 5?",
-                options: ["12", "18", "25", "32"],
-                answer: 2
-            },
-            {
-                q: "2. Tiga angka pertama dari kelipatan 4 adalah...",
-                options: ["4, 6, 8", "4, 8, 12", "1, 2, 4", "4, 10, 14"],
-                answer: 1
-            },
-            {
-                q: "3. Kelipatan persekutuan dari 2 dan 3 adalah...",
-                options: ["6, 12, 18", "5, 10, 15", "4, 8, 12", "2, 3, 6"],
-                answer: 0
-            },
-            {
-                q: "4. Apakah KPK dari 3 dan 5?",
-                options: ["8", "10", "15", "30"],
-                answer: 2
-            },
-            {
-                q: "5. Lampu A menyala setiap 4 detik, Lampu B menyala setiap 6 detik. Setiap berapa detik kedua lampu menyala bersamaan?",
-                options: ["10 detik", "12 detik", "24 detik", "16 detik"],
-                answer: 1
-            }
+            { q: "1. Manakah di bawah ini yang merupakan kelipatan dari 5?", options: ["12", "18", "25", "32"], answer: 2 },
+            { q: "2. Tiga angka pertama dari kelipatan 4 adalah...", options: ["4, 6, 8", "4, 8, 12", "1, 2, 4", "4, 10, 14"], answer: 1 },
+            { q: "3. Kelipatan persekutuan dari 2 dan 3 adalah...", options: ["6, 12, 18", "5, 10, 15", "4, 8, 12", "2, 3, 6"], answer: 0 },
+            { q: "4. Apakah KPK dari 3 dan 5?", options: ["8", "10", "15", "30"], answer: 2 },
+            { q: "5. Lampu A menyala setiap 4 detik, Lampu B menyala setiap 6 detik. Setiap berapa detik kedua lampu menyala bersamaan?", options: ["10 detik", "12 detik", "24 detik", "16 detik"], answer: 1 }
         ];
 
         let currentQuizIdx = 0;
@@ -815,12 +880,62 @@
             if (currentQuizIdx < quizData.length) {
                 loadQuizQuestion();
             } else {
-                document.getElementById('quizContainer').innerHTML = `
-                    <h3>🎉 Kuis Selesai!</h3>
-                    <p style="font-size: 1.2rem; margin-top: 10px;">Skor Akhir Kamu: <strong>${score}</strong> / ${quizData.length * 20}</p>
-                `;
-                document.getElementById('nextQuizBtn').style.display = 'none';
+                showQuizResult();
             }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quizFooter').style.display = 'none';
+            document.getElementById('quizContainer').innerHTML = `
+                <h3>🎉 Kuis Selesai!</h3>
+                <p style="font-size: 1.2rem; margin: 10px 0;">Skor Kamu: <strong>${score}</strong> / 100</p>
+                <hr style="margin: 15px 0;">
+                <p><strong>Kirimkan Nilaimu ke Guru:</strong></p>
+                
+                <label style="display:block; text-align:left; font-weight:bold; margin-top:10px;">Nama Lengkap:</label>
+                <input type="text" id="studentName" class="form-input" placeholder="Masukkan nama kamu...">
+                
+                <label style="display:block; text-align:left; font-weight:bold;">Kelas / No. Absen:</label>
+                <input type="text" id="studentClass" class="form-input" placeholder="Contoh: Kelas 5A / 12">
+
+                <button class="btn-action btn-unlock" style="width: 100%; font-size: 1.1rem; padding: 12px;" onclick="sendScoreToGoogleForm()">📤 Kirim Nilai ke Guru</button>
+                <div id="submitStatus" style="margin-top: 15px; font-weight: bold;"></div>
+            `;
+        }
+
+        // ==================== PENGIRIMAN DATA KE GOOGLE FORM ====================
+        function sendScoreToGoogleForm() {
+            const name = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value.trim();
+            const statusDiv = document.getElementById('submitStatus');
+
+            if (!name || !studentClass) {
+                alert('Harap isi Nama dan Kelas terlebih dahulu!');
+                return;
+            }
+
+            statusDiv.innerText = '⏳ Mengirim nilai...';
+            statusDiv.style.color = 'orange';
+
+            // GANTI LINK DAN ENTRY ID SESUAI GOOGLE FORM ANDA
+            const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfk9DoUuTakoMqKe4v3Nh6k3oYVGoVMX-SMIwEsPS2m0mlWfQ/formResponse";
+            
+            const formData = new FormData();
+            formData.append("entry.641376268", name);         // Ganti Entry ID Nama
+            formData.append("entry.232793482", studentClass); // Ganti Entry ID Kelas
+            formData.append("entry.772604705", score);        // Ganti Entry ID Skor
+
+            fetch(formURL, {
+                method: "POST",
+                mode: "no-cors",
+                body: formData
+            }).then(() => {
+                statusDiv.innerText = '✅ Nilai berhasil terkirim ke Google Form Guru!';
+                statusDiv.style.color = 'green';
+            }).catch(err => {
+                statusDiv.innerText = '❌ Gagal mengirim nilai. Pastikan terkoneksi internet.';
+                statusDiv.style.color = 'red';
+            });
         }
 
         // Initialize on page load
