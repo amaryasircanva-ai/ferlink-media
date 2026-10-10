@@ -1,411 +1,575 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dunia Membaca Ceria - FERLINK Kids</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  body {
-    font-family: 'Quicksand', sans-serif;
-    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-    color: #333;
-    padding: 20px;
-    min-height: 100vh;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dunia Membaca Ceria 🌈 - FERLINK Kids</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF6B6B;
+      --secondary: #4ECDC4;
+      --accent: #FFE66D;
+      --purple: #A78BFA;
+      --pink: #F472B6;
+      --blue: #60A5FA;
+      --green: #34D399;
+      --orange: #FB923C;
+      --bg: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 50%, #fbc2eb 100%);
+      --card-bg: #ffffff;
+      --shadow: 0 10px 25px rgba(0,0,0,0.12);
+      --radius: 24px;
+    }
 
-  /* Tombol Mengambang Kembali ke Beranda */
-  .floating-home {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: #ffffff;
-    color: #ff5252;
-    font-family: 'Fredoka One', cursive;
-    text-decoration: none;
-    padding: 10px 18px;
-    border-radius: 50px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    border: 4px solid #ff5252;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 15px;
-    z-index: 1000;
-    transition: all 0.2s ease;
-  }
-  .floating-home:hover {
-    background: #ff5252;
-    color: white;
-    transform: scale(1.08);
-  }
-  .floating-home:active {
-    transform: translateY(2px);
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 35px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    border: 6px solid #ffeb3b;
-    position: relative;
-    overflow: hidden;
-    margin-top: 20px; /* Jarak agar tidak tertutup tombol mengambang di layar kecil */
-  }
-  
-  /* Hiasan Latar Belakang Ceria */
-  .container::before {
-    content: "⭐ ☁️ 🎈 🌟 🚀 🎨";
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    font-size: 20px;
-    opacity: 0.6;
-    letter-spacing: 5px;
-  }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      background-attachment: fixed;
+      color: #333;
+      min-height: 100vh;
+      padding: 16px;
+      overflow-x: hidden;
+    }
 
-  header {
-    text-align: center;
-    margin-bottom: 25px;
-  }
-  header h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 38px;
-    background: linear-gradient(90deg, #ff5252, #ff9800, #4caf50, #2196f3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 5px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-  }
-  header p {
-    color: #666;
-    font-size: 16px;
-    font-weight: 700;
-  }
-  
-  .score-badge {
-    display: inline-block;
-    background: #fff9c4;
-    color: #f57f17;
-    font-family: 'Fredoka One', cursive;
-    padding: 8px 22px;
-    border-radius: 25px;
-    margin-top: 12px;
-    font-size: 20px;
-    border: 3px dashed #ffd54f;
-    box-shadow: 0 4px 10px rgba(255,235,59,0.3);
-  }
+    /* Floating Home Button */
+    .floating-home {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: white;
+      color: var(--primary);
+      font-family: 'Fredoka', cursive;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 50px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border: 3px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      z-index: 1000;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .floating-home:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.08);
+    }
+    .floating-home:active {
+      transform: scale(0.95);
+    }
 
-  /* Navigasi Tab Menu yang Ramah Anak */
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    font-family: 'Fredoka One', cursive;
-    background: #e0f7fa;
-    border: 3px solid #b2ebf2;
-    padding: 12px 20px;
-    border-radius: 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #00838f;
-    box-shadow: 0 5px 0 #b2ebf2;
-  }
-  .tab-btn:hover {
-    transform: translateY(-3px);
-    background: #b2ebf2;
-  }
-  .tab-btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #b2ebf2;
-  }
-  .tab-btn.active {
-    background: #ff7043;
-    color: white;
-    border-color: #f4511e;
-    box-shadow: 0 5px 0 #d84315;
-  }
+    /* Main Container */
+    .container {
+      max-width: 920px;
+      margin: 50px auto 30px;
+      background: var(--card-bg);
+      border-radius: 36px;
+      box-shadow: var(--shadow);
+      border: 6px solid var(--accent);
+      overflow: hidden;
+      position: relative;
+    }
 
-  .section {
-    display: none;
-    animation: fadeIn 0.4s ease-in-out;
-  }
-  .section.active {
-    display: block;
-  }
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 50%, #FBC2EB 100%);
+      padding: 28px 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: var(--card-bg);
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    header h1 {
+      font-family: 'Fredoka', cursive;
+      font-size: clamp(28px, 7vw, 40px);
+      color: white;
+      text-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    header p {
+      color: rgba(255,255,255,0.95);
+      font-size: 15px;
+      font-weight: 700;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
-  }
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: white;
+      color: #f59e0b;
+      font-family: 'Fredoka', cursive;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stat-badge.level {
+      color: #8b5cf6;
+    }
 
-  /* Grid Huruf Pelangi */
-  .grid-letters {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-    gap: 15px;
-  }
-  .card-item {
-    font-family: 'Fredoka One', cursive;
-    background: #fff;
-    border: 4px solid #ffca28;
-    border-radius: 22px;
-    padding: 15px 5px;
-    text-align: center;
-    font-size: 32px;
-    color: #e91e63;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #ffb300;
-    transition: all 0.15s ease;
-    user-select: none;
-  }
-  .card-item:hover {
-    transform: scale(1.1) rotate(3deg);
-    background: #fffde7;
-  }
-  .card-item:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 #ffb300;
-  }
+    /* Sound Toggle */
+    .sound-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transition: transform 0.2s;
+      z-index: 10;
+    }
+    .sound-toggle:hover { transform: scale(1.1); }
+    .sound-toggle.muted { opacity: 0.6; }
 
-  /* Grid Kartu Kata Ceria */
-  .grid-words {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-  .word-card {
-    background: #fff8e1;
-    border: 4px solid #ffb74d;
-    border-radius: 25px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 8px 0 #ffa726;
-    transition: transform 0.2s;
-  }
-  .word-card:hover {
-    transform: translateY(-5px);
-  }
-  .word-icon {
-    font-size: 55px;
-    margin-bottom: 8px;
-    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
-  }
-  .word-text {
-    font-family: 'Fredoka One', cursive;
-    font-size: 34px;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-  }
-  .syllable-1 { color: #e91e63; }
-  .syllable-2 { color: #3f51b5; }
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 16px 10px;
+      flex-wrap: wrap;
+      background: white;
+    }
+    .tab-btn {
+      font-family: 'Fredoka', cursive;
+      background: #f0f9ff;
+      border: 3px solid #bae6fd;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #0369a1;
+      box-shadow: 0 4px 0 #7dd3fc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .tab-btn:hover {
+      transform: translateY(-3px);
+      background: #e0f2fe;
+    }
+    .tab-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #7dd3fc;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+      color: white;
+      border-color: #ef4444;
+      box-shadow: 0 4px 0 #dc2626;
+    }
 
-  .btn-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  .btn-action {
-    font-family: 'Fredoka One', cursive;
-    background: #26a69a;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: 0 4px 0 #00897b;
-    transition: 0.1s;
-  }
-  .btn-action:hover {
-    background: #00897b;
-  }
-  .btn-action:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #00897b;
-  }
-  .btn-eja {
-    background: #ab47bc;
-    box-shadow: 0 4px 0 #8e24aa;
-  }
-  .btn-eja:hover {
-    background: #8e24aa;
-  }
+    /* Sections */
+    .section {
+      display: none;
+      padding: 16px 20px 30px;
+      animation: fadeIn 0.35s ease;
+    }
+    .section.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  /* Cerita Kartun */
-  .story-card {
-    background: #e8f5e9;
-    border: 4px solid #81c784;
-    border-radius: 25px;
-    padding: 20px 25px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 6px 0 #66bb6a;
-  }
-  .story-icon {
-    font-size: 55px;
-  }
-  .story-text {
-    font-family: 'Fredoka One', cursive;
-    font-size: 24px;
-    color: #2e7d32;
-    line-height: 1.4;
-  }
+    /* Grid Letters & Syllables */
+    .grid-letters {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+      gap: 12px;
+    }
+    .card-item {
+      font-family: 'Fredoka', cursive;
+      background: white;
+      border: 4px solid #fcd34d;
+      border-radius: 20px;
+      padding: 14px 4px;
+      text-align: center;
+      font-size: 28px;
+      color: #e11d48;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #f59e0b;
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      font-weight: 600;
+    }
+    .card-item:hover {
+      transform: scale(1.12) rotate(2deg);
+      background: #fffbeb;
+    }
+    .card-item:active {
+      transform: translateY(3px) scale(1.05);
+      box-shadow: 0 2px 0 #f59e0b;
+    }
+    .card-item.syllable {
+      border-color: #34d399;
+      color: #047857;
+      box-shadow: 0 5px 0 #059669;
+    }
+    .card-item.syllable:hover { background: #ecfdf5; }
+    .card-item.syllable:active { box-shadow: 0 2px 0 #059669; }
 
-  /* Mini Game Box Ceria */
-  .game-box {
-    background: #fce4ec;
-    border: 4px dashed #f06292;
-    border-radius: 30px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 8px 0 #ec407a;
-  }
-  .game-target {
-    font-size: 85px;
-    margin-bottom: 10px;
-    animation: bounce 1.5s infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  .drop-zone {
-    min-height: 70px;
-    border: 3px solid #f8bbd0;
-    background: white;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 25px;
-    padding: 10px;
-  }
-  .syllable-chip {
-    font-family: 'Fredoka One', cursive;
-    background: #ff5252;
-    color: white;
-    font-size: 26px;
-    padding: 12px 24px;
-    border-radius: 18px;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 5px 0 #d32f2f;
-    transition: 0.1s;
-  }
-  .syllable-chip:hover {
-    transform: scale(1.05);
-  }
-  .syllable-chip:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #d32f2f;
-  }
+    /* Words Grid */
+    .grid-words {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .word-card {
+      background: linear-gradient(145deg, #fff7ed, #ffedd5);
+      border: 4px solid #fdba74;
+      border-radius: 24px;
+      padding: 18px 14px;
+      text-align: center;
+      box-shadow: 0 6px 0 #f97316;
+      transition: transform 0.2s;
+    }
+    .word-card:hover {
+      transform: translateY(-6px);
+    }
+    .word-icon {
+      font-size: 52px;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+    .word-text {
+      font-family: 'Fredoka', cursive;
+      font-size: 30px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+    .syllable-1 { color: #e11d48; }
+    .syllable-2 { color: #4f46e5; }
 
-  .sound-hint {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 15px;
-    color: #00838f;
-    font-weight: 700;
-    background: #e0f7fa;
-    padding: 12px;
-    border-radius: 18px;
-    border: 2px dashed #80deea;
-  }
-</style>
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      font-family: 'Fredoka', cursive;
+      background: #14b8a6;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 0 #0f766e;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+    .btn-action:hover { background: #0d9488; }
+    .btn-action:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #0f766e;
+    }
+    .btn-eja {
+      background: #a855f7;
+      box-shadow: 0 4px 0 #7e22ce;
+    }
+    .btn-eja:hover { background: #9333ea; }
+    .btn-eja:active { box-shadow: 0 1px 0 #7e22ce; }
+
+    /* Stories */
+    .story-card {
+      background: linear-gradient(145deg, #ecfdf5, #d1fae5);
+      border: 4px solid #6ee7b7;
+      border-radius: 22px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 5px 0 #34d399;
+      transition: transform 0.2s;
+    }
+    .story-card:hover { transform: translateX(4px); }
+    .story-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+    }
+    .story-text {
+      font-family: 'Fredoka', cursive;
+      font-size: 20px;
+      color: #065f46;
+      line-height: 1.35;
+      flex: 1;
+    }
+
+    /* Game Section */
+    .game-box {
+      background: linear-gradient(145deg, #fdf2f8, #fce7f3);
+      border: 4px dashed #f9a8d4;
+      border-radius: 28px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 8px 0 #ec4899;
+    }
+    .game-target {
+      font-size: 90px;
+      margin-bottom: 8px;
+      animation: bounce 1.8s infinite;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .game-instruction {
+      font-family: 'Fredoka', cursive;
+      font-size: 16px;
+      color: #9d174d;
+      margin-bottom: 18px;
+      line-height: 1.4;
+    }
+    .drop-zone {
+      min-height: 74px;
+      border: 3px solid #fbcfe8;
+      background: white;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 10px;
+      flex-wrap: wrap;
+    }
+    .drop-zone .placeholder {
+      color: #a1a1aa;
+      font-style: italic;
+      font-size: 15px;
+    }
+    .syllable-chip {
+      font-family: 'Fredoka', cursive;
+      background: linear-gradient(135deg, #f43f5e, #fb7185);
+      color: white;
+      font-size: 24px;
+      padding: 12px 22px;
+      border-radius: 16px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 5px 0 #be123c;
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: 600;
+    }
+    .syllable-chip:hover { transform: scale(1.08); }
+    .syllable-chip:active {
+      transform: translateY(3px) scale(1.02);
+      box-shadow: 0 2px 0 #be123c;
+    }
+    .syllable-chip.selected {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      box-shadow: 0 5px 0 #4338ca;
+    }
+
+    .options-zone {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      min-height: 60px;
+    }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Hint Box */
+    .sound-hint {
+      margin: 10px 20px 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #0e7490;
+      font-weight: 700;
+      background: #ecfeff;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 2px dashed #67e8f9;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      font-family: 'Fredoka', cursive;
+      font-size: 16px;
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 3px solid #fcd34d;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast.success { border-color: #34d399; }
+    .toast.error { border-color: #f87171; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container { margin-top: 60px; border-radius: 28px; }
+      .tab-btn { padding: 10px 12px; font-size: 13px; }
+      .grid-letters { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 10px; }
+      .card-item { font-size: 24px; padding: 12px 2px; }
+      .word-text { font-size: 26px; }
+      .story-text { font-size: 18px; }
+      .game-target { font-size: 72px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Tombol Navigasi Mengambang Kembali -->
-<!-- Ubah "bahasa_indonesia.html" menjadi "index.html" jika ingin langsung ke beranda utama -->
+<canvas id="confetti-canvas"></canvas>
+
 <a href="../index.html" class="floating-home">
-  <span>🏠</span> Kembali
+  <span>🏠</span> Beranda
 </a>
 
 <div class="container">
   <header>
-    <h1>🌈 Dunia Membaca Ceria 📖</h1>
-    <p>Ayo Belajar Mengeja dan Membaca Sambil Bermain! ✨</p>
-    <div class="score-badge">⭐ Bintang Hebat: <span id="starCount">0</span></div>
+    <button class="sound-toggle" id="soundToggle" title="Suara On/Off">🔊</button>
+    <h1>🌈 Dunia Membaca Ceria</h1>
+    <p>Belajar Mengeja & Membaca Sambil Bermain! ✨</p>
+    <div class="header-stats">
+      <div class="stat-badge">⭐ <span id="starCount">0</span> Bintang</div>
+      <div class="stat-badge level">🏆 Level <span id="levelCount">1</span></div>
+    </div>
   </header>
 
-  <!-- Navigasi Tab Menu -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('huruf')">🔤 Abjad A-Z</button>
-    <button class="tab-btn" onclick="switchTab('suku-kata')">🧩 Suku Kata</button>
-    <button class="tab-btn" onclick="switchTab('kata')">📝 Kata Seru</button>
-    <button class="tab-btn" onclick="switchTab('cerita')">📚 Kalimat Asyik</button>
-    <button class="tab-btn" onclick="switchTab('game')">🎮 Game Susun Kata</button>
+    <button class="tab-btn active" data-tab="huruf">🔤 Abjad</button>
+    <button class="tab-btn" data-tab="suku-kata">🧩 Suku Kata</button>
+    <button class="tab-btn" data-tab="kata">📝 Kata</button>
+    <button class="tab-btn" data-tab="cerita">📚 Kalimat</button>
+    <button class="tab-btn" data-tab="game">🎮 Game</button>
   </div>
 
-  <!-- Bagian 1: Abjad A-Z -->
+  <!-- Abjad A-Z -->
   <div id="huruf" class="section active">
     <div class="grid-letters" id="lettersGrid"></div>
   </div>
 
-  <!-- Bagian 2: Suku Kata -->
+  <!-- Suku Kata -->
   <div id="suku-kata" class="section">
     <div class="grid-letters" id="syllablesGrid"></div>
   </div>
 
-  <!-- Bagian 3: Kata & Mengeja -->
+  <!-- Kata -->
   <div id="kata" class="section">
     <div class="grid-words" id="wordsGrid"></div>
   </div>
 
-  <!-- Bagian 4: Kalimat/Cerita Pendek -->
+  <!-- Kalimat -->
   <div id="cerita" class="section">
     <div id="storiesContainer"></div>
   </div>
 
-  <!-- Bagian 5: Mini Game -->
+  <!-- Game -->
   <div id="game" class="section">
     <div class="game-box">
       <div class="game-target" id="gameEmoji">👕</div>
-      <p style="font-family: 'Fredoka One', cursive; font-size: 18px; margin-bottom: 20px; color: #880e4f;">Klik kotak suku kata di bawah untuk menyusun nama gambar di atas!</p>
+      <p class="game-instruction">Klik suku kata di bawah untuk menyusun nama gambar!</p>
       
       <div class="drop-zone" id="answerZone">
-        <span style="color:#aaa; font-style:italic; font-family:sans-serif;">Susun di sini ya...</span>
+        <span class="placeholder">Susun di sini ya...</span>
       </div>
 
-      <div class="btn-group" id="optionsZone" style="justify-content: center; margin-bottom: 20px; flex-wrap: wrap;"></div>
+      <div class="options-zone" id="optionsZone"></div>
 
-      <div>
-        <button class="btn-action" style="background:#ffca28; color:#333; box-shadow:0 4px 0 #ffa000; font-size:16px; padding:12px 24px;" onclick="resetGame()">🔄 Ganti Soal Lain</button>
+      <div class="game-controls">
+        <button class="btn-action" style="background:#f59e0b; box-shadow:0 4px 0 #d97706;" onclick="resetGame()">
+          🔄 Ganti Soal
+        </button>
+        <button class="btn-action" style="background:#6366f1; box-shadow:0 4px 0 #4f46e5;" onclick="speakCurrentWord()">
+          🔊 Dengarkan
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="sound-hint">💡 Sentuh atau klik huruf, kata, atau tombol suara untuk mendengarkan audionya! 🔊</div>
+  <div class="sound-hint">
+    💡 Klik huruf, suku kata, atau tombol suara untuk mendengarkan! 🔊
+  </div>
 </div>
 
-<script>
-  let stars = 0;
+<div class="toast" id="toast"></div>
 
+<script>
+  // ========== STATE ==========
+  let stars = parseInt(localStorage.getItem('ferlink_stars') || '0');
+  let level = parseInt(localStorage.getItem('ferlink_level') || '1');
+  let soundEnabled = localStorage.getItem('ferlink_sound') !== 'false';
+  let currentGameItem = null;
+  let currentAnswer = [];
+
+  // ========== DATA ==========
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  const konsonan = ['B', 'C', 'D', 'K', 'M', 'N', 'P', 'S', 'T'];
-  const vokal = ['a', 'i', 'u', 'e', 'o'];
+  const konsonan = ['B','C','D','G','H','J','K','L','M','N','P','R','S','T','W','Y'];
+  const vokal = ['a','i','u','e','o'];
   const sukuKata = [];
-  konsonan.forEach(k => {
-    vokal.forEach(v => sukuKata.push(k + v));
-  });
+  konsonan.forEach(k => vokal.forEach(v => sukuKata.push(k + v)));
 
   const daftarKata = [
     { icon: '👕', s1: 'ba', s2: 'ju', full: 'baju', eja: 'b a, ba... j u, ju... baju' },
@@ -415,97 +579,161 @@
     { icon: '👁️', s1: 'ma', s2: 'ta', full: 'mata', eja: 'm a, ma... t a, ta... mata' },
     { icon: '🧹', s1: 'sa', s2: 'pu', full: 'sapu', eja: 's a, sa... p u, pu... sapu' },
     { icon: '🍞', s1: 'ro', s2: 'ti', full: 'roti', eja: 'r o, ro... t i, ti... roti' },
-    { icon: '🥛', s1: 'su', s2: 'su', full: 'susu', eja: 's u, su... s u, su... susu' }
+    { icon: '🥛', s1: 'su', s2: 'su', full: 'susu', eja: 's u, su... s u, su... susu' },
+    { icon: '🐱', s1: 'ku', s2: 'cing', full: 'kucing', eja: 'k u, ku... c i ng, cing... kucing' },
+    { icon: '🏠', s1: 'ru', s2: 'mah', full: 'rumah', eja: 'r u, ru... m a h, mah... rumah' },
+    { icon: '🍎', s1: 'a', s2: 'pel', full: 'apel', eja: 'a... p e l, pel... apel' },
+    { icon: '🐟', s1: 'i', s2: 'kan', full: 'ikan', eja: 'i... k a n, kan... ikan' },
+    { icon: '🌸', s1: 'bu', s2: 'nga', full: 'bunga', eja: 'b u, bu... ng a, nga... bunga' },
+    { icon: '🚗', s1: 'mo', s2: 'bil', full: 'mobil', eja: 'm o, mo... b i l, bil... mobil' },
+    { icon: '🌙', s1: 'bu', s2: 'lan', full: 'bulan', eja: 'b u, bu... l a n, lan... bulan' },
+    { icon: '⭐', s1: 'bin', s2: 'tang', full: 'bintang', eja: 'b i n, bin... t a ng, tang... bintang' }
   ];
 
   const daftarCerita = [
-    { icon: '👦', teks: 'Budi suka bola.' },
-    { icon: '🐱', teks: 'Ini kucing saya.' },
-    { icon: '🍎', teks: 'Ibu beli apel manis.' },
-    { icon: '🏫', teks: 'Saya rajin ke sekolah.' }
+    { icon: '👦', teks: 'Budi suka bermain bola.' },
+    { icon: '🐱', teks: 'Ini kucing kesayangan saya.' },
+    { icon: '🍎', teks: 'Ibu beli apel yang manis.' },
+    { icon: '🏫', teks: 'Saya rajin pergi ke sekolah.' },
+    { icon: '☀️', teks: 'Matahari bersinar terang.' },
+    { icon: '🌧️', teks: 'Hari ini hujan turun deras.' },
+    { icon: '👨‍👩‍👧', teks: 'Ayah dan ibu sangat sayang.' },
+    { icon: '📖', teks: 'Ayo kita baca buku bersama.' }
   ];
 
-  function bicara(teks, speed = 0.8) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(teks);
-      utterance.lang = 'id-ID';
-      utterance.rate = speed;
-      window.speechSynthesis.speak(utterance);
-    }
+  // ========== INIT ==========
+  function init() {
+    document.getElementById('starCount').textContent = stars;
+    document.getElementById('levelCount').textContent = level;
+    updateSoundButton();
+    renderLetters();
+    renderSyllables();
+    renderWords();
+    renderStories();
+    setupTabs();
   }
 
-  // Render Abjad
-  const lettersGrid = document.getElementById('lettersGrid');
-  alphabet.forEach(letter => {
-    const card = document.createElement('div');
-    card.className = 'card-item';
-    card.innerText = letter;
-    card.onclick = () => bicara(letter);
-    lettersGrid.appendChild(card);
-  });
+  // ========== SOUND ==========
+  function bicara(teks, speed = 0.85) {
+    if (!soundEnabled || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(teks);
+    utt.lang = 'id-ID';
+    utt.rate = speed;
+    window.speechSynthesis.speak(utt);
+  }
 
-  // Render Suku Kata
-  const syllablesGrid = document.getElementById('syllablesGrid');
-  sukuKata.forEach(sk => {
-    const card = document.createElement('div');
-    card.className = 'card-item';
-    card.style.borderColor = '#26a69a';
-    card.style.color = '#00796b';
-    card.style.boxShadow = '0 6px 0 #00897b';
-    card.innerText = sk;
-    card.onclick = () => bicara(sk);
-    syllablesGrid.appendChild(card);
-  });
+  function updateSoundButton() {
+    const btn = document.getElementById('soundToggle');
+    btn.textContent = soundEnabled ? '🔊' : '🔇';
+    btn.classList.toggle('muted', !soundEnabled);
+  }
 
-  // Render Kata
-  const wordsGrid = document.getElementById('wordsGrid');
-  daftarKata.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'word-card';
-    card.innerHTML = `
-      <div class="word-icon">${item.icon}</div>
-      <div class="word-text">
-        <span class="syllable-1">${item.s1}</span><span class="syllable-2">${item.s2}</span>
-      </div>
-      <div class="btn-group">
-        <button class="btn-action" onclick="bicara('${item.full}')">🔊 Baca</button>
-        <button class="btn-action btn-eja" onclick="bicara('${item.eja}', 0.6)">🔤 Eja</button>
-      </div>
-    `;
-    wordsGrid.appendChild(card);
-  });
+  document.getElementById('soundToggle').onclick = () => {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('ferlink_sound', soundEnabled);
+    updateSoundButton();
+    if (soundEnabled) bicara('Suara dinyalakan');
+  };
 
-  // Render Cerita
-  const storiesContainer = document.getElementById('storiesContainer');
-  daftarCerita.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'story-card';
-    card.innerHTML = `
-      <div class="story-icon">${item.icon}</div>
-      <div class="story-text">${item.teks}</div>
-      <button class="btn-action" style="background:#43a047; box-shadow:0 4px 0 #2e7d32; margin-left:auto; padding:12px 18px;" onclick="bicara('${item.teks}')">🔊 Dengarkan</button>
-    `;
-    storiesContainer.appendChild(card);
-  });
+  // ========== RENDER ==========
+  function renderLetters() {
+    const grid = document.getElementById('lettersGrid');
+    grid.innerHTML = '';
+    alphabet.forEach(letter => {
+      const card = document.createElement('div');
+      card.className = 'card-item';
+      card.textContent = letter;
+      card.onclick = () => {
+        bicara(letter);
+        card.style.transform = 'scale(1.2) rotate(5deg)';
+        setTimeout(() => card.style.transform = '', 200);
+      };
+      grid.appendChild(card);
+    });
+  }
 
-  // Game Logic
-  let currentGameItem = null;
-  let currentAnswer = [];
+  function renderSyllables() {
+    const grid = document.getElementById('syllablesGrid');
+    grid.innerHTML = '';
+    sukuKata.forEach(sk => {
+      const card = document.createElement('div');
+      card.className = 'card-item syllable';
+      card.textContent = sk;
+      card.onclick = () => {
+        bicara(sk.toLowerCase());
+        card.style.transform = 'scale(1.15)';
+        setTimeout(() => card.style.transform = '', 200);
+      };
+      grid.appendChild(card);
+    });
+  }
 
+  function renderWords() {
+    const grid = document.getElementById('wordsGrid');
+    grid.innerHTML = '';
+    daftarKata.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+      card.innerHTML = `
+        <div class="word-icon">${item.icon}</div>
+        <div class="word-text">
+          <span class="syllable-1">${item.s1}</span><span class="syllable-2">${item.s2}</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn-action" onclick="bicara('${item.full}')">🔊 Baca</button>
+          <button class="btn-action btn-eja" onclick="bicara('${item.eja}', 0.65)">🔤 Eja</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function renderStories() {
+    const container = document.getElementById('storiesContainer');
+    container.innerHTML = '';
+    daftarCerita.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      card.innerHTML = `
+        <div class="story-icon">${item.icon}</div>
+        <div class="story-text">${item.teks}</div>
+        <button class="btn-action" style="background:#10b981; box-shadow:0 4px 0 #059669; flex-shrink:0;" onclick="bicara('${item.teks}')">
+          🔊
+        </button>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // ========== TABS ==========
+  function setupTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+        if (tabId === 'game') initGame();
+      });
+    });
+  }
+
+  // ========== GAME ==========
   function initGame() {
     currentAnswer = [];
-    document.getElementById('answerZone').innerHTML = '<span style="color:#aaa; font-style:italic; font-family:sans-serif;">Susun di sini ya...</span>';
-    
+    const zone = document.getElementById('answerZone');
+    zone.innerHTML = '<span class="placeholder">Susun di sini ya...</span>';
+
     currentGameItem = daftarKata[Math.floor(Math.random() * daftarKata.length)];
-    document.getElementById('gameEmoji').innerText = currentGameItem.icon;
+    document.getElementById('gameEmoji').textContent = currentGameItem.icon;
 
     let options = [currentGameItem.s1, currentGameItem.s2];
-    while(options.length < 4) {
-      let randomSK = sukuKata[Math.floor(Math.random() * sukuKata.length)].toLowerCase();
-      if(!options.includes(randomSK)) options.push(randomSK);
+    while (options.length < 4) {
+      let random = sukuKata[Math.floor(Math.random() * sukuKata.length)].toLowerCase();
+      if (!options.includes(random)) options.push(random);
     }
-
     options.sort(() => Math.random() - 0.5);
 
     const optionsZone = document.getElementById('optionsZone');
@@ -513,45 +741,50 @@
     options.forEach(opt => {
       const chip = document.createElement('div');
       chip.className = 'syllable-chip';
-      chip.innerText = opt;
+      chip.textContent = opt;
       chip.onclick = () => selectSyllable(opt, chip);
       optionsZone.appendChild(chip);
     });
   }
 
   function selectSyllable(sk, element) {
+    if (element.style.visibility === 'hidden') return;
     bicara(sk);
     currentAnswer.push(sk);
-    
-    const answerZone = document.getElementById('answerZone');
-    if(currentAnswer.length === 1) answerZone.innerHTML = '';
+
+    const zone = document.getElementById('answerZone');
+    if (currentAnswer.length === 1) zone.innerHTML = '';
 
     const chip = document.createElement('div');
-    chip.className = 'syllable-chip';
-    chip.style.background = '#3f51b5';
-    chip.style.boxShadow = '0 5px 0 #303f9f';
-    chip.innerText = sk;
-    answerZone.appendChild(chip);
-
+    chip.className = 'syllable-chip selected';
+    chip.textContent = sk;
+    zone.appendChild(chip);
     element.style.visibility = 'hidden';
 
-    if(currentAnswer.length === 2) {
-      let combined = currentAnswer.join('');
-      if(combined === currentGameItem.full) {
-        setTimeout(() => {
-          bicara(`Hore! Benar, jawabannya adalah ${currentGameItem.full}`);
+    if (currentAnswer.length === 2) {
+      const combined = currentAnswer.join('');
+      setTimeout(() => {
+        if (combined === currentGameItem.full) {
+          // Benar!
           stars += 10;
-          document.getElementById('starCount').innerText = stars;
-          alert('🎉 HORE! Kamu Hebat! +10 Bintang ⭐');
-          initGame();
-        }, 500);
-      } else {
-        setTimeout(() => {
+          if (stars >= level * 50) {
+            level++;
+            localStorage.setItem('ferlink_level', level);
+            document.getElementById('levelCount').textContent = level;
+            showToast(`🎉 Level Naik! Sekarang Level ${level}`, 'success');
+          }
+          localStorage.setItem('ferlink_stars', stars);
+          document.getElementById('starCount').textContent = stars;
+          bicara(`Hore! Benar sekali. Jawabannya ${currentGameItem.full}`);
+          showToast('🎉 HORE! Kamu Hebat! +10 ⭐', 'success');
+          launchConfetti();
+          setTimeout(initGame, 1800);
+        } else {
           bicara('Coba lagi ya!');
-          alert('❌ Ups, kurang tepat! Ayo coba lagi ya.');
-          initGame();
-        }, 500);
-      }
+          showToast('❌ Ups, kurang tepat. Ayo coba lagi!', 'error');
+          setTimeout(initGame, 1200);
+        }
+      }, 400);
     }
   }
 
@@ -559,18 +792,63 @@
     initGame();
   }
 
-  function switchTab(tabId) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    
-    event.target.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
-
-    if(tabId === 'game') {
-      initGame();
-    }
+  function speakCurrentWord() {
+    if (currentGameItem) bicara(currentGameItem.full);
   }
-</script>
 
+  // ========== TOAST ==========
+  function showToast(msg, type = '') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast show ' + type;
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // ========== CONFETTI ==========
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = [];
+    const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A78BFA', '#F472B6', '#60A5FA', '#34D399'];
+
+    for (let i = 0; i < 120; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 10 + 6,
+        h: Math.random() * 6 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: Math.random() * 3 + 2,
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 8 - 4
+      });
+    }
+
+    let frame = 0;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.y += p.speed;
+        p.rotation += p.rotSpeed;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 90) requestAnimationFrame(animate);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    animate();
+  }
+
+  // ========== START ==========
+  init();
+</script>
 </body>
 </html>
