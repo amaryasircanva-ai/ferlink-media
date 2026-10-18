@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendidikan Pancasila - FERLINK Media Pembelajaran Interaktif</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Trebuchet MS",Arial,sans-serif;background:#f5fbff;color:#24324a;min-height:100vh}
+
+/* Sidebar Styling (Sesuai index.html FERLINK) */
+.sidebar{position:fixed;left:0;top:0;width:255px;height:100vh;background:linear-gradient(180deg,#dff6ff,#eefaff);border-right:3px solid #c9efff;padding:20px 15px;overflow-y:auto;z-index:100}
+.logo{text-align:center;margin-bottom:20px}.logo-icon{font-size:48px;margin-bottom:5px}
+.logo h1{font-size:37px;letter-spacing:3px;background:linear-gradient(90deg,#1976ff,#8e44ff,#ff3d81,#ff9800);-webkit-background-clip:text;color:transparent;font-weight:900}
+.logo p{font-size:12px;color:#42627d;font-weight:bold}
+.menu{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.menu a{display:flex;align-items:center;gap:12px;text-decoration:none;padding:13px 15px;border-radius:18px;background:white;color:#263b67;font-weight:bold;border:2px solid #d9eaff;transition:.2s;box-shadow:0 3px 8px rgba(50,100,150,.06)}
+.menu a:hover{transform:translateX(5px);border-color:#7abaff;box-shadow:0 5px 15px rgba(30,120,220,.15)}
+.menu-icon{font-size:25px}
+.menu .active{background:linear-gradient(90deg,#ec3971,#ff5388);color:white;border-color:#ec3971;box-shadow:0 5px 15px rgba(236,57,113,.25)}
+
+.motivation{margin-top:20px;background:linear-gradient(135deg,#fff8d8,#e2f7ff);border-radius:20px;padding:18px 12px;text-align:center;border:2px solid #d9eff8}
+.motivation .big{font-size:42px}.motivation h3{color:#1686a9;margin:5px 0;font-size:18px}.motivation p{font-size:12px;line-height:1.5;color:#587083}
+
+/* Main Area */
+.main{margin-left:255px;min-height:100vh;padding:25px 35px 50px;background:radial-gradient(circle at 10% 10%,rgba(255,255,255,.9),transparent 25%),#f5fbff}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:20px}
+.welcome h2{font-size:28px;color:#233b68;margin-bottom:5px;display:flex;align-items:center;gap:10px}
+.welcome p{color:#60758d;font-size:15px}
+
+.btn-back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#white;color:#263b67;border:2px solid #d7e9f5;padding:10px 16px;border-radius:16px;font-weight:bold;font-size:14px;transition:.2s}
+.btn-back:hover{background:#eaf5ff;border-color:#7abaff;transform:translateX(-3px)}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#ec3971,#f5576c);color:white;border-radius:25px;padding:30px 35px;margin-bottom:28px;min-height:140px;box-shadow:0 10px 25px rgba(236,57,113,.20)}
+.hero::after{content:"🇮🇩 ⭐ 🛡️ ⚖️";position:absolute;right:30px;bottom:15px;font-size:48px;opacity:.75}
+.hero h2{font-size:28px;margin-bottom:10px}.hero h2 span{color:#ffe34d}.hero p{font-size:15px;max-width:700px;line-height:1.6}
+
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section-title{font-size:24px;color:#273d65}.section-title span{font-size:26px}
+
+/* Grid Kartu Pembelajaran */
+.materi-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:20px;margin-bottom:35px}
+.materi-card{position:relative;background:white;border-radius:22px;padding:22px 18px;border:2px solid #e3edf5;transition:.25s;display:flex;flex-direction:column;justify-content:space-between}
+.materi-card:hover{transform:translateY(-7px);box-shadow:0 12px 25px rgba(50,100,150,.15)}
+
+.card-badge{position:absolute;right:15px;top:15px;background:#37a934;color:white;font-size:10px;font-weight:bold;padding:5px 10px;border-radius:10px}
+.badge-pink{background:#ec3971}
+
+.materi-icon{width:70px;height:70px;margin-bottom:15px;display:flex;justify-content:center;align-items:center;border-radius:50%;font-size:38px;background:#f1f7ff}
+.materi-card h3{font-size:18px;color:#1e293b;margin-bottom:8px}
+.materi-card p{font-size:13px;color:#64748b;line-height:1.5;margin-bottom:18px}
+
+.learn-button{display:block;text-align:center;text-decoration:none;color:white;padding:12px 10px;border-radius:14px;font-size:13px;font-weight:bold;transition:.2s}
+.btn-norma{background:linear-gradient(90deg,#ec3971,#ff5388);box-shadow:0 4px 12px rgba(236,57,113,.25)}
+.btn-norma:hover{background:linear-gradient(90deg,#d52861,#ec3971);transform:scale(1.02)}
+
+.btn-general{background:linear-gradient(90deg,#1877f2,#4361ee);box-shadow:0 4px 12px rgba(24,119,242,.2)}
+.btn-general:hover{opacity:.9;transform:scale(1.02)}
+
+.footer-message{margin-top:30px;background:#fff5ca;border:2px solid #ffdf64;border-radius:20px;text-align:center;padding:14px;color:#795600;font-weight:bold;font-size:14px}
+.mobile-menu{display:none;border:none;background:#ec3971;color:white;border-radius:12px;padding:10px 13px;font-size:22px;cursor:pointer}
+
+@media(max-width:1100px){.materi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:850px){.sidebar{transform:translateX(-100%);transition:.3s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.mobile-menu{display:block}}
+@media(max-width:600px){.main{padding:15px}.materi-grid{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:22px}}
+</style>
+</head>
+<body>
+
+<!-- Sidebar FERLINK -->
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-icon">🎓📚</div>
+        <h1>FERLINK</h1>
+        <p>Media Pembelajaran Interaktif</p>
+    </div>
+    <nav class="menu">
+        <a href="index.html"><span class="menu-icon">🏠</span>Beranda</a>
+        <a href="pancasila.html" class="active"><span class="menu-icon">🇮🇩</span>Pendidikan Pancasila</a>
+        <a href="index.html#pembelajaran"><span class="menu-icon">📚</span>Semua Pelajaran</a>
+        <a href="index.html#game"><span class="menu-icon">🎮</span>Game Belajar</a>
+        <a href="index.html#guru"><span class="menu-icon">👨‍🏫</span>Untuk Guru</a>
+    </nav>
+    <div class="motivation">
+        <div class="big">🇮🇩</div>
+        <h3>Pancasila Jiwaku!</h3>
+        <p>Taat norma, berani jujur, dan wujudkan masa depan bangsa yang cemerlang!</p>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+    <header class="header">
+        <div class="welcome">
+            <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+            <div>
+                <h2><span>🇮🇩</span> Pendidikan Pancasila</h2>
+                <p>Pilih materi atau modul interaktif yang ingin kamu pelajari hari ini! ✨</p>
+            </div>
+        </div>
+        <a href="index.html" class="btn-back">⬅️ Kembali ke Beranda</a>
+    </header>
+
+    <section class="hero">
+        <h2>Pendidikan Pancasila & <span>Kewarganegaraan</span></h2>
+        <p>Belajar mengenal norma, nilai-nilai Pancasila, dan cara menjadi warga negara yang baik, bertanggung jawab, serta taat hukum. 🦅✨</p>
+    </section>
+
+    <div class="section-header">
+        <h2 class="section-title"><span>📚</span> Kartu Materi Pembelajaran</h2>
+    </div>
+
+    <!-- Grid Kartu Pembelajaran -->
+    <div class="materi-grid">
+
+        <!-- KARTU NORMA (Link ke Aplikasi Pembelajaran Norma) -->
+        <div class="materi-card" style="border-color:#ffc0d1; background:linear-gradient(180deg,#fff9fa,#fff0f4)">
+            <span class="card-badge badge-pink">UTAMA / KELAS 7</span>
+            <div>
+                <div class="materi-icon" style="background:#ffd9e4">⚖️</div>
+                <h3>Patuh Terhadap Norma</h3>
+                <p>Mempelajari jenis norma (Agama, Kesusilaan, Kesopanan, Hukum), keterkaitan dengan Pancasila, serta pencegahan bahaya narkoba & komunikasi asertif.</p>
+            </div>
+            <!-- Ganti 'media_pembelajaran_interaktif.html' sesuai nama file aplikasi norma kamu -->
+            <a href="media_pembelajaran_interaktif.html" class="learn-button btn-norma">
+                🚀 Buka Aplikasi Norma →
+            </a>
+        </div>
+
+        <!-- Kartu Pancasila dalam Kehidupan -->
+        <div class="materi-card">
+            <span class="card-badge">KELAS 7</span>
+            <div>
+                <div class="materi-icon" style="background:#fff3c4">⭐</div>
+                <h3>Penerapan Nilai Pancasila</h3>
+                <p>Memahami pengamalan Sila ke-1 hingga Sila ke-5 Pancasila dalam kehidupan sehari-hari di rumah, sekolah, dan masyarakat.</p>
+            </div>
+            <a href="#" class="learn-button btn-general">Ayo Belajar! →</a>
+        </div>
+
+        <!-- Kartu Bhinneka Tunggal Ika -->
+        <div class="materi-card">
+            <span class="card-badge">KELAS 7</span>
+            <div>
+                <div class="materi-icon" style="background:#e1f6d3">🤝</div>
+                <h3>Bhinneka Tunggal Ika</h3>
+                <p>Mengenal dan menghargai keragaman suku, agama, ras, serta budaya dalam bingkai Negara Kesatuan Republik Indonesia.</p>
+            </div>
+            <a href="#" class="learn-button btn-general">Ayo Belajar! →</a>
+        </div>
+
+        <!-- Kartu Hak dan Kewajiban -->
+        <div class="materi-card">
+            <span class="card-badge">KELAS 7</span>
+            <div>
+                <div class="materi-icon" style="background:#e9ddff">🛡️</div>
+                <h3>Hak & Kewajiban Warga Negara</h3>
+                <p>Memahami keseimbangan antara hak yang diterima dan kewajiban yang harus dilaksanakan sebagai anak dan siswa.</p>
+            </div>
+            <a href="#" class="learn-button btn-general">Ayo Belajar! →</a>
+        </div>
+
+    </div>
+
+    <div class="footer-message">
+        🏆 Terus semangat belajar Pendidikan Pancasila! Jadilah generasi taat norma dan berakhlak mulia! 😊 🌟
+    </div>
+</main>
+
+<script>
+function toggleMenu(){
+    document.getElementById("sidebar").classList.toggle("open");
+}
+</script>
+</body>
+</html>
