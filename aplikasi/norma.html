@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Pembelajaran - Pendidikan Pancasila Kelas 7</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for High Readability & Dyslexia Friendly Option -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+        .text-large-accessibility {
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+        .btn-focus:focus {
+            outline: 4px solid #FBBF24;
+            outline-offset: 2px;
+        }
+        .nav-tab-active {
+            background-color: #FBBF24 !important;
+            color: #1E1B4B !important;
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="bg-indigo-50 min-h-screen flex flex-col justify-between text-gray-800">
+
+    <!-- Tombol Navigasi Mengambang (Floating Button) Kembali ke Utama -->
+    <a href="index.html" class="fixed bottom-6 right-6 z-50 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-full shadow-2xl flex items-center gap-2 font-bold hover:scale-105 transition-all duration-200 border-2 border-white btn-focus group" title="Kembali ke Halaman Utama FERLINK">
+        <i class="fa-solid fa-house text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm pr-1">Beranda</span>
+    </a>
+
+    <!-- Top Header & Navigation Bar -->
+    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
+        <!-- Header Utama -->
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2 border-b border-indigo-600">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-book-open-reader text-2xl text-yellow-300"></i>
+                <span class="font-bold text-lg md:text-xl">Media Belajar Pancasila Inklusif</span>
+            </div>
+            
+            <!-- Controls Aksesibilitas (Musik & TTS) -->
+            <div class="flex items-center gap-2">
+                <button id="btn-bgm" onclick="toggleBGM()" class="btn-focus bg-indigo-600 hover:bg-indigo-800 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition">
+                    <i id="bgm-icon" class="fa-solid fa-music text-yellow-300"></i>
+                    <span id="bgm-text">Musik: Off</span>
+                </button>
+                <button onclick="stopTTS()" class="btn-focus bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-circle-stop"></i>
+                    <span>Hentikan Suara</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Navigasi Halaman Atas -->
+        <nav class="bg-indigo-800 px-4 py-2 shadow-inner">
+            <div class="max-w-5xl mx-auto flex items-center justify-center sm:justify-start gap-1 sm:gap-2 overflow-x-auto">
+                <button id="nav-screen-cover" onclick="nextScreen('screen-cover')" class="nav-btn btn-focus px-3.5 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Halaman Awal</span>
+                </button>
+                <button id="nav-screen-storyboard" onclick="nextScreen('screen-storyboard')" class="nav-btn btn-focus px-3.5 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Storybook</span>
+                </button>
+                <button id="nav-screen-materi" onclick="nextScreen('screen-materi')" class="nav-btn btn-focus px-3.5 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Materi Norma</span>
+                </button>
+                <button id="nav-screen-quiz" onclick="startQuiz()" class="nav-btn btn-focus px-3.5 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Kuis</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Container Utama -->
+    <main class="max-w-4xl mx-auto p-4 md:p-6 w-full flex-grow">
+
+        <!-- SCREEN 1: COVER / HALAMAN AWAL -->
+        <section id="screen-cover" class="bg-white rounded-2xl shadow-xl p-6 md:p-10 text-center border-4 border-indigo-200">
+            <div class="mb-6">
+                <span class="inline-block bg-yellow-100 text-yellow-800 text-sm font-bold px-4 py-1.5 rounded-full border border-yellow-300 mb-3">
+                    Mata Pelajaran: Pendidikan Pancasila | Kelas 7 (Fase D)
+                </span>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2">Materi : Patuh Terhadap Norma</h1>
+                <h2 class="text-xl md:text-2xl font-bold text-emerald-600">Berani Berkata Tidak, Taat Norma, Selamatkan Masa Depan</h2>
+            </div>
+
+            <div class="my-8 bg-indigo-50 p-6 rounded-xl border border-indigo-100 text-left max-w-2xl mx-auto space-y-2">
+                <h3 class="font-bold text-indigo-900 text-lg border-b border-indigo-200 pb-2">🎯 Tujuan Pembelajaran:</h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 text-large-accessibility">
+                    <li>Peserta didik mampu memahami jenis-jenis norma (agama, kesusilaan, kesopanan, dan hukum) serta kaitannya dengan Sila-Sila Pancasila.</li>
+                    <li>Peserta didik dapat menganalisis dampak negatif penyalahgunaan zat berbahaya (narkoba) dan pentingnya perlindungan diri melalui komunikasi asertif.</li>
+                </ul>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg mb-8 max-w-xl mx-auto text-sm text-gray-600">
+                <p><strong>Nama Penyusun:</strong> Belsalina Nisfu Listiana, S.Pd</p>
+                <p><strong>NIP:</strong> 199003132017082002</p>
+                <p><strong>Instansi:</strong> SMP Negeri 2 Mempawah Hilir</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="readText('Cover. Materi : Patuh Terhadap Norma. Berani Berkata Tidak, Taat Norma, Selamatkan Masa Depan. Klik tombol Mulai Belajar untuk melanjutkan.')" class="btn-focus bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-volume-high text-xl"></i> Dengarkan Judul
+                </button>
+                <button onclick="nextScreen('screen-storyboard')" class="btn-focus bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg text-lg flex items-center justify-center gap-2">
+                    <span>Mulai Belajar</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: PEMANTIK & STORYBOOK -->
+        <section id="screen-storyboard" class="hidden bg-white rounded-2xl shadow-xl p-6 md:p-8 border-4 border-indigo-200">
+            <!-- Pertanyaan Pemantik -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl mb-6">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="font-bold text-amber-900 text-xl flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Pertanyaan Pemantik
+                        </h3>
+                        <p id="pemantik-text" class="text-amber-800 text-large-accessibility mt-2">
+                            "Apakah sesuatu yang dilakukan oleh banyak teman secara otomatis menjadi benar? Apa yang akan kamu lakukan jika diajak melakukan hal berbahaya oleh teman sebayamu?"
+                        </p>
+                    </div>
+                    <button onclick="readTextFromId('pemantik-text')" class="btn-focus p-2 bg-amber-200 text-amber-900 rounded-lg hover:bg-amber-300 ml-2 flex-shrink-0" title="Dengarkan Suara">
+                        <i class="fa-solid fa-volume-high text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-indigo-900">📖 Storybook: Keberanian Raka</h2>
+                <p class="text-gray-600">Bacalah cerita interaktif di bawah ini!</p>
+            </div>
+
+            <!-- Storybook Card Container -->
+            <div class="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-6 mb-6">
+                <div id="story-content" class="space-y-4">
+                    <!-- Story Content Injected via JS -->
+                </div>
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-indigo-200">
+                    <button id="btn-prev-story" onclick="changeStory(-1)" class="btn-focus bg-gray-400 hover:bg-gray-500 text-white font-bold px-4 py-2 rounded-lg disabled:opacity-50">
+                        <i class="fa-solid fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <span id="story-page-indicator" class="font-bold text-indigo-900">Halaman 1 / 6</span>
+                    <button id="btn-next-story" onclick="changeStory(1)" class="btn-focus bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg">
+                        Berikutnya <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-6">
+                <button onclick="nextScreen('screen-cover')" class="btn-focus text-indigo-600 hover:underline font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Halaman Awal
+                </button>
+                <button onclick="nextScreen('screen-materi')" class="btn-focus bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg flex items-center gap-2">
+                    <span>Lanjut ke Materi Norma</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: MATERI AJAR NORMA & PANCASILA -->
+        <section id="screen-materi" class="hidden bg-white rounded-2xl shadow-xl p-6 md:p-8 border-4 border-indigo-200">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-indigo-900">📚 Ringkasan Materi Ajar</h2>
+                <button onclick="readTextFromId('materi-container')" class="btn-focus bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-volume-high"></i> Baca Semua Materi
+                </button>
+            </div>
+
+            <div id="materi-container" class="space-y-6 text-large-accessibility">
+                <!-- Bagian 1: Pengertian & Jenis Norma -->
+                <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold text-indigo-900 text-xl mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-indigo-600"></i> 1. Pengertian dan Jenis-Jenis Norma
+                    </h3>
+                    <p class="text-gray-700 mb-3">
+                        <strong>Norma</strong> adalah kaidah atau aturan yang mengatur tingkah laku manusia dalam masyarakat. Terdapat 4 jenis norma:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <div class="bg-white p-3 rounded-lg border">
+                            <span class="font-bold text-indigo-700">1. Norma Agama:</span> Aturan dari Tuhan Yang Maha Esa. Sanksinya dosa/pahala.
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border">
+                            <span class="font-bold text-indigo-700">2. Norma Kesusilaan:</span> Bisikan hati nurani tentang baik-buruk. Sanksinya rasa penyesalan.
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border">
+                            <span class="font-bold text-indigo-700">3. Norma Kesopanan:</span> Aturan pergaulan dan adat masyarakat. Sanksinya dikucilkan/dicela.
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border">
+                            <span class="font-bold text-indigo-700">4. Norma Hukum:</span> Peraturan resmi dibuat negara. Sanksinya tegas dan memaksa (penjara/denda).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 2: Keterkaitan dengan Pancasila -->
+                <div class="bg-emerald-50 p-5 rounded-xl border border-emerald-200">
+                    <h3 class="font-bold text-emerald-900 text-xl mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-flag text-emerald-600"></i> 2. Hubungan Norma dan Sila-Sila Pancasila
+                    </h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Sila 1 (Ketuhanan YME):</strong> Mematuhi norma agama sebagai wujud imannya kepada Tuhan.</li>
+                        <li><strong>Sila 2 (Kemanusiaan Adil & Beradab):</strong> Menghormati kebiasaan dan norma kesusilaan serta kesopanan sesama manusia.</li>
+                        <li><strong>Sila 3 (Persatuan Indonesia):</strong> Menjaga ketertiban masyarakat dengan menaati hukum bersama.</li>
+                        <li><strong>Sila 4 (Kerakyatan):</strong> Musyawarah untuk membuat kesepakatan dan norma kelompok.</li>
+                        <li><strong>Sila 5 (Keadilan Sosial):</strong> Mengakui hak orang lain dan berlaku adil sesuai norma hukum.</li>
+                    </ul>
+                </div>
+
+                <!-- Bagian 3: Bimbingan Pencegahan Narkoba & Asertif -->
+                <div class="bg-rose-50 p-5 rounded-xl border border-rose-200">
+                    <h3 class="font-bold text-rose-900 text-xl mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-rose-600"></i> 3. Bahaya Narkoba & Komunikasi Asertif
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        Penyalahgunaan zat terlarang (Narkoba) melanggar <strong>Norma Agama, Kesusilaan, dan Hukum</strong>. Dampaknya merusak kesehatan organ tubuh, otak, masa depan, serta ancaman pidana penjara.
+                    </p>
+                    <p class="text-gray-700">
+                        <strong>Sikap Asertif:</strong> Kemampuan menolak ajakan berbahaya secara <strong>tegas, jujur, dan santun</strong> tanpa harus menyakiti atau mempermalukan orang lain. Contoh: <em>"Terima kasih atas ajakannya, tapi saya menolak karena ingin menjaga kesehatan dan masa depan saya."</em>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-8">
+                <button onclick="nextScreen('screen-storyboard')" class="btn-focus text-indigo-600 hover:underline font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Storybook
+                </button>
+                <button onclick="startQuiz()" class="btn-focus bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg text-lg flex items-center gap-2">
+                    <span>Mulai Kuis 10 Soal</span> <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: KUIS INTERAKTIF (10 SOAL) -->
+        <section id="screen-quiz" class="hidden bg-white rounded-2xl shadow-xl p-6 md:p-8 border-4 border-indigo-200">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="quiz-progress-text" class="font-bold text-indigo-900">Soal 1 dari 10</span>
+                    <span id="quiz-score-badge" class="bg-indigo-100 text-indigo-800 text-sm font-bold px-3 py-1 rounded-full">Skor: 0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="quiz-progress-bar" class="bg-indigo-600 h-3 rounded-full transition-all duration-300" style="width: 10%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-200 mb-6">
+                <div class="flex justify-between items-start gap-2">
+                    <h3 id="quiz-question" class="font-bold text-xl text-gray-800 text-large-accessibility">
+                        <!-- Text Question injected by JS -->
+                    </h3>
+                    <button onclick="readQuestionText()" class="btn-focus p-2 bg-indigo-200 text-indigo-900 rounded-lg hover:bg-indigo-300 flex-shrink-0" title="Dengarkan Soal">
+                        <i class="fa-solid fa-volume-high text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Answer Options -->
+            <div id="quiz-options" class="grid grid-cols-1 gap-3 mb-6">
+                <!-- Buttons injected by JS -->
+            </div>
+
+            <!-- Feedback Box -->
+            <div id="quiz-feedback" class="hidden p-5 rounded-xl border mb-6 transition-all">
+                <h4 id="feedback-title" class="font-bold text-xl mb-2 flex items-center gap-2"></h4>
+                <p id="feedback-desc" class="text-gray-700 text-large-accessibility mb-2"></p>
+                <p class="font-bold text-amber-700 italic">"Tetap Jaga Semangat ya, kamu Keren..."</p>
+                <button onclick="nextQuestion()" class="mt-4 btn-focus bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-lg">
+                    Lanjut Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: HASIL KUIS -->
+        <section id="screen-result" class="hidden bg-white rounded-2xl shadow-xl p-8 text-center border-4 border-indigo-200">
+            <div class="mb-6">
+                <i class="fa-solid fa-trophy text-6xl text-yellow-400 mb-4"></i>
+                <h2 class="text-3xl font-extrabold text-indigo-900">Hasil Kuis Belajar</h2>
+                <p class="text-gray-600 mt-1">Kamu telah menyelesaikan seluruh pertanyaan!</p>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-200 max-w-sm mx-auto mb-6">
+                <span class="text-gray-600 block mb-1">Skor Akhir Kamu:</span>
+                <span id="final-score" class="text-5xl font-black text-indigo-600">0</span>
+                <span class="text-gray-500 block mt-1">dari total 100 poin</span>
+            </div>
+
+            <p id="result-message" class="text-xl font-bold text-emerald-600 mb-8">
+                Luar biasa! Kamu anak yang hebat dan taat norma!
+            </p>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="startQuiz()" class="btn-focus bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis
+                </button>
+                <button onclick="nextScreen('screen-cover')" class="btn-focus bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-house"></i> Kembali ke Awal
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-900 text-white text-center p-4 text-sm mt-8">
+        <p>Pendidikan Pancasila Kelas VII - SMP Negeri 2 Mempawah Hilir © 2026</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Web Audio API Background Music Synthesizer
+        let audioCtx = null;
+        let bgmInterval = null;
+        let isBGMPlaying = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSoftNote(freq, duration) {
+            if (!isBGMPlaying || !audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function toggleBGM() {
+            initAudio();
+            isBGMPlaying = !isBGMPlaying;
+            const bgmBtnText = document.getElementById('bgm-text');
+            const bgmIcon = document.getElementById('bgm-icon');
+
+            if (isBGMPlaying) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                bgmBtnText.innerText = "Musik: On";
+                bgmIcon.className = "fa-solid fa-music text-yellow-300";
+                
+                const notes = [261.63, 329.63, 392.00, 523.25, 440.00, 349.23];
+                let idx = 0;
+                bgmInterval = setInterval(() => {
+                    playSoftNote(notes[idx % notes.length], 1.5);
+                    idx++;
+                }, 1200);
+            } else {
+                bgmBtnText.innerText = "Musik: Off";
+                bgmIcon.className = "fa-solid fa-volume-xmark text-gray-400";
+                clearInterval(bgmInterval);
+            }
+        }
+
+        // Text To Speech (TTS)
+        function readText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function readTextFromId(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) readText(el.innerText);
+        }
+
+        function stopTTS() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // Update Nav Menu Indicator
+        function updateNavState(activeScreenId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('nav-tab-active');
+            });
+            const activeBtn = document.getElementById('nav-' + activeScreenId);
+            if (activeBtn) {
+                activeBtn.classList.add('nav-tab-active');
+            }
+        }
+
+        // Screen Navigation
+        function nextScreen(screenId) {
+            stopTTS();
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            updateNavState(screenId);
+            window.scrollTo(0,0);
+
+            if (screenId === 'screen-storyboard') {
+                updateStoryUI();
+            }
+        }
+
+        // Storybook Data
+        const storyPages = [
+            {
+                title: "Halaman 1: Sore di Lapangan Basket",
+                text: "Sore itu, Raka, Boni, Dion, dan Arya selesai latihan basket. Raka merasa senang karena timnya makin kompak. Bagi Raka, mereka bertiga adalah sahabat terbaiknya."
+            },
+            {
+                title: "Halaman 2: Bungkusan Misterius",
+                text: "Boni mengeluarkan bungkusan kecil berisi zat terlarang dari sakunya. Boni mengajak teman-temannya untuk meminum zat tersebut agar lebih percaya diri saat tanding. Raka terkejut karena tahu zat itu berbahaya!"
+            },
+            {
+                title: "Halaman 3: Ujian Kesetiaan",
+                text: "Saat Raka menolak, Dion dan Arya menekan Raka. Dion berkata, 'Kalau kamu kawan setia, kamu harus coba bareng kita! Kalau tidak, kamu bukan kelompok kita lagi!'"
+            },
+            {
+                title: "Halaman 4: Pergulatan Dalam Hati",
+                text: "Hati Raka berdetak kencang. Ia takut dikucilkan, tetapi ia ingat nasihat guru dan orang tua bahwa zat terlarang melanggar norma hukum, norma agama, serta merusak masa depan."
+            },
+            {
+                title: "Halaman 5: Suara Ketegasan (Sikap Asertif)",
+                text: "Raka menarik napas tenang dan menatap kawan-kawannya dengan santun namun tegas: 'Aku menghargai persahabatan kita, tapi aku menolak mencobanya karena ingin menjaga kesehatan dan masa depan kita.'"
+            },
+            {
+                title: "Halaman 6: Langkah yang Tepat",
+                text: "Teman-teman Raka tertegun. Raka mengambil tasnya dan pulang dengan bangga. Raka paham bahwa sahabat sejati adalah yang saling menjaga dalam kebaikan, bukan mengajak pada bahaya."
+            }
+        ];
+
+        let currentStoryIdx = 0;
+        function updateStoryUI() {
+            const story = storyPages[currentStoryIdx];
+            document.getElementById('story-content').innerHTML = `
+                <div class="flex justify-between items-start">
+                    <h3 class="font-bold text-xl text-indigo-900">${story.title}</h3>
+                    <button onclick="readText('${story.title}. ${story.text}')" class="btn-focus p-2 bg-indigo-200 text-indigo-900 rounded-lg hover:bg-indigo-300">
+                        <i class="fa-solid fa-volume-high text-lg"></i>
+                    </button>
+                </div>
+                <p class="text-gray-700 text-large-accessibility leading-relaxed mt-2">${story.text}</p>
+            `;
+            document.getElementById('story-page-indicator').innerText = `Halaman ${currentStoryIdx + 1} / ${storyPages.length}`;
+            document.getElementById('btn-prev-story').disabled = (currentStoryIdx === 0);
+            document.getElementById('btn-next-story').disabled = (currentStoryIdx === storyPages.length - 1);
+        }
+
+        function changeStory(delta) {
+            currentStoryIdx += delta;
+            updateStoryUI();
+        }
+
+        // Quiz Data (10 Soal)
+        const quizData = [
+            {
+                q: "1. Apa yang dimaksud dengan norma?",
+                options: [
+                    "Kaidah atau aturan yang mengatur perilaku manusia dalam masyarakat",
+                    "Keinginan pribadi seseorang tanpa aturan",
+                    "Hukuman yang diberikan oleh teman bermain",
+                    "Anjuran yang tidak perlu dipatuhi"
+                ],
+                answer: 0,
+                explanation: "Norma adalah pedoman, aturan, atau kaidah yang mengatur tingkah laku manusia agar kehidupan masyarakat menjadi tertib dan aman."
+            },
+            {
+                q: "2. Norma yang bersumber dari kitab suci dan ajaran Tuhan Yang Maha Esa adalah norma...",
+                options: ["Norma Kesopanan", "Norma Agama", "Norma Hukum", "Norma Kesusilaan"],
+                answer: 1,
+                explanation: "Norma Agama bersumber dari ajaran Tuhan Yang Maha Esa dan memiliki sanksi berupa dosa atau pahala."
+            },
+            {
+                q: "3. Peraturan resmi yang dibuat oleh pemerintah dan memiliki sanksi tegas serta memaksa adalah norma...",
+                options: ["Norma Kesopanan", "Norma Kesusilaan", "Norma Hukum", "Norma Kebiasaan"],
+                answer: 2,
+                explanation: "Norma Hukum dibuat oleh lembaga berwenang (negara) dan bersifat memaksa serta memiliki sanksi nyata seperti denda atau penjara."
+            },
+            {
+                q: "4. Sikap menolak ajaran berbahaya secara tegas, santun, dan tanpa mempermalukan orang lain disebut sikap...",
+                options: ["Pasif", "Otoriter", "Asertif", "Anarkis"],
+                answer: 2,
+                explanation: "Sikap Asertif adalah kemampuan mengungkapkan pendapat atau penolakan dengan jelas, tegas, dan tetap menghormati orang lain."
+            },
+            {
+                q: "5. Mematuhi norma agama dalam kehidupan sehari-hari merupakan wujud pengamalan Pancasila, khususnya Sila ke-...",
+                options: ["Sila Pertama (1)", "Sila Kedua (2)", "Sila Ketiga (3)", "Sila Keempat (4)"],
+                answer: 0,
+                explanation: "Sila Pertama 'Ketuhanan Yang Maha Esa' menuntut setiap warga negara untuk taat dan patuh pada ajaran serta norma agama."
+            },
+            {
+                q: "6. Mengapa penyalahgunaan narkoba melanggar norma hukum dan norma agama?",
+                options: [
+                    "Karena narkoba membuat tubuh makin sehat",
+                    "Karena merusak tubuh, pikiran, masa depan, dan dilarang undang-undang",
+                    "Karena narkoba disukai oleh kawan sebaya",
+                    "Karena harganya sangat murah"
+                ],
+                answer: 1,
+                explanation: "Narkoba merusak jiwa dan fisik manusia, serta secara tegas dilarang oleh Hukum Negara dan Ajaran Agama."
+            },
+            {
+                q: "7. Rasa menyesal dan bersalah di dalam hati nurani setelah melakukan kesalahan adalah bentuk sanksi dari norma...",
+                options: ["Norma Hukum", "Norma Kesusilaan", "Norma Kesopanan", "Norma Agama"],
+                answer: 1,
+                explanation: "Norma Kesusilaan berasal dari hati nurani manusia. Sanksinya berupa penyesalan dan rasa bersalah."
+            },
+            {
+                q: "8. Jika teman sebayamu mengancam akan memusuhi jika kamu tidak mau mencoba zat terlarang, tindakan terbaikmu adalah...",
+                options: [
+                    "Mengikutinya agar tetap punya teman",
+                    "Menolak dengan tegas (asertif) dan melaporkan kepada guru/orang tua",
+                    "Pura-pura pingsan di tempat",
+                    "Membalas dengan memukul teman tersebut"
+                ],
+                answer: 1,
+                explanation: "Menolak secara asertif membentengi diri dari bahaya, dan meminta bantuan guru/orang dewasa adalah keputusan yang bertanggung jawab."
+            },
+            {
+                q: "9. Menghormati kebiasaan dan tidak mengejek kawan di sekolah merupakan bentuk kepatuhan terhadap norma...",
+                options: ["Norma Kesopanan", "Norma Hukum", "Norma Kebetulan", "Norma Fisika"],
+                answer: 0,
+                explanation: "Norma Kesopanan mengatur tatakrama pergaulan sehari-hari di lingkungan sekolah maupun masyarakat."
+            },
+            {
+                q: "10. Sahabat sejati dalam lingkungan kawan sebaya adalah kawan yang...",
+                options: [
+                    "Selalu mengajak melakukan tindakan melanggar aturan",
+                    "Saling menjaga dalam kebaikan dan saling menghormati masa depan",
+                    "Memaksa kita mengikuti semua keinginannya",
+                    "Mengejek jika kita menaati aturan sekolah"
+                ],
+                answer: 1,
+                explanation: "Sahabat sejati mendukung kita tumbuh menjadi pribadi yang baik, taat norma, serta sukses meraih masa depan."
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuizIdx = 0;
+            score = 0;
+            nextScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuizIdx];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${currentQuizIdx + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-score-badge').innerText = `Skor: ${score}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuizIdx + 1) / quizData.length) * 100}%`;
+            
+            document.getElementById('quiz-question').innerText = q.q;
+            document.getElementById('quiz-feedback').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-focus text-left bg-gray-50 hover:bg-indigo-100 border-2 border-gray-200 p-4 rounded-xl font-medium text-gray-800 transition text-large-accessibility flex justify-between items-center";
+                btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-gray-400"></i>`;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            readText(q.q);
+        }
+
+        function readQuestionText() {
+            readText(quizData[currentQuizIdx].q);
+        }
+
+        function checkAnswer(selectedIdx) {
+            const q = quizData[currentQuizIdx];
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackDesc = document.getElementById('feedback-desc');
+
+            const optionBtns = document.getElementById('quiz-options').querySelectorAll('button');
+            optionBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === q.answer) {
+                score += 10;
+                document.getElementById('quiz-score-badge').innerText = `Skor: ${score}`;
+                feedbackBox.className = "p-5 rounded-xl border mb-6 bg-emerald-50 border-emerald-300";
+                feedbackTitle.className = "font-bold text-xl mb-2 flex items-center gap-2 text-emerald-800";
+                feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Benar, Kamu Hebat...`;
+                feedbackDesc.innerText = q.explanation;
+                readText("Benar, Kamu Hebat! " + q.explanation);
+            } else {
+                feedbackBox.className = "p-5 rounded-xl border mb-6 bg-rose-50 border-rose-300";
+                feedbackTitle.className = "font-bold text-xl mb-2 flex items-center gap-2 text-rose-800";
+                feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> Jawaban Kurang Tepat`;
+                feedbackDesc.innerText = `Penjelasan: ${q.explanation}`;
+                readText("Jawaban kurang tepat. " + q.explanation + ". Tetap Jaga Semangat ya, kamu Keren...");
+            }
+
+            feedbackBox.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuizIdx++;
+            if (currentQuizIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            nextScreen('screen-result');
+            document.getElementById('final-score').innerText = score;
+            const msgEl = document.getElementById('result-message');
+
+            let resultSpeech = "";
+            if (score >= 80) {
+                msgEl.innerText = "Luar biasa! Kamu anak yang hebat, berani berkata tidak pada bahaya, dan taat norma!";
+                resultSpeech = "Luar biasa! Kamu anak yang hebat, berani berkata tidak pada bahaya, dan taat norma!";
+            } else {
+                msgEl.innerText = "Bagus sekali! Pelajari lagi materinya agar kamu makin paham dan hebat!";
+                resultSpeech = "Bagus sekali! Pelajari lagi materinya agar kamu makin paham dan hebat!";
+            }
+
+            readText(`Selesai! Skor akhir kamu adalah ${score}. ${resultSpeech}`);
+        }
+
+        // Initialize App
+        window.onload = () => {
+            updateNavState('screen-cover');
+            updateStoryUI();
+        };
+    </script>
+</body>
+</html>
