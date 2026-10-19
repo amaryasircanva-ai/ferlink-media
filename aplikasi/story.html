@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Storybook - FERLINK.id</title>
+  
+  <!-- Font Google & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --secondary: #06B6D4;
+      --accent: #F59E0B;
+      --bg-main: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 18px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      --shadow-hover: 0 20px 30px -10px rgba(79, 70, 229, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    /* Header & Hero Section */
+    header {
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #2563EB 100%);
+      color: white;
+      padding: 40px 20px 60px 20px;
+      text-align: center;
+      border-bottom-left-radius: 32px;
+      border-bottom-right-radius: 32px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+    }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Navigation / Back Button */
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 20px 0 20px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-3px);
+    }
+
+    /* Controls: Search & Category Filters */
+    .controls-container {
+      max-width: 1200px;
+      margin: -30px auto 30px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .controls-wrapper {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .category-filters {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: thin;
+    }
+
+    .filter-btn {
+      background: #F1F5F9;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Books Grid Section */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    /* Book Card Component (Anchor Tag) */
+    .book-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .book-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(79, 70, 229, 0.3);
+    }
+
+    .card-cover {
+      width: 100%;
+      height: 220px;
+      background: #EEF2FF;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .book-card:hover .card-cover img {
+      transform: scale(1.05);
+    }
+
+    .badge-category {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.25rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: auto;
+    }
+
+    .read-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .heyzine-icon {
+      font-size: 0.75rem;
+      background: #E0E7FF;
+      color: var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .controls-wrapper {
+        flex-direction: row;
+        align-items: center;
+      }
+      .search-box {
+        width: 320px;
+      }
+      .category-filters {
+        flex-grow: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="https://ferlink.id" class="btn-back">
+        <i class="fa-solid fa-arrow-left">
+        </i> Kembali ke FERLINK.id
+      </a>
+    </div>
+    <div style="margin-top: 15px;">
+      <div class="brand-tag">
+        <i class="fa-solid fa-book-open-reader">
+        </i> FERLINK Digital Library
+      </div>
+      <h1>Gemini Storybook</h1>
+      <p class="subtitle">Kumpulan buku cerita interaktif Flipbook Bahasa Indonesia untuk siswa SD</p>
+    </div>
+  </header>
+
+  <!-- Controls (Search & Category) -->
+  <div class="controls-container">
+    <div class="controls-wrapper">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass">
+        </i>
+        <input type="text" id="searchInput" placeholder="Cari judul atau kata kunci..." onkeyup="filterBooks()">
+      </div>
+      <div class="category-filters">
+        <button class="filter-btn active" onclick="filterCategory('all', this)">Semua Cerita</button>
+        <button class="filter-btn" onclick="filterCategory('fabel', this)">Fabel</button>
+        <button class="filter-btn" onclick="filterCategory('petualangan', this)">Petualangan</button>
+        <button class="filter-btn" onclick="filterCategory('sains', this)">Sains & Budaya</button>
+        <button class="filter-btn" onclick="filterCategory('moral', this)">Karakter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <main class="main-content">
+    <div class="books-grid" id="booksGrid">
+
+      <!-- KARTU BUKU 1 -->
+      <!-- Ganti href dengan link Heyzine Anda & src img dengan foto sampul Anda -->
+      <a href="https://heyzine.com/flip-book/buku-petualangan-bintang.html" target="_blank" rel="noopener noreferrer" class="book-card" data-category="petualangan">
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=500&q=80" alt="Petualangan Bintang Kecil">
+          <span class="badge-category">Petualangan</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Petualangan Bintang Kecil</h3>
+          <p class="card-desc">Kisah perjalanan sebuah bintang yang ingin menjelajahi keindahan laut Indonesia.</p>
+          <div class="card-footer">
+            <span class="read-tag"><i class="fa-solid fa-book-open">
+            </i> Baca Buku</span>
+            <span class="heyzine-icon"><i class="fa-solid fa-arrow-up-right-from-square">
+            </i> Heyzine</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- KARTU BUKU 2 -->
+      <a href="https://heyzine.com/flip-book/kancil-dan-danau.html" target="_blank" rel="noopener noreferrer" class="book-card" data-category="fabel">
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500&q=80" alt="Si Kancil dan Penjaga Danau">
+          <span class="badge-category">Fabel</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Si Kancil & Penjaga Danau</h3>
+          <p class="card-desc">Pesan moral tentang pentingnya menjaga kebersihan lingkungan dan air bersih.</p>
+          <div class="card-footer">
+            <span class="read-tag"><i class="fa-solid fa-book-open">
+            </i> Baca Buku</span>
+            <span class="heyzine-icon"><i class="fa-solid fa-arrow-up-right-from-square">
+            </i> Heyzine</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- KARTU BUKU 3 -->
+      <a href="https://heyzine.com/flip-book/misteri-gunung-merapi.html" target="_blank" rel="noopener noreferrer" class="book-card" data-category="sains">
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=500&q=80" alt="Misteri Gunung Merapi">
+          <span class="badge-category">Sains & Budaya</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Misteri Gunung Berapi</h3>
+          <p class="card-desc">Penjelasan sederhana dan seru mengenai bagaimana gunung berapi meletus.</p>
+          <div class="card-footer">
+            <span class="read-tag"><i class="fa-solid fa-book-open">
+            </i> Baca Buku</span>
+            <span class="heyzine-icon"><i class="fa-solid fa-arrow-up-right-from-square">
+            </i> Heyzine</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- KARTU BUKU 4 -->
+      <a href="https://heyzine.com/flip-book/rahasia-kejujuran.html" target="_blank" rel="noopener noreferrer" class="book-card" data-category="moral">
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80" alt="Rahasia Kejujuran Doni">
+          <span class="badge-category">Karakter</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Rahasia Kejujuran Doni</h3>
+          <p class="card-desc">Belajar tentang nilai-nilai kejujuran dan tanggung jawab dalam kehidupan sehari-hari.</p>
+          <div class="card-footer">
+            <span class="read-tag"><i class="fa-solid fa-book-open">
+            </i> Baca Buku</span>
+            <span class="heyzine-icon"><i class="fa-solid fa-arrow-up-right-from-square">
+            </i> Heyzine</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Empty State apabila pencarian tidak ditemukan -->
+    <div class="empty-state" id="emptyState">
+      <i class="fa-solid fa-book-bookmark">
+      </i>
+      <h3>Buku Tidak Ditemukan</h3>
+      <p>Coba gunakan kata kunci pencarian lain atau pilih kategori lain.</p>
+    </div>
+  </main>
+
+  <script>
+    let currentCategory = 'all';
+
+    function filterCategory(category, element) {
+      currentCategory = category;
+      
+      // Update tampilan tombol aktif
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+
+      filterBooks();
+    }
+
+    function filterBooks() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const books = document.querySelectorAll('.book-card');
+      let visibleCount = 0;
+
+      books.forEach(book => {
+        const title = book.querySelector('.card-title').textContent.toLowerCase();
+        const desc = book.querySelector('.card-desc').textContent.toLowerCase();
+        const category = book.getAttribute('data-category');
+
+        const matchesSearch = title.includes(searchInput) || desc.includes(searchInput);
+        const matchesCategory = (currentCategory === 'all') || (category === currentCategory);
+
+        if (matchesSearch && matchesCategory) {
+          book.style.display = 'flex';
+          visibleCount++;
+        } else {
+          book.style.display = 'none';
+        }
+      });
+
+      // Tampilkan info kosong jika tidak ada buku yang cocok
+      const emptyState = document.getElementById('emptyState');
+      if (visibleCount === 0) {
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
