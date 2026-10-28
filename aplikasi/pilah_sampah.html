@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Edukasi Memilah Sampah - Ferlink</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .font-game {
+            font-family: 'Fredoka One', cursive;
+        }
+
+        /* Responsive Background Container */
+        .game-container {
+            background-image: url('img/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        /* Drag and Drop Styling */
+        .draggable {
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            touch-action: none;
+        }
+
+        .draggable:active, .dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+            z-index: 1000 !important;
+            opacity: 0.9;
+        }
+
+        .dropzone-active {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+        }
+
+        /* Bounce Animation */
+        @keyframes bounce-short {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-bounce-short {
+            animation: bounce-short 0.5s ease infinite;
+        }
+
+        /* Custom Scrollbar for Modal */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800 h-screen w-screen overflow-hidden flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-emerald-600 text-white px-4 py-2 flex justify-between items-center shadow-lg z-20">
+        <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-recycle text-2xl text-yellow-300 animate-spin-slow"></i>
+            <div>
+                <h1 class="font-game text-xl md:text-2xl tracking-wide leading-none">Pilah Sampah Cerdas</h1>
+                <p class="text-xs text-emerald-100 font-medium">Ferlink by Robie Ferli</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button id="btnSettings" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs md:text-sm px-3 py-1.5 rounded-lg border border-emerald-500 flex items-center gap-1.5 transition shadow">
+                <i class="fa-solid fa-gear"></i>
+                <span class="hidden sm:inline">Pengaturan Aset</span>
+            </button>
+            <button id="btnReset" class="bg-amber-500 hover:bg-amber-600 text-white text-xs md:text-sm px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition shadow">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span class="hidden sm:inline">Ulangi</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN GAME AREA -->
+    <main id="gameContainer" class="game-container flex-1 flex flex-col justify-between items-center p-4 relative overflow-hidden">
+        
+        <!-- SCOREBOARD & STATS -->
+        <div class="z-10 w-full max-w-4xl grid grid-cols-4 gap-2 bg-white/85 backdrop-blur-md p-2.5 rounded-2xl shadow-xl border border-white/50 text-center">
+            <div class="bg-emerald-100/80 p-1.5 md:p-2 rounded-xl border border-emerald-300">
+                <span class="text-[10px] md:text-xs uppercase font-bold text-emerald-700 block">Skor</span>
+                <span id="scoreText" class="font-game text-lg md:text-2xl text-emerald-800">0</span>
+            </div>
+            <div class="bg-blue-100/80 p-1.5 md:p-2 rounded-xl border border-blue-300">
+                <span class="text-[10px] md:text-xs uppercase font-bold text-blue-700 block">Benar</span>
+                <span id="correctText" class="font-game text-lg md:text-2xl text-blue-800">0</span>
+            </div>
+            <div class="bg-rose-100/80 p-1.5 md:p-2 rounded-xl border border-rose-300">
+                <span class="text-[10px] md:text-xs uppercase font-bold text-rose-700 block">Salah</span>
+                <span id="wrongText" class="font-game text-lg md:text-2xl text-rose-800">0</span>
+            </div>
+            <div class="bg-amber-100/80 p-1.5 md:p-2 rounded-xl border border-amber-300">
+                <span class="text-[10px] md:text-xs uppercase font-bold text-amber-700 block">Sisa</span>
+                <span id="remainingText" class="font-game text-lg md:text-2xl text-amber-800">0</span>
+            </div>
+        </div>
+
+        <!-- ACTIVE ITEM DRAG AREA (CENTER) -->
+        <div class="z-10 flex-1 flex flex-col items-center justify-center my-2 w-full max-w-md">
+            <div id="itemContainer" class="relative flex flex-col items-center min-h-[160px] justify-center w-full">
+                <!-- Dynamic Item loaded via JS -->
+            </div>
+        </div>
+
+        <!-- DUSTBINS AREA (BOTTOM) -->
+        <div class="z-10 w-full max-w-5xl grid grid-cols-3 gap-2 md:gap-6 items-end pb-2">
+            
+            <!-- TONG ORGANIK -->
+            <div data-category="organik" class="bin-dropzone bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-2xl p-2 md:p-4 text-center border-4 border-emerald-300 shadow-2xl transition duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[160px] md:min-h-[220px]">
+                <div class="font-game text-xs md:text-lg bg-emerald-800/80 px-2 md:px-3 py-1 rounded-full w-full truncate">ORGANIK</div>
+                <div class="flex-1 flex items-center justify-center my-1 w-full relative">
+                    <img src="img/tong_organik.png" alt="Tong Organik" class="max-h-24 md:max-h-36 object-contain pointer-events-none drop-shadow-md" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <!-- Fallback Icon if Image Missing -->
+                    <div class="fallback-bin hidden flex flex-col items-center text-emerald-100">
+                        <i class="fa-solid fa-leaf text-3xl md:text-5xl my-1"></i>
+                    </div>
+                </div>
+                <span class="text-[9px] md:text-xs text-emerald-100">Sisa Makanan, Daun</span>
+            </div>
+
+            <!-- TONG ANORGANIK -->
+            <div data-category="anorganik" class="bin-dropzone bg-amber-500/90 hover:bg-amber-500 text-white rounded-2xl p-2 md:p-4 text-center border-4 border-amber-300 shadow-2xl transition duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[160px] md:min-h-[220px]">
+                <div class="font-game text-xs md:text-lg bg-amber-700/80 px-2 md:px-3 py-1 rounded-full w-full truncate">ANORGANIK</div>
+                <div class="flex-1 flex items-center justify-center my-1 w-full relative">
+                    <img src="img/tong_anorganik.png" alt="Tong Anorganik" class="max-h-24 md:max-h-36 object-contain pointer-events-none drop-shadow-md" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <!-- Fallback Icon if Image Missing -->
+                    <div class="fallback-bin hidden flex flex-col items-center text-amber-100">
+                        <i class="fa-solid fa-bottle-water text-3xl md:text-5xl my-1"></i>
+                    </div>
+                </div>
+                <span class="text-[9px] md:text-xs text-amber-100">Plastik, Botol, Kertas</span>
+            </div>
+
+            <!-- TONG B3 / RESIDU -->
+            <div data-category="b3" class="bin-dropzone bg-rose-600/90 hover:bg-rose-600 text-white rounded-2xl p-2 md:p-4 text-center border-4 border-rose-300 shadow-2xl transition duration-200 cursor-pointer flex flex-col items-center justify-between min-h-[160px] md:min-h-[220px]">
+                <div class="font-game text-xs md:text-lg bg-rose-800/80 px-2 md:px-3 py-1 rounded-full w-full truncate">RESIDU / B3</div>
+                <div class="flex-1 flex items-center justify-center my-1 w-full relative">
+                    <img src="img/tong_residu.png" alt="Tong Residu" class="max-h-24 md:max-h-36 object-contain pointer-events-none drop-shadow-md" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <!-- Fallback Icon if Image Missing -->
+                    <div class="fallback-bin hidden flex flex-col items-center text-rose-100">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl md:text-5xl my-1"></i>
+                    </div>
+                </div>
+                <span class="text-[9px] md:text-xs text-rose-100">Baterai, Kaca, Residu</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER BRANDING -->
+    <footer class="bg-slate-900 text-slate-400 text-center py-1.5 text-xs z-20 border-t border-slate-800">
+        <p>Media Pembelajaran Interaktif &copy; <span class="text-emerald-400 font-bold">Ferlink by Robie Ferli</span></p>
+    </footer>
+
+    <!-- MODAL GAME OVER (RESULT) -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border-4 border-emerald-400 transform transition-all scale-100">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto -mt-12 shadow-lg border-4 border-white text-3xl">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            
+            <h2 class="font-game text-2xl text-slate-800 mt-3">Permainan Selesai!</h2>
+            <p class="text-xs text-slate-500 mb-3">Kamu telah selesai memilah sampah.</p>
+
+            <!-- Bintang Penilaian -->
+            <div id="starContainer" class="flex justify-center space-x-2 text-3xl text-amber-400 my-3">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <!-- Detail Nilai -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 my-4 space-y-1 text-left text-sm">
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Total Skor:</span>
+                    <span id="finalScore" class="font-bold text-emerald-600">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Jawaban Benar:</span>
+                    <span id="finalCorrect" class="font-bold text-blue-600">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Jawaban Salah:</span>
+                    <span id="finalWrong" class="font-bold text-rose-600">0</span>
+                </div>
+            </div>
+
+            <button id="btnPlayAgain" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-game py-3 rounded-xl shadow-lg transition text-lg active:scale-95">
+                <i class="fa-solid fa-play mr-2"></i> Main Lagi
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL PENGATURAN DATA SAMPAH -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-5 max-w-lg w-full shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b pb-3 mb-3">
+                <h3 class="font-game text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-emerald-600"></i> Pengaturan Data Sampah
+                </h3>
+                <button id="btnCloseSettings" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+
+            <div class="text-xs text-slate-500 mb-3 bg-blue-50 p-2.5 rounded-lg border border-blue-200">
+                <p><strong>Petunjuk:</strong> Masukkan file gambar Anda ke dalam folder <code class="bg-blue-100 text-blue-800 px-1 rounded">img/</code>. Anda bisa menyesuaikan nama file dan kategorinya di bawah ini.</p>
+            </div>
+
+            <!-- List Item Settings -->
+            <div id="settingsList" class="flex-1 overflow-y-auto space-y-2 pr-1 mb-3">
+                <!-- Generated dynamically -->
+            </div>
+
+            <div class="flex justify-between items-center pt-2 border-t gap-2">
+                <button id="btnAddItem" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 font-bold text-xs px-3 py-2 rounded-lg transition">
+                    + Tambah Item
+                </button>
+                <div class="space-x-2">
+                    <button id="btnSaveSettings" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-lg transition shadow">
+                        Simpan & Terapkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT UTAMA GAME -->
+    <script>
+        // DATA DEFAULT DAFTAR SAMPAH
+        const defaultTrashData = [
+            { id: 1, name: "Daun Kering", category: "organik", image: "img/sampah1.png", icon: "fa-leaf", color: "text-emerald-600" },
+            { id: 2, name: "Kulit Pisang", category: "organik", image: "img/sampah2.png", icon: "fa-apple-whole", color: "text-amber-600" },
+            { id: 3, name: "Botol Plastik", category: "anorganik", image: "img/sampah3.png", icon: "fa-bottle-water", color: "text-blue-500" },
+            { id: 4, name: "Kertas Bekas", category: "anorganik", image: "img/sampah4.png", icon: "fa-box-open", color: "text-slate-600" },
+            { id: 5, name: "Baterai Bekas", category: "b3", image: "img/sampah5.png", icon: "fa-car-battery", color: "text-rose-600" },
+            { id: 6, name: "Pecahan Kaca", category: "b3", image: "img/sampah6.png", icon: "fa-wine-bottle", color: "text-purple-600" },
+            { id: 7, name: "Tulang Ikan", category: "organik", image: "img/sampah7.png", icon: "fa-wine-bottle", color: "text-purple-600" },
+            { id: 8, name: "Kulit Jeruk", category: "organik", image: "img/sampah8.png", icon: "fa-wine-bottle", color: "text-purple-600" },
+            { id: 9, name: "Kaleng Bekas", category: "anorganik", image: "img/sampah9.png", icon: "fa-wine-bottle", color: "text-purple-600" },
+            { id: 10, name: "Sampah Plastik", category: "anorganik", image: "img/sampah10.png", icon: "fa-wine-bottle", color: "text-purple-600" },
+
+        ];
+
+        // State Aplikasi
+        let trashData = JSON.parse(localStorage.getItem('ferlink_trash_data')) || [...defaultTrashData];
+        let remainingTrash = [];
+        let currentItem = null;
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        // Audio Effects (Web Audio API Synthesizer)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.exponentialRampToValueAtTime(130.81, audioCtx.currentTime + 0.2); // C3
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'win') {
+                const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+                notes.forEach((freq, idx) => {
+                    const noteOsc = audioCtx.createOscillator();
+                    const noteGain = audioCtx.createGain();
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioCtx.destination);
+                    noteOsc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
+                    noteGain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.1);
+                    noteGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.1 + 0.3);
+                    noteOsc.start(audioCtx.currentTime + idx * 0.1);
+                    noteOsc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
+                });
+            }
+        }
+
+        // DOM Elements
+        const itemContainer = document.getElementById('itemContainer');
+        const scoreText = document.getElementById('scoreText');
+        const correctText = document.getElementById('correctText');
+        const wrongText = document.getElementById('wrongText');
+        const remainingText = document.getElementById('remainingText');
+        const resultModal = document.getElementById('resultModal');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsList = document.getElementById('settingsList');
+
+        // Inisialisasi Permainan
+        function initGame() {
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            remainingTrash = [...trashData].sort(() => Math.random() - 0.5);
+            
+            updateScoreboard();
+            resultModal.classList.add('hidden');
+            spawnNextItem();
+        }
+
+        // Perbarui Papan Skor
+        function updateScoreboard() {
+            scoreText.textContent = score;
+            correctText.textContent = correctCount;
+            wrongText.textContent = wrongCount;
+            remainingText.textContent = remainingTrash.length + (currentItem ? 1 : 0);
+        }
+
+        // Tampilkan Sampah Berikutnya
+        function spawnNextItem() {
+            itemContainer.innerHTML = '';
+
+            if (remainingTrash.length === 0) {
+                currentItem = null;
+                updateScoreboard();
+                endGame();
+                return;
+            }
+
+            currentItem = remainingTrash.pop();
+            updateScoreboard();
+
+            // Element Card Sampah
+            const card = document.createElement('div');
+            card.id = 'activeTrash';
+            card.className = 'draggable bg-white p-3 md:p-4 rounded-2xl shadow-xl border-2 border-emerald-400 flex flex-col items-center justify-center cursor-grab animate-bounce-short min-w-[140px] md:min-w-[170px] z-20';
+            card.setAttribute('draggable', 'true');
+
+            // Konten Gambar + Fallback
+            card.innerHTML = `
+                <div class="w-20 h-20 md:w-28 md:h-28 flex items-center justify-center relative">
+                    <img src="${currentItem.image}" alt="${currentItem.name}" class="max-h-full max-w-full object-contain pointer-events-none" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                    <div class="fallback-card hidden flex flex-col items-center justify-center">
+                        <i class="fa-solid ${currentItem.icon || 'fa-trash'} text-4xl md:text-5xl ${currentItem.color || 'text-emerald-500'} mb-1"></i>
+                    </div>
+                </div>
+                <span class="font-bold text-xs md:text-sm text-slate-700 mt-2 text-center truncate max-w-[130px]">${currentItem.name}</span>
+            `;
+
+            itemContainer.appendChild(card);
+
+            // Pasang Event Drag & Touch
+            setupDragEvents(card);
+        }
+
+        // Setup Event Listener Drag (Mouse & Touch)
+        function setupDragEvents(el) {
+            // MOUSE EVENTS
+            el.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', currentItem.category);
+                el.classList.add('dragging');
+            });
+
+            el.addEventListener('dragend', () => {
+                el.classList.remove('dragging');
+            });
+
+            // TOUCH EVENTS (IFP / Smartphone / Tablet)
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let initialLeft = 0;
+            let initialTop = 0;
+
+            el.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                
+                const rect = el.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+
+                el.style.position = 'fixed';
+                el.style.left = `${initialLeft}px`;
+                el.style.top = `${initialTop}px`;
+                el.classList.add('dragging');
+            }, { passive: false });
+
+            el.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dx = touch.clientX - touchStartX;
+                const dy = touch.clientY - touchStartY;
+
+                el.style.left = `${initialLeft + dx}px`;
+                el.style.top = `${initialTop + dy}px`;
+
+                // Highlight Dropzone dibawah jari
+                const dropzone = getDropzoneUnderTouch(touch.clientX, touch.clientY);
+                document.querySelectorAll('.bin-dropzone').forEach(b => b.classList.remove('dropzone-active'));
+                if (dropzone) {
+                    dropzone.classList.add('dropzone-active');
+                }
+            }, { passive: false });
+
+            el.addEventListener('touchend', (e) => {
+                el.classList.remove('dragging');
+                const touch = e.changedTouches[0];
+                const dropzone = getDropzoneUnderTouch(touch.clientX, touch.clientY);
+
+                document.querySelectorAll('.bin-dropzone').forEach(b => b.classList.remove('dropzone-active'));
+
+                if (dropzone) {
+                    const targetCategory = dropzone.getAttribute('data-category');
+                    checkAnswer(targetCategory);
+                } else {
+                    // Reset posisi jika dilepas di tempat kosong
+                    el.style.position = 'relative';
+                    el.style.left = 'auto';
+                    el.style.top = 'auto';
+                }
+            });
+        }
+
+        // Dapatkan Dropzone Tong Sampah saat Touch
+        function getDropzoneUnderTouch(x, y) {
+            const elements = document.elementsFromPoint(x, y);
+            for (let el of elements) {
+                if (el.classList.contains('bin-dropzone')) {
+                    return el;
+                }
+            }
+            return null;
+        }
+
+        // Setup Event Dropzone (Mouse)
+        document.querySelectorAll('.bin-dropzone').forEach(bin => {
+            bin.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                bin.classList.add('dropzone-active');
+            });
+
+            bin.addEventListener('dragleave', () => {
+                bin.classList.remove('dropzone-active');
+            });
+
+            bin.addEventListener('drop', (e) => {
+                e.preventDefault();
+                bin.classList.remove('dropzone-active');
+                const targetCategory = bin.getAttribute('data-category');
+                checkAnswer(targetCategory);
+            });
+        });
+
+        // Verifikasi Jawaban
+        function checkAnswer(selectedCategory) {
+            if (!currentItem) return;
+
+            if (selectedCategory === currentItem.category) {
+                // Jawaban Benar
+                score += 10;
+                correctCount++;
+                playSound('correct');
+                showFloatingFeedback('Benar! +10', 'text-emerald-500');
+            } else {
+                // Jawaban Salah
+                score = Math.max(0, score - 5);
+                wrongCount++;
+                playSound('wrong');
+                showFloatingFeedback('Salah! -5', 'text-rose-500');
+            }
+
+            updateScoreboard();
+            spawnNextItem();
+        }
+
+        // Efek Visual Teks Melayang
+        function showFloatingFeedback(text, colorClass) {
+            const feedback = document.createElement('div');
+            feedback.className = `fixed font-game text-xl md:text-2xl ${colorClass} z-50 pointer-events-none transition-all duration-700 ease-out transform -translate-y-0 opacity-100`;
+            feedback.textContent = text;
+            feedback.style.left = '50%';
+            feedback.style.top = '40%';
+            feedback.style.transform = 'translate(-50%, -50%)';
+
+            document.body.appendChild(feedback);
+
+            setTimeout(() => {
+                feedback.style.transform = 'translate(-50%, -100px)';
+                feedback.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => feedback.remove(), 750);
+        }
+
+        // Layar Akhir (Game Over)
+        function endGame() {
+            playSound('win');
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalCorrect').textContent = correctCount;
+            document.getElementById('finalWrong').textContent = wrongCount;
+
+            // Rating Bintang
+            const total = correctCount + wrongCount;
+            const accuracy = total > 0 ? (correctCount / total) : 0;
+            const starContainer = document.getElementById('starContainer');
+            
+            if (accuracy >= 0.8) {
+                starContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>';
+            } else if (accuracy >= 0.5) {
+                starContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star text-slate-300"></i>';
+            } else {
+                starContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-regular fa-star text-slate-300"></i><i class="fa-regular fa-star text-slate-300"></i>';
+            }
+
+            resultModal.classList.remove('hidden');
+        }
+
+        // MODAL PENGATURAN DATA SAMPAH
+        function renderSettingsList() {
+            settingsList.innerHTML = '';
+            trashData.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs';
+                row.innerHTML = `
+                    <input type="text" value="${item.name}" placeholder="Nama Sampah" class="item-name flex-1 px-2 py-1 border rounded bg-white" data-index="${index}">
+                    <input type="text" value="${item.image}" placeholder="File Gambar (img/...)" class="item-img flex-1 px-2 py-1 border rounded bg-white" data-index="${index}">
+                    <select class="item-category px-2 py-1 border rounded bg-white" data-index="${index}">
+                        <option value="organik" ${item.category === 'organik' ? 'selected' : ''}>Organik</option>
+                        <option value="anorganik" ${item.category === 'anorganik' ? 'selected' : ''}>Anorganik</option>
+                        <option value="b3" ${item.category === 'b3' ? 'selected' : ''}>B3</option>
+                    </select>
+                    <button class="btn-delete-item text-rose-500 hover:text-rose-700 px-1 font-bold" data-index="${index}">&times;</button>
+                `;
+                settingsList.appendChild(row);
+            });
+
+            // Delete Event
+            document.querySelectorAll('.btn-delete-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.target.getAttribute('data-index');
+                    trashData.splice(idx, 1);
+                    renderSettingsList();
+                });
+            });
+        }
+
+        // Event Listeners Modal Pengaturan
+        document.getElementById('btnSettings').addEventListener('click', () => {
+            renderSettingsList();
+            settingsModal.classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseSettings').addEventListener('click', () => {
+            settingsModal.classList.add('hidden');
+        });
+
+        document.getElementById('btnAddItem').addEventListener('click', () => {
+            trashData.push({
+                id: Date.now(),
+                name: "Sampah Baru",
+                category: "organik",
+                image: "img/sampah_baru.png",
+                icon: "fa-trash",
+                color: "text-slate-500"
+            });
+            renderSettingsList();
+        });
+
+        document.getElementById('btnSaveSettings').addEventListener('click', () => {
+            const names = document.querySelectorAll('.item-name');
+            const imgs = document.querySelectorAll('.item-img');
+            const cats = document.querySelectorAll('.item-category');
+
+            names.forEach((el, idx) => {
+                if (trashData[idx]) {
+                    trashData[idx].name = el.value || "Tanpa Nama";
+                    trashData[idx].image = imgs[idx].value || "img/default.png";
+                    trashData[idx].category = cats[idx].value;
+                }
+            });
+
+            localStorage.setItem('ferlink_trash_data', JSON.stringify(trashData));
+            settingsModal.classList.add('hidden');
+            initGame();
+        });
+
+        // Event Listeners Kontrol Permainan
+        document.getElementById('btnReset').addEventListener('click', initGame);
+        document.getElementById('btnPlayAgain').addEventListener('click', initGame);
+
+        // Jalankan Game saat Halaman Selesai Dimuat
+        window.onload = () => {
+            initGame();
+        };
+    </script>
+</body>
+</html>
